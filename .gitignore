@@ -1,0 +1,30 @@
+
+# local env files
+.env*.local
+client/.env*
+server/.env*
+
+# node_modules in subdirectories
+**/node_modules
+
+# dependencies
+/node_modules
+.yarn/install-state.gz
+/.env.local
+# testing
+/coverage
+
+# production
+/build
+
+# debug
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+
+# local env files
+.env*.local
+
+# typescript
+*.tsbuildinfo
+next-env.d.ts
