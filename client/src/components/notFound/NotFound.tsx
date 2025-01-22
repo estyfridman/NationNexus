@@ -1,7 +1,7 @@
 'use client';
 
 import { Link } from 'react-router-dom';
-import styles from './not-found.module.css'
+import styles from './not-found.module.scss'
 import { DotLottieReact } from '@lottiefiles/dotlottie-react'
 
 export default function NotFound() {

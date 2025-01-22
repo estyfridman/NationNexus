@@ -4,27 +4,27 @@ import "sweetalert2/src/sweetalert2.scss";
 import { ResetFormType, NavigateType } from '../models/swalTypes';
 
 export const successAlert = async (title: string, text: string) => {
-  Swal({
+  Swal.fire({
     title: title || "Success",
     text: text || "Your action was completed successfully",
-    type: 'success',
+    icon: 'success',
     timer: 2000,
     showConfirmButton: false
   });
 }
 
 export const errorRegisterAlert = async (message: string) => {
-  Swal({
+  Swal.fire({
     title: "error!",
     text: message || "Something went wrong. Please try again later.",
-    type: 'error',
+    icon: 'error',
     timer: 2000,
     showConfirmButton: false,
   });
 }
 
 export const deleteAlert = async (resetForm: ResetFormType, navigate: NavigateType) => {
-  const result = await Swal({
+  const result = await Swal.fire({
     title: 'Are you sure?',
     text: 'Do you really want to cancel? Your changes will be lost.',
     showCancelButton: true,

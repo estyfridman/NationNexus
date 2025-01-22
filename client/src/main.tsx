@@ -7,22 +7,31 @@ import { ReactQueryDevtools } from '@tanstack/react-query-devtools';
 import { createBrowserRouter, RouterProvider } from 'react-router-dom';
 import NotFound from './components/notFound/NotFound.tsx';
 import EditForm from './components/editForm/EditForm.tsx';
-import Grid from './components/grid/grig.tsx';
+import Grid from './components/grid/Grig.tsx';
+import Layout from './Layout.tsx';
+import ErrorBoundary from './ErrorBoundary.tsx'
+import { RecoilRoot } from 'recoil';
 
 const queryClient = new QueryClient();
 
 const router = createBrowserRouter([
   {
     path: '/',
-    element: <App />
-  },
-  {
-    path: '/edit',
-    element: <EditForm />
-  },
-  {
-    path: '/grid',
-    element: <Grid />
+    element: <Layout />,
+    children: [
+      {
+        path: '',
+        element: <App />,
+      },
+      {
+        path: 'edit',
+        element: <EditForm />,
+      },
+      {
+        path: 'grid',
+        element: <Grid />,
+      },
+    ],
   },
   {
     path: '*',
@@ -32,9 +41,13 @@ const router = createBrowserRouter([
 
 createRoot(document.getElementById('root')!).render(
   <StrictMode>
-    <QueryClientProvider client={queryClient}>
-      <RouterProvider router={router} />
-      <ReactQueryDevtools />
-    </QueryClientProvider>
+    <ErrorBoundary>
+      <QueryClientProvider client={queryClient}>
+        <RecoilRoot>
+          <RouterProvider router={router} />
+        </RecoilRoot>
+        <ReactQueryDevtools />
+      </QueryClientProvider>
+    </ErrorBoundary>
   </StrictMode>,
 )

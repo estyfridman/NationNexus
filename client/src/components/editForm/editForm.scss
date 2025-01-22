@@ -1,15 +1,94 @@
 
+@use '../../styles/variables' as vars;
+
 .field-container {
-    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1), 0 1px 2px rgba(0, 0, 0, 0.06); // shadow
-    appearance: none; 
-    border: 1px solid #e2e8f0; 
-    border-radius: 0.25rem; 
-    padding: 0.25rem 0.5rem; 
-    color: #4a5568; 
-    line-height: 1.25; 
-    outline: none; 
-  
+  display: flex;
+  flex-direction: column;
+  margin-bottom: 20px;
+
+  label {
+    font-size: 16px;
+    font-weight: 500;
+    color: #2d3748;
+    margin-bottom: 5px;
+  }
+
+  input {
+    padding: 0.5rem 0.75rem;
+    border: 1px solid #cbd5e0;
+    border-radius: 4px;
+    font-size: 14px;
+    color: #1a202c;
+    box-shadow: inset 0 1px 2px rgba(0, 0, 0, 0.075);
+    transition: border-color 0.2s ease, box-shadow 0.2s ease;
+
     &:focus {
-      box-shadow: 0 0 0 3px rgba(66, 153, 225, 0.5); 
+      border-color: #3182ce;
+      box-shadow: 0 0 0 3px rgba(66, 153, 225, 0.5);
+      outline: none;
     }
   }
+
+  .error {
+    font-size: 12px;
+    color: #e53e3e;
+    margin-top: 5px;
+  }
+}
+
+button[type='submit'],
+button[type='button'] {
+  padding: 10px 20px;
+  font-size: 16px;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  margin-right: 10px;
+  transition: background-color 0.3s ease, transform 0.2s ease;
+
+  &.MuiButton-containedPrimary {
+    background-color: #3182ce;
+    color: #ffffff;
+
+    &:hover {
+      background-color: #2b6cb0;
+      transform: scale(1.05);
+    }
+  }
+}
+
+button[type='button'] {
+  background-color: #e53e3e;
+
+  &:hover {
+    background-color: #c53030;
+  }
+}
+
+form {
+  max-width: 500px;
+  margin: 0 auto;
+  padding: 20px;
+  border-radius: 8px;
+  background-color: #ffffff;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+}
+
+@media (max-width: 600px) {
+  .field-container label {
+    font-size: 14px;
+  }
+
+  input {
+    font-size: 12px;
+  }
+
+  button {
+    font-size: 14px;
+  }
+}
+
+h1 {
+  color: vars.$secondary-color;
+  height: 100px;
+}

@@ -19,6 +19,17 @@ export const getCountryById = (id: string) => {
     }
     return null;
 };
+// export const useAddState = () => {
+//   const queryClient = useQueryClient();
+//   return useMutation(addState, {
+//     onSuccess: (newState) => {
+//       queryClient.setQueryData(["Countries"], (oldStates: ICountry[] | undefined) => {
+//         return oldStates ? [...oldStates, newState] : [newState];
+//       });
+//     },
+//   });
+// };
+
 
 export const useUpdateCountry = () => {
     const queryClient = useQueryClient();
