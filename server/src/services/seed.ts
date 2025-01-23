@@ -4,7 +4,8 @@ import Country from '../models/country';
 import dotenv from 'dotenv';
 
 dotenv.config();
-const db = process.env.DB_CONNECTION_STRING || ' ';
+const db = 'mongodb://ehshpiner:kdExc6PGtpz4xYts@ac-vlnvcjo-shard-00-00.3hwmtbz.mongodb.net:27017,ac-vlnvcjo-shard-00-01.3hwmtbz.mongodb.net:27017,ac-vlnvcjo-shard-00-02.3hwmtbz.mongodb.net:27017/?replicaSet=atlas-13bqn0-shard-0&tls=true&authSource=admin'
+// process.env.MONGO_URL || ' ';
 const API_URL = 'https://restcountries.com/v3.1/all';
 
 const connectDatabase = async () => {
@@ -20,6 +21,7 @@ const connectDatabase = async () => {
 const fetchAndSaveCountries = async () => {
   try {
     const response = await axios.get(API_URL);
+    console.log(response);
     const countries = response.data;
 
     for (const countryData of countries) {
@@ -28,11 +30,10 @@ const fetchAndSaveCountries = async () => {
       if (!existingCountry) {
         const newCountry = new Country({
           name: countryData.name.common,
-          capital: countryData.capital ? countryData.capital[0] : 'Unknown', 
           region: countryData.region,
           population: countryData.population,
           languages: countryData.languages ? Object.values(countryData.languages).join(', ') : 'Unknown',
-          flags: countryData.flags ? countryData.flags[0] : 'No Flag',
+          flag: countryData.flags ? countryData.flags[0] : 'No Flag',
         });
 
         await newCountry.save();
@@ -49,7 +50,7 @@ const fetchAndSaveCountries = async () => {
 const seedDatabase = async () => {
   await connectDatabase();
   await fetchAndSaveCountries();
-  mongoose.disconnect();
+  // mongoose.disconnect();
 };
 
 seedDatabase();

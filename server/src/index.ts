@@ -1,11 +1,10 @@
 import dotenv from 'dotenv';
-import mongoose from 'mongoose';
 import express from 'express';
 import helmet from 'helmet';
 import bodyParser from 'body-parser';
 import countryRoutes from './routes/countryRoute';
 import cors from 'cors';
-import Country from './models/country';
+import connectDB from './config/connectDB';
 
 const app = express();
 app.use(cors());
@@ -15,40 +14,16 @@ app.use('/countries', countryRoutes);
 
 dotenv.config();
 
-const db = process.env.DB_CONNECTION_STRING || " ";
+const MONGODB_URI = process.env.MONGO_URL || ' ';
+const PORT = process.env.PORT || 8080;
 
-async function connect () {
-  try {
-    const conn = await mongoose.connect(db || '');
-  } catch (error) {
-    console.error(`Error: ${error}`, db);
-    process.exit(1);
+connectDB(MONGODB_URI)
+  .then(() => {
+    app.listen(PORT, () => {
+      console.log(`Server running on port ${PORT}`);
+    });
+  })
+  .catch((error) => {
+    console.error('Failed to connect to database:', error);
   }
-}
-
-connect();
-
-app.get('/', async (req, res) => {
-  try {
-    const countries = await Country.find();
-    console.log('countries: ', countries);
-    res.json(countries);
-  } catch (error) {
-    (error instanceof Error) ? res.status(500).json({ error: error.message }) : res.status(500).json({ error: 'An unknown error occurred' });
-  }
-})
-
-// app.delete('/countries/:id', async (req, res) => {
-//   try {
-//     const country = await Country.findByIdAndDelete(req.params.id);
-//     if (!country) {
-//       return res.status(404).json({ error: 'Country not found' });
-//     }
-//     res.json({ message: 'Country deleted' });
-//   } catch (error) {
-//     (error instanceof Error) ? res.status(500).json({ error: error.message }) : res.status(500).json({ error: 'An unknown error occurred' });
-//   }
-// });
-
-const port = process.env.PORT || 8080;
-app.listen(port, () => console.log(`Server running on port ${port}`));
+);

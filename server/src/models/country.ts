@@ -1,13 +1,13 @@
-import mongoose, { Schema, Document } from 'mongoose';
+import mongoose, { Document } from 'mongoose';
 
-interface IState extends Document {
+interface ICountry extends Document {
   name: string;
   flag: string;
   population: number;
   region: string;
 }
 
-const StateSchema = new mongoose.Schema({
+const CountrySchema = new mongoose.Schema({
     name: {
       type: String,
       required: true,
@@ -28,4 +28,4 @@ const StateSchema = new mongoose.Schema({
     },
   });
   
-  export default mongoose.model<IState>('State', StateSchema, 'states-collections');
+  export default mongoose.model<ICountry>('Country', CountrySchema, 'countries-collections');
