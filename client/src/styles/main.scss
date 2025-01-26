@@ -4,5 +4,13 @@ body {
   font-family: Arial, sans-serif;
   margin: 0;
   padding: 0;
-  background-color: vars.$primary-bg;
+  background-color: #cef0f8;
+}
+
+button[type='button'] {
+  background-color: #ffffff00;
+
+  &:hover {
+    background-color: #cef0f8;
+  }
 }

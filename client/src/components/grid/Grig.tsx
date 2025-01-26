@@ -1,80 +1,110 @@
-'use client'
+'use client';
 
-import { Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Paper } from '@mui/material';
 import { useRecoilState } from 'recoil';
 import { selectedCountryState } from '../../services/recoilService/selectedCountry';
 import { ICountry } from '../../models/iCountry';
 import './grid.scss';
-
-const countries = [
-  {
-    _id: '1',
-    name: 'Israel',
-    flag: 'israel.jpeg',
-    region: 'Asia',
-    population: 500000,
-  },
-  {
-    _id: '2',
-    name: 'Japan',
-    flag: 'japan.jpeg',
-    region: 'Asia',
-    population: 126500000,
-  },
-  {
-    _id: '3',
-    name: 'United States',
-    flag: 'usa.jpeg',
-    region: 'North America',
-    population: 331000000,
-  },
-  {
-    _id: '4',
-    name: 'Brazil',
-    flag: 'brazil.jpeg',
-    region: 'South America',
-    population: 212600000,
-  },
-];
+import { useNavigate } from 'react-router-dom';
+import IconButton from '@mui/material/Button';
+import { useFetchCountries } from '../../services/hooks/useFetchCountries';
+import Loading from '../loading/Loading';
+import NotFound from '../notFound/NotFound';
+import { DataGrid, GridPaginationModel } from '@mui/x-data-grid';
+import { useState } from 'react';
+import EditIcon from '@mui/icons-material/Edit';
+import DeleteIcon from '@mui/icons-material/Delete';
 
 export default function Grid() {
   const [selectedCountry, setSelectedCountry] = useRecoilState<ICountry>(selectedCountryState);
+  const { data, isLoading, isError } = useFetchCountries();
+
+  const navigate = useNavigate();
+  
+  const columns = [
+    { field: 'name', headerName: 'Name', flex: 1 },
+    {
+      field: 'flag',
+      headerName: 'Flag',
+      flex: 1,
+      renderCell: (params: any) => (
+        <img
+          src={`${params.value}`}
+          alt={params.row.name}
+          style={{ width: '50px', height: '30px' }}
+        />
+      ),
+    },
+    { field: 'region', headerName: 'Region', flex: 1 },
+    { field: 'population', headerName: 'Population', flex: 1 },
+    {
+      field: 'actions',
+      headerName: 'Actions',
+      flex: 1,
+      sortable: false,
+      renderCell: (params: any) => (
+        <>
+          <IconButton
+            onClick={(e) => {
+              e.stopPropagation();
+              handleEdit(params.row._id);
+            }}
+            style={{ marginRight: '8px' }}
+          >
+            <EditIcon/>
+          </IconButton>
+          <IconButton
+            variant="text"
+            color="info"
+            onClick={(e) => {
+              e.stopPropagation(); 
+              handleDelete(params.row._id);
+            }} >
+            <DeleteIcon/>
+          </IconButton>
+        </>
+      ),
+    },
+  ];
+
+  const [paginationModel, setPaginationModel] = useState<GridPaginationModel>({
+    page: 0,
+    pageSize: 7,
+  });
 
   const handleCountrySelect = (country: ICountry) => {
     setSelectedCountry(country);
+    navigate(`/edit/${country._id}`);
   };
 
+  function handleDelete(id: string) {
+    console.log('deleting country with id:', id);
+  }
+
+  function handleEdit(id: string) {
+    console.log(id);
+  }
+
   return (
-    <TableContainer component={Paper}>
-      <Table sx={{ minWidth: 650 }} aria-label="simple table">
-        <TableHead>
-          <TableRow>
-            <TableCell>Name</TableCell>
-            <TableCell align="right">Flag</TableCell>
-            <TableCell align="right">Region</TableCell>
-            <TableCell align="right">Population</TableCell>
-          </TableRow>
-        </TableHead>
-        <TableBody>
-          {countries.map((country) => (
-            <TableRow
-              key={country._id}  onClick={() => handleCountrySelect(country)}
-              sx={{ '&:last-child td, &:last-child th': { border: 0 } }}
-            >
-              <TableCell component="th" scope="row">
-                {country.name}
-              </TableCell>
-              <TableCell align="right">
-                <div className="image-container">
-                  <img src={`/images/${country.flag}`} alt={country.name} />
-                </div>
-              </TableCell>
-              <TableCell align="right">{country.region}</TableCell>
-              <TableCell align="right">{country.population}</TableCell>
-            </TableRow>
-          ))}
-        </TableBody>
-      </Table>    </TableContainer>
+    <>
+      {isLoading ? (
+        <Loading />
+      ) : isError ? (
+        <NotFound />
+      ) : (
+        <>
+         <div style={{ height: 500, width: '100%' }}>
+      {data && 
+      <DataGrid
+        rows={data.map((country) => ({ ...country, id: country._id }))}
+        columns={columns}
+        editMode="row"
+        onRowClick={(params) => handleCountrySelect(params.row)}
+      />}
+      
+    </div>
+          <IconButton>+</IconButton>
+        </>
+      )}
+    </>
   );
 }
-

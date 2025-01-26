@@ -26,6 +26,9 @@ const router = createBrowserRouter([
       {
         path: 'edit',
         element: <EditForm />,
+      },{
+        path: 'edit/:id',
+        element: <EditForm />,
       },
       {
         path: 'grid',

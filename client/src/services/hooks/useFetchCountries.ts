@@ -4,7 +4,7 @@ import { client } from '../../api/client';
 import { ICountry } from '../../models/iCountry';
 
 const fetchCountries = async (): Promise<AxiosResponse<ICountry[], any>> => {
-    return await client.get<ICountry[]>('/');
+    return await client.get<ICountry[]>('/countries/');
 };
 
 export const useFetchCountries = (): QueryObserverResult<ICountry[], any> => {

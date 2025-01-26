@@ -1,0 +1,18 @@
+
+.links {
+    display: inline-block;
+    text-align: center;
+    padding: 15px 0; 
+    cursor: pointer;
+    font-size: 16px;
+    color: inherit;
+    text-decoration: none;
+    transition: font-size 0.2s ease, color 0.2s ease;
+  
+    &:hover {
+      font-size: 18px;
+      color: #214061;
+      font-size: large;
+    }
+}
+  

@@ -4,7 +4,7 @@ import { Request, Response } from 'express';
 export const getAllCountries = async (req: Request, res: Response): Promise<void> => {
   try {
     const countries = await Country.find();
-    console.log('countries: ', countries);
+    console.log(countries);
     res.json(countries);
   } catch (error) {
     (error instanceof Error) 

@@ -10,7 +10,7 @@ const app = express();
 app.use(cors());
 app.use(bodyParser.json());
 app.use(helmet());
-app.use('/countries', countryRoutes);
+app.use('/api', countryRoutes);
 
 dotenv.config();
 

@@ -7,6 +7,9 @@ interface ICountry extends Document {
   region: string;
 }
 
+const dbName = 'HMOMembers';
+const collectionName = 'countries';
+
 const CountrySchema = new mongoose.Schema({
     name: {
       type: String,
@@ -28,4 +31,8 @@ const CountrySchema = new mongoose.Schema({
     },
   });
   
-  export default mongoose.model<ICountry>('Country', CountrySchema, 'countries-collections');
+// const Country = connection.model<ICountry>(collectionName, CountrySchema, dbName);
+
+// export default Country;
+
+export default mongoose.model<ICountry>('Country', CountrySchema);
