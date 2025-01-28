@@ -1,14 +1,12 @@
 import { Formik, Form, ErrorMessage, Field } from 'formik';
-import Button from '@mui/material/Button';
 import IconButton from '@mui/material/Button';
 import { countrySchema } from '../../models/countrySchema';
 import './editForm.scss';
 import { useMutation } from '@tanstack/react-query';
-import { deleteAlert } from '../../utils/sweet-alerts';
+import { cancelAlert } from '../../utils/sweet-alerts';
 import { useNavigate } from 'react-router-dom';
 import { useUpdateCountry } from '../../services/hooks/countryQuery';
 import { useParams } from 'react-router-dom';
-import { client } from '../../api/client';
 import { useRecoilValue } from 'recoil';
 import { selectedCountryState } from '../../services/recoilService/selectedCountry';
 import SaveIcon from '@mui/icons-material/Save';
@@ -26,11 +24,14 @@ export default function EditForm() {
 
   const updateCountryMutation = useUpdateCountry();
 
-  const handleSubmit = () => {
+  const handleSubmit = (values: any) => {
+    console.log('Submitting form');
+    console.log(values);
     updateCountryMutation.mutate({
-      id: '1',
-      updatedData: { name: 'Israel', flag: 'logo.svg' }, //חייב לשנות כך שייקח את הנתונים שהכנסתי לטבלה
+        id: id || selectedCountry._id || '',
+        updatedData: values  
     });
+    navigate('/');
   };
 
   return (
@@ -52,9 +53,9 @@ export default function EditForm() {
               </div>
 
               <div className="field-container">
-                <label htmlFor="flags">Flag URL</label>
-                <Field name="flags" type="file" id="flags" />
-                <ErrorMessage name="flags" component="span" className="error" />
+                <label htmlFor="flag">Flag URL</label>
+                <Field name="flag" type="text" id="flag" />
+                <ErrorMessage name="flag" component="span" className="error" />
               </div>
 
               <div className="field-container">
@@ -68,16 +69,16 @@ export default function EditForm() {
                 <Field name="population" type="number" id="population" />
                 <ErrorMessage name="population" component="span" className="error" />
               </div>
-              <IconButton
+              <IconButton className='edit-button'
                 type="submit"
                 disabled={!dirty || !isValid || !hasChanged}
               >
                 <SaveIcon/>
               </IconButton>
-              <IconButton
+              <IconButton className='edit-button'
                 type="button"
                 disabled={!dirty || !hasChanged}
-                onClick={() => deleteAlert(mutation.reset, navigate)}
+                onClick={() => cancelAlert(mutation.reset, navigate)}
               >
                 <CancelIcon/>
               </IconButton>

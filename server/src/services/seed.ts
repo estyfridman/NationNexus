@@ -4,8 +4,7 @@ import Country from '../models/country';
 import dotenv from 'dotenv';
 
 dotenv.config();
-const db = 'mongodb://ehshpiner:kdExc6PGtpz4xYts@ac-vlnvcjo-shard-00-00.3hwmtbz.mongodb.net:27017,ac-vlnvcjo-shard-00-01.3hwmtbz.mongodb.net:27017,ac-vlnvcjo-shard-00-02.3hwmtbz.mongodb.net:27017/?replicaSet=atlas-13bqn0-shard-0&tls=true&authSource=admin'
-// process.env.MONGO_URL || ' ';
+ const db = process.env.MONGO_URL || ' ';
 const API_URL = 'https://restcountries.com/v3.1/all';
 
 const connectDatabase = async () => {
@@ -33,7 +32,7 @@ const fetchAndSaveCountries = async () => {
           region: countryData.region,
           population: countryData.population,
           languages: countryData.languages ? Object.values(countryData.languages).join(', ') : 'Unknown',
-          flag: countryData.flags ? countryData.flags[0] : 'No Flag',
+          flag: countryData.flags ? countryData.flags.png : 'No Flag',
         });
 
         await newCountry.save();

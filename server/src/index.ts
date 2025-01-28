@@ -5,15 +5,19 @@ import bodyParser from 'body-parser';
 import countryRoutes from './routes/countryRoute';
 import cors from 'cors';
 import connectDB from './config/connectDB';
+import path from 'path';
+import { securityMiddlewares, sanitizeInputs } from './middlewares/securityMiddleware';
 
 const app = express();
 app.use(cors());
 app.use(bodyParser.json());
 app.use(helmet());
+
+app.use(securityMiddlewares); 
+app.use(sanitizeInputs);
 app.use('/api', countryRoutes);
 
-dotenv.config();
-
+dotenv.config({ path: path.resolve(__dirname, 'config/.env') });
 const MONGODB_URI = process.env.MONGO_URL || ' ';
 const PORT = process.env.PORT || 8080;
 

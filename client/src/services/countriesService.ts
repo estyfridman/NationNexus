@@ -4,7 +4,7 @@ import { ICountry, ICountryUpdate } from '../models/iCountry';
 
 export async function getAllCountries(): Promise<ICountry[]>{
     try {
-        const response = await client.get("/api/countries");
+        const response = await client.get("/countries");
         return  response.data;
     } catch (error) {
         console.error("Error fetching countries:", error);
@@ -14,7 +14,7 @@ export async function getAllCountries(): Promise<ICountry[]>{
 
 export async function getCountryById(id: string): Promise<ICountry> {
     try {
-      const response = await client.post("/api/countries/findById", { id });
+      const response = await client.get(`/countries/findById${id}`);
       return response.data.documents;
     } catch (error) {
       console.error("Error fetching countries by ID:", error);
@@ -22,10 +22,10 @@ export async function getCountryById(id: string): Promise<ICountry> {
     }
 };
 
-export async function updateCountry({ id, updatedData }: { id: string; updatedData: ICountryUpdate }): Promise<ICountry>{
+export async function updateCountry({ id, updatedData } : {id: string, updatedData: ICountryUpdate }): Promise<{ id: string; updatedData: ICountryUpdate }>{
     try {
-        const response = await client.post(`/api/countries/${id}`, updatedData);
-        return response.data; 
+        const response = await client.patch(`/countries/${id}`, updatedData);
+        return { id, updatedData: response.data };
     } catch (error) {
         console.error("Error updating the Country:", error);
         throw error; 
@@ -34,7 +34,7 @@ export async function updateCountry({ id, updatedData }: { id: string; updatedDa
 
 export async function createCountry(newCountry: ICountry): Promise<ICountry> {
     try {
-      const response = await client.post("/api/countries", newCountry);
+      const response = await client.post("/countries", newCountry);
       return response.data;
     } catch (error) {
       console.error("Error creating country:", error);
@@ -42,9 +42,12 @@ export async function createCountry(newCountry: ICountry): Promise<ICountry> {
     }
   }
   
-  export async function deleteCountry(id: string): Promise<void> {
+  export async function deleteCountry(id: string): Promise<any> {
     try {
-      await client.delete(`/api/countries/${id}`);
+      const response = await client.delete(`/countries/${id}`);
+      console.log('Delete')
+      console.log(response)
+      return response.data;
     } catch (error) {
       console.error("Error deleting country:", error);
       throw error;

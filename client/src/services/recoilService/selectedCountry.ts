@@ -1,8 +1,15 @@
 import { atom } from 'recoil';
+import { ICountry } from '../../models/iCountry';
 
-export const selectedCountryState = atom({
-  key: 'selectedCountry',
-  default: {name: 'Israel', flag: 'logo.svg',
-    region: 'asia',
-    population: 900000,
+export const createSelectedCountryState = () =>
+  atom<ICountry>({
+    key: `selectedCountry_${Math.random()}`,
+  default: {
+    _id: '',
+    name: '', 
+    flag: '',
+    region: '',
+    population: 0,
 }});
+
+export const selectedCountryState = createSelectedCountryState();

@@ -22,9 +22,6 @@ export default function Navbar() {
         <Link underline="none" color="inherit" onClick={() => handleLinkClick('/grid')}className='links'>
           Grid
         </Link>
-        <Link underline="none" color="inherit" onClick={() => handleLinkClick('/edit')} className='links'>
-          Edit
-        </Link>
         <Typography variant="h6" component="div" sx={{ flexGrow: 1 }}>
           {selectedCountry ? `Selected Country: ${selectedCountry.name}` : 'Please select a country'}
         </Typography>

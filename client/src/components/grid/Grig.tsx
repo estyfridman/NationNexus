@@ -13,13 +13,19 @@ import { DataGrid, GridPaginationModel } from '@mui/x-data-grid';
 import { useState } from 'react';
 import EditIcon from '@mui/icons-material/Edit';
 import DeleteIcon from '@mui/icons-material/Delete';
+import { useDeleteCountry } from '../../services/hooks/useDeleteCountry ';
+import { deleteAlert, errorDeleteAlert } from '../../utils/sweet-alerts';
+import { useQueryClient } from '@tanstack/react-query';
 
 export default function Grid() {
+  const queryClient = useQueryClient();
+  console.log('Cached activities:', queryClient.getQueryData(['Countries']));  
+  const [gridKey, setGridKey] = useState<number>(0);
   const [selectedCountry, setSelectedCountry] = useRecoilState<ICountry>(selectedCountryState);
   const { data, isLoading, isError } = useFetchCountries();
-
+  const deleteCountryMutation = useDeleteCountry();
   const navigate = useNavigate();
-  
+
   const columns = [
     { field: 'name', headerName: 'Name', flex: 1 },
     {
@@ -46,42 +52,48 @@ export default function Grid() {
           <IconButton
             onClick={(e) => {
               e.stopPropagation();
-              handleEdit(params.row._id);
+              handleEdit(params.row);
             }}
             style={{ marginRight: '8px' }}
           >
-            <EditIcon/>
+            <EditIcon />
           </IconButton>
           <IconButton
             variant="text"
             color="info"
             onClick={(e) => {
-              e.stopPropagation(); 
-              handleDelete(params.row._id);
-            }} >
-            <DeleteIcon/>
+              handleDelete(e, params.row._id);
+            }}
+          >
+            <DeleteIcon />
           </IconButton>
         </>
       ),
     },
   ];
 
-  const [paginationModel, setPaginationModel] = useState<GridPaginationModel>({
-    page: 0,
-    pageSize: 7,
-  });
-
   const handleCountrySelect = (country: ICountry) => {
     setSelectedCountry(country);
     navigate(`/edit/${country._id}`);
   };
 
-  function handleDelete(id: string) {
-    console.log('deleting country with id:', id);
+  function handleDelete(e: React.MouseEvent<HTMLButtonElement, MouseEvent>, id: string) {
+    e.stopPropagation();
+    deleteAlert(() => {
+      deleteCountryMutation.mutate(id, {
+        onSuccess: () => {
+          setGridKey((prevKey) => prevKey + 1);
+        },
+        onError: () => {
+          errorDeleteAlert('Failed to delete the record. Please try again.');
+        },
+      });
+    });
   }
 
-  function handleEdit(id: string) {
-    console.log(id);
+  function handleEdit(country: ICountry) {
+    setSelectedCountry(country)
+    navigate(`/edit/${country._id}`);
   }
 
   return (
@@ -92,16 +104,17 @@ export default function Grid() {
         <NotFound />
       ) : (
         <>
-         <div style={{ height: 500, width: '100%' }}>
-      {data && 
-      <DataGrid
-        rows={data.map((country) => ({ ...country, id: country._id }))}
-        columns={columns}
-        editMode="row"
-        onRowClick={(params) => handleCountrySelect(params.row)}
-      />}
-      
-    </div>
+          <div className="data-grid-container" style={{ height: 700, width: '100%' }}>
+            {data && (
+              <DataGrid
+                key={gridKey}
+                rows={data?.map((country) => ({ ...country, id: country._id })) || []}
+                columns={columns}
+                editMode="row"
+                onRowClick={(params) => handleCountrySelect(params.row)}
+              />
+            )}
+          </div>
           <IconButton>+</IconButton>
         </>
       )}

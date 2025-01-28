@@ -12,7 +12,7 @@ const router = Router();
 router.get('/countries', getAllCountries);
 router.get('/countries/:id', getCountryById);
 router.post('/countries', createCountry); 
-router.put('/countries/:id', updateCountry);
+router.patch('/countries/:id', updateCountry);
 router.delete('/countries/:id', deleteCountry);
 
 export default router;

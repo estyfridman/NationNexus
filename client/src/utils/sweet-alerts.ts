@@ -23,7 +23,32 @@ export const errorRegisterAlert = async (message: string) => {
   });
 }
 
-export const deleteAlert = async (resetForm: ResetFormType, navigate: NavigateType) => {
+export const errorDeleteAlert = async (message: string) => {
+  Swal.fire({
+    title: "error!",
+    text: message || "Something went wrong. Please try again later.",
+    icon: 'error',
+    timer: 2000,
+    showConfirmButton: false,
+  });
+}
+
+export const deleteAlert = async (onConfirm: () => void) => {
+  const result = await Swal.fire({
+    title: 'Are you sure?',
+    text: 'Do you really want to delete?',
+    icon: 'warning',
+    showCancelButton: true,
+    confirmButtonText: 'Yes, delete',
+    cancelButtonText: 'No, cancel',
+  });
+
+  if (result.isConfirmed) {
+    onConfirm();
+  }
+};
+
+export const cancelAlert = async (resetForm: ResetFormType, navigate: NavigateType) => {
   const result = await Swal.fire({
     title: 'Are you sure?',
     text: 'Do you really want to cancel? Your changes will be lost.',

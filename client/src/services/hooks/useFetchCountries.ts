@@ -13,6 +13,6 @@ export const useFetchCountries = (): QueryObserverResult<ICountry[], any> => {
             const { data } = await fetchCountries();
             return data;
         },
-        queryKey: [ 'countries' ]
+        queryKey: [ 'Countries' ]
     });
 };

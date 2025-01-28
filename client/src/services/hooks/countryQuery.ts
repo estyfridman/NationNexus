@@ -36,19 +36,15 @@ export const useUpdateCountry = () => {
   
     return useMutation({
       mutationFn: updateCountry,
-      onMutate: async ({ id, updatedData }: { id: string; updatedData: ICountryUpdate }) => {
+      onMutate: async () => {
         await queryClient.cancelQueries({ queryKey: ["Countries"] });
-  
         const previousCountries = queryClient.getQueryData<ICountry[]>(["Countries"]);
-  
+        return { previousCountries };
+      },
+      onSuccess: ({ id, updatedData }: { id: string; updatedData: ICountryUpdate }) => {
         queryClient.setQueryData<ICountry[] | undefined>(["Countries"], (old) =>
           old?.map((oldCountry) => (oldCountry._id === id ? { ...oldCountry, ...updatedData } : oldCountry))
         );
-  
-        return { previousCountries };
-      },
-      onSuccess: () => {
-        queryClient.invalidateQueries({ queryKey: ["Countries"] });
       },
     });
   };

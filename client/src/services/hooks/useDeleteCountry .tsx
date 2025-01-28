@@ -7,26 +7,21 @@ export const useDeleteCountry = () => {
 
   return useMutation({
     mutationFn: deleteCountry,
-    onMutate: async (id: string) => {
+    onMutate: async () => {
       await queryClient.cancelQueries({ queryKey: ["Countries"] });
-
       const previousCountries = queryClient.getQueryData<ICountry[]>(["Countries"]);
-
-      // עדכון ה-cache באופן מקומי
-      queryClient.setQueryData<ICountry[] | undefined>(["Countries"], (old) =>
-        old?.filter((country) => country._id !== id)
-      );
-
       return { previousCountries };
     },
     onError: (err: Error, id: string, context) => {
       if (context?.previousCountries) {
         queryClient.setQueryData(["Countries"], context.previousCountries);
       }
+      console.error(`Error deleting the ${id} country:`, err);
     },
-    onSettled: () => {
-      //  את זה חייב לשנות זה גורם לקריאות שרת רבות ומיותרות
-      queryClient.invalidateQueries({ queryKey: ["Countries"] });
+    onSuccess: (deletedCountry: ICountry) => {
+      queryClient.setQueryData<ICountry[]>(["Countries"], (oldData) =>
+        oldData?.filter((country) => country._id !== deletedCountry._id) ?? [] 
+      );
     },
   });
 };
