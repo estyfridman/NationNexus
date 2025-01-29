@@ -8,7 +8,7 @@ export interface IUser extends Document {
   phone: string;
   password: string;
   profileImage?: string;
-  role: 'admin' | 'user';
+  role: 'admin' | 'user' | 'guest';
   createdAt: Date;
 }
 
@@ -20,7 +20,7 @@ const UserSchema = new mongoose.Schema<IUser>({
   phone: String,
   password: { type: String, unique: true},
   profileImage: String,
-  role: { type: String, enum: ['admin', 'user'], default: 'user' },
+  role: { type: String, enum: ['admin', 'user', 'guest'], default: 'guest' },
   createdAt: { type: Date, default: Date.now }
 });
 

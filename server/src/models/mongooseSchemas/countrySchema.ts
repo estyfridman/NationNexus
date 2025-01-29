@@ -1,5 +1,5 @@
 import mongoose, { Document } from 'mongoose';
-import ICountry from '../iCountry';
+import ICountry from '../interfaces/iCountry';
 
 const dbName = 'HMOMembers';
 const collectionName = 'countries';

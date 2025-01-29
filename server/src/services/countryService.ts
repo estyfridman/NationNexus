@@ -1,6 +1,6 @@
 import Country from '../models/mongooseSchemas/countrySchema';
 import { Types } from 'mongoose';
-import ICountry from '../models/iCountry';
+import ICountry from '../models/interfaces/iCountry';
 
 class CountryService {
   async getAllCountries() {
