@@ -6,18 +6,17 @@ import dotenv from 'dotenv';
 import path from 'path';
 import {describe, expect, beforeAll, beforeEach, afterAll, it} from '@jest/globals';
 
-// dotenv.config({ path: path.resolve(__dirname, '../config/.env') });
-// const MONGODB_URI = process.env.MONGO_URL_TEST || ' ';
-
+dotenv.config({ path: path.resolve(__dirname, '../config/.env') });
+const MONGODB_URI = process.env.MONGO_URL_TEST || ' ';
 
 describe('Country API', () => {
   beforeAll(async () => {
-    await mongoose.connect('mongodb+srv://test-user:aldtest-user1212@friedmannetflixcluster.4pkqo2v.mongodb.net/db');
+    await mongoose.connect(MONGODB_URI);
   });
 
-  // beforeEach(async () => {
-  //   await Country.deleteMany({});
-  // });
+  beforeEach(async () => {
+    await Country.deleteMany({});
+  });
 
   afterAll(async () => {
     await mongoose.connection.close();
@@ -25,26 +24,26 @@ describe('Country API', () => {
 
   describe('get/countries', () => {
     it('should retrieve all countries', async () => {
-      // await Country.create([
-      //   {
-      //     "name": "South Georgia",
-      //     "flag": "https://flagcdn.com/w320/gs.png",
-      //     "population": 30,
-      //     "region": "Antarctic"
-      //   },
-      //   {
-      //     "name": "Grenada",
-      //     "flag": "https://flagcdn.com/w320/gd.png",
-      //     "population": 112519,
-      //     "region": "Americas"
-      //   },
-      //   {
-      //     "name": "Switzerland",
-      //     "flag": "https://flagcdn.com/w320/ch.png",
-      //     "population": 8654622,
-      //     "region": "Europe"
-      //   },
-      // ]);
+      await Country.create([
+        {
+          "name": "South Georgia",
+          "flag": "https://flagcdn.com/w320/gs.png",
+          "population": 30,
+          "region": "Antarctic"
+        },
+        {
+          "name": "Grenada",
+          "flag": "https://flagcdn.com/w320/gd.png",
+          "population": 112519,
+          "region": "Americas"
+        },
+        {
+          "name": "Switzerland",
+          "flag": "https://flagcdn.com/w320/ch.png",
+          "population": 8654622,
+          "region": "Europe"
+        },
+      ]);
 
       const res = await request(app).get('/countries');
       expect(res).toBe(Object);
