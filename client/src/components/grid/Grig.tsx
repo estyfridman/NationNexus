@@ -9,13 +9,14 @@ import IconButton from '@mui/material/Button';
 import { useFetchCountries } from '../../services/hooks/useFetchCountries';
 import Loading from '../loading/Loading';
 import NotFound from '../notFound/NotFound';
-import { DataGrid, GridPaginationModel } from '@mui/x-data-grid';
+import { DataGrid } from '@mui/x-data-grid';
 import { useState } from 'react';
 import EditIcon from '@mui/icons-material/Edit';
 import DeleteIcon from '@mui/icons-material/Delete';
 import { useDeleteCountry } from '../../services/hooks/useDeleteCountry ';
-import { deleteAlert, errorDeleteAlert } from '../../utils/sweet-alerts';
+import { deleteAlert, errorDeleteAlert, successAlert } from '../../utils/sweet-alerts';
 import { useQueryClient } from '@tanstack/react-query';
+import AddCountryDialog from '../AddCountryModal/AddCountryModal';
 
 export default function Grid() {
   const queryClient = useQueryClient();
@@ -25,13 +26,15 @@ export default function Grid() {
   const { data, isLoading, isError } = useFetchCountries();
   const deleteCountryMutation = useDeleteCountry();
   const navigate = useNavigate();
+    const [openModal, setOpenModal] = useState(false);
 
   const columns = [
-    { field: 'name', headerName: 'Name', flex: 1 },
+    { field: 'name', headerName: 'Name', flex: 1, headerClassName: 'custom-header' },
     {
       field: 'flag',
       headerName: 'Flag',
       flex: 1,
+      headerClassName: 'custom-header',
       renderCell: (params: any) => (
         <img
           src={`${params.value}`}
@@ -40,12 +43,12 @@ export default function Grid() {
         />
       ),
     },
-    { field: 'region', headerName: 'Region', flex: 1 },
-    { field: 'population', headerName: 'Population', flex: 1 },
+    { field: 'region', headerName: 'Region', flex: 1, headerClassName: 'custom-header' },
+    { field: 'population', headerName: 'Population', flex: 1, headerClassName: 'custom-header' },
     {
       field: 'actions',
       headerName: 'Actions',
-      flex: 1,
+      flex: 1, headerClassName: 'custom-header',
       sortable: false,
       renderCell: (params: any) => (
         <>
@@ -83,6 +86,7 @@ export default function Grid() {
       deleteCountryMutation.mutate(id, {
         onSuccess: () => {
           setGridKey((prevKey) => prevKey + 1);
+          successAlert()
         },
         onError: () => {
           errorDeleteAlert('Failed to delete the record. Please try again.');
@@ -95,6 +99,11 @@ export default function Grid() {
     setSelectedCountry(country)
     navigate(`/edit/${country._id}`);
   }
+
+  const handleonClose = () => {
+    setOpenModal(false)
+    successAlert()
+  };
 
   return (
     <>
@@ -115,7 +124,8 @@ export default function Grid() {
               />
             )}
           </div>
-          <IconButton>+</IconButton>
+          <IconButton onClick={()=> setOpenModal(true)}>+</IconButton>
+          <AddCountryDialog open={openModal} onClose={handleonClose}/>
         </>
       )}
     </>

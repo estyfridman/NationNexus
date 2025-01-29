@@ -1,4 +1,4 @@
-import Country from '../models/country';
+import Country from '../models/mongooseSchemas/countrySchema';
 import { Request, Response } from 'express';
 import countryService from '../services/countryService';
 

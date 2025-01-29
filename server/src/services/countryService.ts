@@ -1,4 +1,4 @@
-import Country from '../models/country';
+import Country from '../models/mongooseSchemas/countrySchema';
 import { Types } from 'mongoose';
 import ICountry from '../models/iCountry';
 

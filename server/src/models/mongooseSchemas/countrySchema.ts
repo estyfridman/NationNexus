@@ -1,11 +1,5 @@
 import mongoose, { Document } from 'mongoose';
-
-interface ICountry extends Document {
-  name: string;
-  flag: string;
-  population: number;
-  region: string;
-}
+import ICountry from '../iCountry';
 
 const dbName = 'HMOMembers';
 const collectionName = 'countries';

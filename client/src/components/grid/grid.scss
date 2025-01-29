@@ -1,11 +1,50 @@
 
-// .image-container {
-//     img {
-//       max-width: 70px;
-//       height: auto;
-//     }
-//   }
-
-  .data-grid-container{
+  .data-grid-container {
+    width: 100%;
+    overflow-x: auto;
     margin: 1%;
+  
+    .MuiDataGrid-columnHeader {
+      display: flex;
+      flex-direction: column; 
+      align-items: center;
+      justify-content: center;
+      text-align: center;
+      position: relative;
+    }
+  
+    .custom-header {
+      font-size: 16px;
+      font-weight: bold;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+  
+    @media (max-width: 600px) {
+      .custom-header {
+        font-size: 12px; 
+        white-space: normal;
+      }
+  
+      .MuiDataGrid-columnHeader {
+        flex-direction: column; 
+        align-items: center;
+        padding: 4px;
+      }
+  
+      .MuiDataGrid-columnHeaderTitle {
+        margin-bottom: 4px; 
+      }
+
+      .MuiButtonBase-root {
+        opacity: 0;
+        transition: opacity 0.3s ease-in-out;
+      }
+      .MuiDataGrid-columnHeader:hover .MuiButtonBase-root,
+      .MuiDataGrid-columnHeader:focus-within .MuiButtonBase-root {
+        opacity: 1;
+      }
+    }
   }
+  

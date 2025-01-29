@@ -1,6 +1,6 @@
 import axios from 'axios';
 import mongoose from 'mongoose';
-import Country from '../models/country';
+import Country from '../models/mongooseSchemas/countrySchema';
 import dotenv from 'dotenv';
 
 dotenv.config();

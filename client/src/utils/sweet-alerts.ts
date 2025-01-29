@@ -3,7 +3,7 @@ import Swal from 'sweetalert2'
 import "sweetalert2/src/sweetalert2.scss";
 import { ResetFormType, NavigateType } from '../models/swalTypes';
 
-export const successAlert = async (title: string, text: string) => {
+export const successAlert = async (title?: string, text?: string) => {
   Swal.fire({
     title: title || "Success",
     text: text || "Your action was completed successfully",

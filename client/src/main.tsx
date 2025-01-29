@@ -11,6 +11,8 @@ import Grid from './components/grid/Grig.tsx';
 import Layout from './Layout.tsx';
 import ErrorBoundary from './ErrorBoundary.tsx'
 import { RecoilRoot } from 'recoil';
+import Login from './components/login/Login';
+import Logout from './components/logout/Logout';
 
 const queryClient = new QueryClient();
 
@@ -24,9 +26,6 @@ const router = createBrowserRouter([
         element: <App />,
       },
       {
-        path: 'edit',
-        element: <EditForm />,
-      },{
         path: 'edit/:id',
         element: <EditForm />,
       },
@@ -34,6 +33,14 @@ const router = createBrowserRouter([
         path: 'grid',
         element: <Grid />,
       },
+      {
+        path: 'login',
+        element: <Login />,
+      },
+      {
+        path: 'logout',
+        element: <Logout />,
+      }
     ],
   },
   {
