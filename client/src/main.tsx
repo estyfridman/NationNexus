@@ -13,6 +13,7 @@ import ErrorBoundary from './ErrorBoundary.tsx'
 import { RecoilRoot } from 'recoil';
 import Login from './components/login/Login';
 import Logout from './components/logout/Logout';
+import SignUp from './components/signUp/signUp.tsx';
 
 const queryClient = new QueryClient();
 
@@ -40,6 +41,10 @@ const router = createBrowserRouter([
       {
         path: 'logout',
         element: <Logout />,
+      },
+      {
+        path: 'signup',
+        element: <SignUp />,
       }
     ],
   },

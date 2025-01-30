@@ -13,7 +13,7 @@ export const successAlert = async (title?: string, text?: string) => {
   });
 }
 
-export const errorRegisterAlert = async (message: string) => {
+export const errorAlert = async (message?: string) => {
   Swal.fire({
     title: "error!",
     text: message || "Something went wrong. Please try again later.",
@@ -62,3 +62,14 @@ export const cancelAlert = async (resetForm: ResetFormType, navigate: NavigateTy
     navigate('/');
   }
 };
+
+
+export const genericErrorAlert = async () => {
+  Swal.fire({
+    title: "error!",
+    text: "Something went wrong. Please try again later.",
+    icon: 'error',
+    timer: 2000,
+    showConfirmButton: false,
+  });
+}

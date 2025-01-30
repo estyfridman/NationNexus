@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { Button, Dialog, DialogActions, DialogContent, DialogTitle, TextField } from "@mui/material";
 import { useCreateCountry } from "../../services/hooks/useCreateCountry";
-import { errorRegisterAlert, successAlert } from "../../utils/sweet-alerts";
+import { errorAlert, successAlert } from "../../utils/sweet-alerts";
 
 interface AddCountryDialogProps {
     open: boolean;
@@ -31,7 +31,7 @@ export default function AddCountryDialog({ open, onClose }: AddCountryDialogProp
           onClose({}, "backdropClick"); 
         },
         onError: (error) => {
-            errorRegisterAlert("There was an issue adding the country. Please try again.");
+            errorAlert("There was an issue adding the country. Please try again.");
             console.error("Failed to add country:", error);
         },
       }
