@@ -1,4 +1,3 @@
-"use client"
 import Swal from 'sweetalert2'
 import "sweetalert2/src/sweetalert2.scss";
 import { ResetFormType, NavigateType } from '../models/swalTypes';

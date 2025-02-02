@@ -3,7 +3,7 @@ import xss from 'xss';
 import { Request, Response, NextFunction  } from 'express';
 
 export const sanitizeValues = (req: Request, res: Response, next: NextFunction ) => {
-    const sanitizeObject = (obj: any) => {
+    const sanitizeObject = (obj: any) => { // change!!
         for (const key in obj) {
           if (typeof obj[key] === 'string') {
             obj[key] = xss(obj[key]); 

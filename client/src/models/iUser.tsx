@@ -13,3 +13,13 @@ export default interface IUser {
   }
   
   export interface IUserUpdate extends Partial<IUser> {}
+
+  export interface IUserFormData {
+    firstName: string;
+    lastName: string;
+    username: string;
+    email: string;
+    phone: string;
+    password: string;
+    profileImage?: File;
+  }

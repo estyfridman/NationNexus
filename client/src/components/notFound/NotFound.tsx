@@ -1,5 +1,3 @@
-'use client';
-
 import { Link } from 'react-router-dom';
 import styles from './not-found.module.scss'
 import { DotLottieReact } from '@lottiefiles/dotlottie-react'

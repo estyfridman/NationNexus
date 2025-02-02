@@ -1,7 +1,9 @@
 import axios from "axios";
 
+const apiPort = import.meta.env.VITE_API_PORT;
+
 export const client = axios.create({
-    baseURL : 'http://localhost:8000/api',
+    baseURL : apiPort,
     headers: {
         'Content-Type': 'application/json'
     }

@@ -11,19 +11,21 @@ export const getAllUsers = async () => {
   }
 }
 
-export const registerUser = async (userData: IUser) => {
-    try {
-        const response = await client.post('/register', userData);
-        return response.data;
-      } catch (error) {
-        console.error('Error registering user:', error);
-        throw error;
-      }
-  };
+export const registerUser = async (formData: FormData) => {
+  try {
+    const response = await client.post("/users/register", formData, {
+      headers: { "Content-Type": "multipart/form-data" },
+    });
+    return response.data;
+  } catch (error) {
+    console.error("Error registering user:", error);
+    throw error;
+  }
+};
   
   export const loginUser = async (credentials: { username: string, password: string }) => {
     try {
-        const response = await client.post('/login', credentials);
+        const response = await client.post('/users/login', credentials);
         return response.data;
       } catch (error) {
         console.error('Error logging in:', error);
@@ -33,7 +35,7 @@ export const registerUser = async (userData: IUser) => {
   
   export const updateUser = async ({ id, updatedData }: { id: string; updatedData: IUserUpdate }) => {
     try {
-        const response = await client.put(`/update-user/${id}`, updatedData);
+        const response = await client.put(`/users/update-user/${id}`, updatedData);
         return response.data;
       } catch (error) {
         console.error('Error updating user:', error);
@@ -43,7 +45,7 @@ export const registerUser = async (userData: IUser) => {
   
   export const requestPermission = async (role: 'admin' | 'user' | 'guest') => {
     try {
-        const response = await client.post('/request-permission', { role });
+        const response = await client.post('/users/request-permission', { role });
         return response.data;
       } catch (error) {
         console.error('Error requesting permission:', error);
@@ -64,7 +66,6 @@ export const registerUser = async (userData: IUser) => {
   export async function deleteUser(id: string): Promise<any> {
     try {
       const response = await client.delete(`/users/${id}`);
-      console.log(response)
       return response.data;
     } catch (error) {
       console.error("Error deleting user:", error);

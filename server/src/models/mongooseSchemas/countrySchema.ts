@@ -1,8 +1,5 @@
-import mongoose, { Document } from 'mongoose';
+import mongoose from 'mongoose';
 import ICountry from '../interfaces/iCountry';
-
-const dbName = 'HMOMembers';
-const collectionName = 'countries';
 
 const CountrySchema = new mongoose.Schema({
     name: {
@@ -23,10 +20,6 @@ const CountrySchema = new mongoose.Schema({
       type: String,
       required: true,
     },
-  });
+});
   
-// const Country = connection.model<ICountry>(collectionName, CountrySchema, dbName);
-
-// export default Country;
-
 export default mongoose.model<ICountry>('Country', CountrySchema);

@@ -1,5 +1,3 @@
-'use client';
-
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import { getAllUsers, registerUser, deleteUser, loginUser, updateUser, requestPermission, grantPermission } from '../userService';
 import IUser, { IUserUpdate } from '../../models/iUser';
@@ -19,24 +17,26 @@ export const useGetUserById = (id: string) => {
 };
 
 export const useCreateUser = () => {
-    const queryClient = useQueryClient();
-  
-    return useMutation({
-      mutationFn: registerUser,
-      onMutate: async (newUser: IUser) => {
-        await queryClient.cancelQueries({ queryKey: ["Users"] });
-        const previousUsers = queryClient.getQueryData<IUser[]>(["Users"]);
-        return { previousUsers };
-      },
-      onSuccess: (newUser: IUser) => {
-        queryClient.setQueryData<IUser[] | undefined>(["Users"], (old) => {
-          return old ? [...old, newUser] : [newUser];
-        });
-      },
-      onError: (error, newUser, context) => {
-        queryClient.setQueryData<IUser[] | undefined>(["Users"], context?.previousUsers);
-      },
-    });
+  const queryClient = useQueryClient();
+
+  return useMutation({
+    mutationFn: registerUser,
+    onMutate: async (newUser: FormData) => {
+      await queryClient.cancelQueries({ queryKey: ["Users"] });
+      const previousUsers = queryClient.getQueryData(["Users"]);
+      return { previousUsers };
+    },
+    onSuccess: (newUser) => {
+      queryClient.setQueryData(["Users"], (oldUsers: any) => {
+        return oldUsers ? [...oldUsers, newUser] : [newUser];
+      });
+    },
+    onError: (error, newUser, context) => {
+      if (context?.previousUsers) {
+        queryClient.setQueryData(["Users"], context.previousUsers);
+      }
+    },
+  });
 };
 
 export const useUpdateUser = () => {

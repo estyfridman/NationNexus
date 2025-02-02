@@ -1,5 +1,3 @@
-'use client';
-
 import { useRecoilState } from 'recoil';
 import { selectedCountryState } from '../../services/recoilService/selectedCountry';
 import { ICountry } from '../../models/iCountry';

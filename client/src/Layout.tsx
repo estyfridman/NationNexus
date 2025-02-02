@@ -8,7 +8,6 @@ export default function Layout() {
       <main>
         <Outlet />
       </main>
-      {/* <main>{children}</main> */}
     </>
   );
 }

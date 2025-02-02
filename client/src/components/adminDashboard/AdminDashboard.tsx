@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import { Typography, Box, Button,  Select,  MenuItem,  IconButton,  Avatar } from '@mui/material';
-import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
+import { useQueryClient } from '@tanstack/react-query';
 import { useFormik } from 'formik';
 import * as Yup from 'yup';
 import IUser, { IUserUpdate } from '../../models/iUser';
@@ -9,7 +9,7 @@ import { DataGrid } from '@mui/x-data-grid';
 import EditIcon from '@mui/icons-material/Edit';
 import DeleteIcon from '@mui/icons-material/Delete';
 import { useDeleteUser, useGetUsers, useGrantPermission, useUpdateUser } from '../../services/hooks/userHooks';
-import { errorAlert, errorDeleteAlert, successAlert } from '../../utils/sweet-alerts';
+import { errorAlert } from '../../utils/sweet-alerts';
 
 
 export default function AdminDashboard() {
