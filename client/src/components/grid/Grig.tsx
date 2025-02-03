@@ -53,7 +53,7 @@ export default function Grid() {
     {
       field: 'actions',
       headerName: 'Actions',
-      flex: 1, headerClassName: 'custom-header',
+      flex: 2, headerClassName: 'action-header',
       sortable: false,
       renderCell: (params: any) => (
         <>
@@ -62,7 +62,6 @@ export default function Grid() {
               e.stopPropagation();
               handleEdit(params.row);
             }}
-            style={{ marginRight: '8px' }}
           >
             <EditIcon />
           </IconButton>
@@ -118,7 +117,7 @@ export default function Grid() {
         <NotFound title='Unable to retrieve data' message='The server is currently unavailable. Please try again later.'/>
       ) : (
         <>
-          <div className="data-grid-container" style={{ height: 700, width: '100%' }}>
+          <div className="data-grid-container" >
             {data && (
               <DataGrid
                 key={gridKey}

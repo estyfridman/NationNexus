@@ -1,8 +1,7 @@
 
-import {  useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
-import { getAllCountries, updateCountry } from '../countriesService';
+import { useMutation, useQueryClient } from '@tanstack/react-query';
+import { updateCountry } from '../countriesService';
 import { ICountry, ICountryUpdate } from '../../models/iCountry';
-
 
 export const useUpdateCountry = () => {
     const queryClient = useQueryClient();

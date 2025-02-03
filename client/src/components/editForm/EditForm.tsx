@@ -43,7 +43,7 @@ export default function EditForm() {
 
   return (
     <>
-      <h1>Edit and Delete Country</h1>
+      <h1>Edit Country</h1>
       <Formik
         initialValues={selectedCountry}
         validationSchema={countrySchema}
