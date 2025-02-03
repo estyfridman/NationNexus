@@ -1,6 +1,8 @@
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import { getAllUsers, registerUser, deleteUser, loginUser, updateUser, requestPermission, grantPermission } from '../userService';
 import IUser, { IUserUpdate } from '../../models/iUser';
+import { errorAlert } from '../../utils/sweet-alerts';
+import logger from "../../utils/logger";
 
 export const useGetUsers = () => {
     return useQuery<IUser[]>({
@@ -21,20 +23,14 @@ export const useCreateUser = () => {
 
   return useMutation({
     mutationFn: registerUser,
-    onMutate: async (newUser: FormData) => {
-      await queryClient.cancelQueries({ queryKey: ["Users"] });
-      const previousUsers = queryClient.getQueryData(["Users"]);
-      return { previousUsers };
-    },
     onSuccess: (newUser) => {
       queryClient.setQueryData(["Users"], (oldUsers: any) => {
         return oldUsers ? [...oldUsers, newUser] : [newUser];
       });
     },
     onError: (error, newUser, context) => {
-      if (context?.previousUsers) {
-        queryClient.setQueryData(["Users"], context.previousUsers);
-      }
+      errorAlert(`${error} - ${newUser} - ${context}`)
+      logger.error(`Error: ${error.message} - Create User - in ${new Date().toLocaleString()}`);
     },
   });
 };
@@ -44,20 +40,14 @@ export const useUpdateUser = () => {
   
     return useMutation({
       mutationFn: updateUser,
-      onMutate: async ({ id, updatedData }: { id: string; updatedData: IUserUpdate }) => {
-        await queryClient.cancelQueries({ queryKey: ["Users"] });
-        const previousUsers = queryClient.getQueryData<IUser[]>(["Users"]);
-        return { previousUsers, updatedData };
-      },
       onSuccess: ({ id, updatedData }: { id: string; updatedData: IUserUpdate }) => {
         queryClient.setQueryData<IUser[] | undefined>(["Users"], (old) =>
           old?.map((oldUser) => (oldUser._id === id ? { ...oldUser, ...updatedData } : oldUser))
         );
       },
       onError: (error, variables, context) => {
-        if (context?.previousUsers) {
-          queryClient.setQueryData<IUser[] | undefined>(["Users"], context.previousUsers);
-        }
+        errorAlert(`${error} - ${variables.id} - ${context}`)
+        logger.error(`Error: ${error.message} - Update User - in ${new Date().toLocaleString()}`);
       },
     });
 };
@@ -67,18 +57,14 @@ export const useDeleteUser = () => {
   
     return useMutation({
       mutationFn: deleteUser,
-      onMutate: async (id: string) => {
-        await queryClient.cancelQueries({ queryKey: ["Users"] });
-        const previousUsers = queryClient.getQueryData<IUser[]>(["Users"]);
-        return { previousUsers };
-      },
       onSuccess: (id: string) => {
         queryClient.setQueryData<IUser[] | undefined>(["Users"], (old) =>
           old ? old.filter((user) => user._id !== id) : []
         );
       },
       onError: (error, id, context) => {
-        queryClient.setQueryData<IUser[] | undefined>(["Users"], context?.previousUsers);
+        errorAlert(`${error} - ${id} - ${context}`)
+        logger.error(`Error: ${error.message} - Delete User - in ${new Date().toLocaleString()}`);
       },
     });
 };
@@ -88,18 +74,12 @@ export const useLoginUser = () => {
   
     return useMutation({
       mutationFn: loginUser,
-      onMutate: async (credentials: { username: string; password: string }) => {
-        await queryClient.cancelQueries({ queryKey: ["User"] });
-        const previousUser = queryClient.getQueryData<IUser>(["User"]);
-        return { previousUser };
-      },
       onSuccess: (user: IUser) => {
         queryClient.setQueryData(["User"], user);
       },
       onError: (error, credentials, context) => {
-        if (context?.previousUser) {
-          queryClient.setQueryData(["User"], context.previousUser);
-        }
+        errorAlert(`${error} - ${credentials.username} - ${context}`)
+        logger.error(`Error: ${error.message} - Login User - in ${new Date().toLocaleString()}`);
       },
     });
   };
@@ -109,43 +89,29 @@ export const useLoginUser = () => {
   
     return useMutation({
       mutationFn: requestPermission,
-      onMutate: async (role: "admin" | "user") => {
-        await queryClient.cancelQueries({ queryKey: ["User"] });
-        const previousUser = queryClient.getQueryData<IUser>(["User"]);
-        return { previousUser };
-      },
       onSuccess: (updatedUser: IUser) => {
         queryClient.setQueryData(["User"], updatedUser);
       },
       onError: (error, role, context) => {
-        if (context?.previousUser) {
-          queryClient.setQueryData(["User"], context.previousUser);
-        }
+        errorAlert(`${error} - ${role} - ${context}`)
+        logger.error(`Error: ${error.message} - RequestPermission - ${role} - ${context} - in ${new Date().toLocaleString()}`);
       },
     });
   };
-
 
 export const useGrantPermission = () => {
     const queryClient = useQueryClient();
   
     return useMutation({
       mutationFn: grantPermission,
-      onMutate: async ({ userId, role }: { userId: string; role: 'admin' | 'user' | 'guest' }) => {
-        await queryClient.cancelQueries({ queryKey: ["Users"] });
-        const previousUsers = queryClient.getQueryData<IUser[]>(["Users"]);
-        return { previousUsers, role };
-      },
       onSuccess: ({ userId, updatedUser }: { userId: string; updatedUser: IUser }) => {
         queryClient.setQueryData<IUser[] | undefined>(["Users"], (oldUsers) =>
           oldUsers?.map((user) => (user._id === userId ? updatedUser : user))
         );
       },
       onError: (error, { userId, role }, context) => {
-        if (context?.previousUsers) {
-          queryClient.setQueryData(["Users"], context.previousUsers);
-          console.error(`Error granting permission to user ${userId} with role ${role}:`, error);
-        }
+        errorAlert(`${error} - ${userId} - ${role} - ${context}`)
+        logger.error(`Error: ${error.message} - GrantPermission - ${userId} - ${role} - ${context} - in ${new Date().toLocaleString()}`);
       },
     });
   };

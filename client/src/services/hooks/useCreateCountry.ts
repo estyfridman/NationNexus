@@ -2,6 +2,8 @@
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { createCountry } from '../countriesService';
 import { ICountry } from '../../models/iCountry';
+import { errorAlert } from '../../utils/sweet-alerts';
+import logger from "../../utils/logger";
 
 export const useCreateCountry = () => {
   const queryClient = useQueryClient();
@@ -14,7 +16,8 @@ export const useCreateCountry = () => {
       });
     },
     onError: (error, newCountry, context) => {
-      //qsweet-aletr
+      errorAlert(`${error} - ${newCountry} - ${context}`)
+      logger.error(`Error: ${error.message} - ${newCountry.name} in ${new Date().toLocaleString()}`);
     },
   });
 };
