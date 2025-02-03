@@ -19,8 +19,13 @@ class CountryService {
   }
 
   async createCountry(countryData: ICountry) {
-    return await Country.create(countryData);
-  }
+    try {
+      const newCountry = new Country(countryData);
+      await newCountry.validate();
+      return await newCountry.save();
+    } catch (error) {
+      throw new Error('Validation ICountry');
+    }  }
 
   async updateCountry(id: string, updateData: Partial<ICountry>) {
     if (!Types.ObjectId.isValid(id)) {

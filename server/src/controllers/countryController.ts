@@ -33,8 +33,8 @@ export const createCountry = async (req: Request, res: Response): Promise<void> 
       res.status(201).json(newCountry);
     } catch (error) {
       (error instanceof Error)
-        ? res.status(400).json({ error: error.message })
-        : res.status(400).json({ error: 'An unknown error occurred' });
+        ? res.status(400).json({ error: 'Validation Error', details: error.message })
+        : res.status(500).json({ error: 'An unknown error occurred' });
     }
 };
 
