@@ -1,4 +1,5 @@
 import mongoose from 'mongoose';
+import logger from "../utils/logger";
 
 let connection: mongoose.Mongoose | null = null;
 
@@ -9,7 +10,7 @@ async function connectDB(db: string): Promise<mongoose.Mongoose> {
     connection = await mongoose.connect(db || '');
     return connection;
   } catch (error) {
-    console.error(`MongoDB connection error: ${error}`);
+    logger.error(`MongoDB connection error: ${error}`);
     process.exit(1);
   }
 }

@@ -1,6 +1,7 @@
-import fs from 'fs';
-import path from 'path';
+
 import Country from '../models/mongooseSchemas/countrySchema';
+import logger from "../utils/logger";
+
 import * as countriesData from './data/countries';
 
 const fetchAndSaveCountries = async () => {
@@ -10,9 +11,9 @@ const fetchAndSaveCountries = async () => {
     const countryCount = await Country.countDocuments();
     if (countryCount > 0) return
     await Country.insertMany(countriesData.data.countries);
-    console.log(`Saved countries to the database.`);
+    logger.info(`Saved countries to the database.`);
   } catch (error) {
-    console.error('Error fetching and saving countries:', error);
+    logger.error('Error fetching and saving countries:', error);
   }
 };
 

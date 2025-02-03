@@ -4,6 +4,7 @@ import helmet from 'helmet';
 import cors from 'cors';
 import connectDB from './config/connectDB';
 import path from 'path';
+import logger from "../src/utils/logger";
 
 import countryRoutes from './routes/countryRoute';
 import userRoutes from './routes/userRoutes';
@@ -31,11 +32,11 @@ connectDB(MONGODB_URI)
   })
   .then(() => {
     app.listen(PORT, () => {
-      console.log(`Server running on port ${PORT}`);
+      logger.info(`Server running on port ${PORT}`);
     });
   })
   .catch((error) => {
-    console.error('Failed to connect to database:', error);
+    logger.error('Failed to connect to database:', error);
   });
 
 
