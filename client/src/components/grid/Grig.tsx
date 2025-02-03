@@ -13,12 +13,9 @@ import EditIcon from '@mui/icons-material/Edit';
 import DeleteIcon from '@mui/icons-material/Delete';
 import { useDeleteCountry } from '../../services/hooks/useDeleteCountry ';
 import { deleteAlert, errorDeleteAlert, successAlert } from '../../utils/sweet-alerts';
-import { useQueryClient } from '@tanstack/react-query';
 import AddCountryDialog from '../AddCountryModal/AddCountryModal';
 
 export default function Grid() {
-  const queryClient = useQueryClient();
-  console.log('Cached activities:', queryClient.getQueryData(['Countries']));  
   const [gridKey, setGridKey] = useState<number>(0);
   const [selectedCountry, setSelectedCountry] = useRecoilState<ICountry>(selectedCountryState);
   const [retryCount, setRetryCount] = useState(0);

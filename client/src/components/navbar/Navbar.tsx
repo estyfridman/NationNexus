@@ -5,7 +5,6 @@ import { selectedCountryState } from '../../services/recoilService/selectedCount
 import { useNavigate } from 'react-router-dom';
 import './navbar.scss';
 import { userState } from '../../services/recoilService/userState';
-import AccountCircleIcon from '@mui/icons-material/AccountCircle';
 
 export default function Navbar() {
   const selectedCountry = useRecoilValue(selectedCountryState);
@@ -56,7 +55,7 @@ export default function Navbar() {
             Admin Dashboard
           </Link>
         )}
-        <Typography variant="h6" component="div" sx={{ flexGrow: 1 }}>
+        <Typography component="div" className="customTypography">
           {selectedCountry
             ? `Selected Country: ${selectedCountry.name}`
             : 'Please select a country'}
