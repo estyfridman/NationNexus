@@ -1,5 +1,6 @@
 import { Component, ErrorInfo, ReactNode } from 'react';
 import NotFound from './components/notFound/NotFound';
+import logger from "../src/utils/logger";
 
 interface Props {
   children: ReactNode;
@@ -29,7 +30,7 @@ export default class ErrorBoundary extends Component<Props, State> {
   
 
   componentDidCatch(error: Error, errorInfo: ErrorInfo) {
-    console.error('Uncaught error:', error, errorInfo);
+    logger.error(`Uncaught error: ${error.message} - ${errorInfo.componentStack}`);
     this.setState({
       errorInfo
     });

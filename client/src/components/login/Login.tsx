@@ -1,13 +1,12 @@
-import React from 'react';
 import { useFormik } from 'formik';
 import * as Yup from 'yup';
 import { TextField, Button, Container, Typography } from '@mui/material';
 import { useNavigate } from 'react-router-dom';
+import logger from "../../utils/logger";
 
 const Login = () => {
   const navigate = useNavigate();
 
-  // Formik for managing form state and validation
   const formik = useFormik({
     initialValues: {
       email: '',
@@ -19,13 +18,11 @@ const Login = () => {
     }),
     onSubmit: async (values) => {
       try {
-        // Perform login logic here, like sending a request to the backend
-        // Example:
-        // const response = await loginUser(values);
-        console.log('Login successful:', values);
+        // const response = await loginUser(values) from mutation;
+        logger.info(`Login successful: ${values.email}`);
         navigate('/dashboard'); 
       } catch (error) {
-        console.error('Login failed', error);
+        logger.error(`Login failed ${error} - ${values.email}`);
       }
     },
   });

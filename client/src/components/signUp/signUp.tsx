@@ -5,6 +5,7 @@ import * as Yup from 'yup';
 import { successAlert, errorAlert } from '../../utils/sweet-alerts';
 import { useCreateUser } from '../../services/hooks/userHooks';
 import { IUserFormData } from '../../models/iUser';
+import logger from "../../utils/logger";
 
 export default function Register() {
   const [preview, setPreview] = useState<string | null>(null);
@@ -12,12 +13,8 @@ export default function Register() {
   const { mutate, isPending } = useCreateUser();
 
   const handleSubmit = (values: IUserFormData) => {
-    console.log('handleSubmit');
-    console.log(values);
-    console.log('Selected file:', selectedFile);
     const formData = new FormData();
     if (selectedFile) {
-    console.log(selectedFile);
       formData.append('profileImage', selectedFile);
     }
     formData.append('firstName', values.firstName);
@@ -29,7 +26,7 @@ export default function Register() {
 
     mutate(formData, {
       onSuccess: () => successAlert('Success', 'Registration successful!'),
-      onError: () => errorAlert('Error registering'),
+      onError: () => { errorAlert('Error registering'); logger.error(`Error registering for ${values.email}`);},
     });
   };
 
@@ -61,7 +58,7 @@ export default function Register() {
     if (file) {
       setSelectedFile(file);
       setPreview(URL.createObjectURL(file));
-      formik.setFieldValue('profileImage', file); //מיותר?
+      formik.setFieldValue('profileImage', file);
     }
   };
   return (

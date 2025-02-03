@@ -1,12 +1,13 @@
 import { client } from "../api/client";
 import IUser, { IUserUpdate } from "../models/iUser";
+import logger from "../utils/logger";
 
 export const getAllUsers = async () => {
     try {
     const response = await client.get<IUser[]>('/users');
     return response.data;
 } catch (error) {
-    console.error('Error in getAllUsers:', error);
+    logger.error(`Error in getAllUsers: ${error}`);
     throw error;
   }
 }
@@ -18,7 +19,7 @@ export const registerUser = async (formData: FormData) => {
     });
     return response.data;
   } catch (error) {
-    console.error("Error registering user:", error);
+    logger.error(`Error registering user: ${error}`);
     throw error;
   }
 };
@@ -28,7 +29,7 @@ export const registerUser = async (formData: FormData) => {
         const response = await client.post('/users/login', credentials);
         return response.data;
       } catch (error) {
-        console.error('Error logging in:', error);
+        logger.error(`Error logging in: ${error}`);
         throw error;
       }
   };
@@ -38,7 +39,7 @@ export const registerUser = async (formData: FormData) => {
         const response = await client.put(`/users/update-user/${id}`, updatedData);
         return response.data;
       } catch (error) {
-        console.error('Error updating user:', error);
+        logger.error(`Error updating user: ${error}`);
         throw error;
       }
   };
@@ -48,7 +49,7 @@ export const registerUser = async (formData: FormData) => {
         const response = await client.post('/users/request-permission', { role });
         return response.data;
       } catch (error) {
-        console.error('Error requesting permission:', error);
+        logger.error(`Error requesting permission: ${error}`);
         throw error;
       }
   };
@@ -58,7 +59,7 @@ export const registerUser = async (formData: FormData) => {
         const response = await client.patch(`/users/permission/${userId}`, role);
         return { userId, updatedUser: response.data };
     } catch (error) {
-        console.error("Error granting permission:", error);
+      logger.error(`Error granting permission: ${error}`);
         throw error;
     }
   };
@@ -68,7 +69,7 @@ export const registerUser = async (formData: FormData) => {
       const response = await client.delete(`/users/${id}`);
       return response.data;
     } catch (error) {
-      console.error("Error deleting user:", error);
+      logger.error(`Error deleting user: ${error}`);
       throw error;
     }
   }

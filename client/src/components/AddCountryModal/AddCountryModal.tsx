@@ -2,6 +2,7 @@ import { useState } from "react";
 import { Button, Dialog, DialogActions, DialogContent, DialogTitle, TextField } from "@mui/material";
 import { useCreateCountry } from "../../services/hooks/useCreateCountry";
 import { errorAlert, successAlert } from "../../utils/sweet-alerts";
+import logger from "../../utils/logger";
 
 interface AddCountryDialogProps {
     open: boolean;
@@ -32,7 +33,7 @@ export default function AddCountryDialog({ open, onClose }: AddCountryDialogProp
         },
         onError: (error) => {
             errorAlert("There was an issue adding the country. Please try again.");
-            console.error("Failed to add country:", error);
+            logger.error(`Failed to add country: ${error.message}`);
         },
       }
     );
