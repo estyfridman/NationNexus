@@ -8,7 +8,7 @@ import { useFetchCountries } from '../../services/hooks/useFetchCountries';
 import Loading from '../loading/Loading';
 import NotFound from '../notFound/NotFound';
 import { DataGrid } from '@mui/x-data-grid';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import EditIcon from '@mui/icons-material/Edit';
 import DeleteIcon from '@mui/icons-material/Delete';
 import { useDeleteCountry } from '../../services/hooks/useDeleteCountry ';
@@ -21,11 +21,21 @@ export default function Grid() {
   console.log('Cached activities:', queryClient.getQueryData(['Countries']));  
   const [gridKey, setGridKey] = useState<number>(0);
   const [selectedCountry, setSelectedCountry] = useRecoilState<ICountry>(selectedCountryState);
-  const { data, isLoading, isError } = useFetchCountries();
+  const [retryCount, setRetryCount] = useState(0);
+  const { data, isLoading, isError, refetch } = useFetchCountries();
   const deleteCountryMutation = useDeleteCountry();
   const navigate = useNavigate();
     const [openModal, setOpenModal] = useState(false);
-
+    useEffect(() => {
+      if (isError && retryCount < 3) {
+        const retryTimeout = setTimeout(() => {
+          setRetryCount(retryCount + 1);
+          refetch();
+        }, 3000);
+        return () => clearTimeout(retryTimeout);
+      }
+    }, [isError, retryCount, refetch]);
+    
   const columns = [
     { field: 'name', headerName: 'Name', flex: 1, headerClassName: 'custom-header' },
     {
@@ -107,8 +117,8 @@ export default function Grid() {
     <>
       {isLoading ? (
         <Loading />
-      ) : isError ? (
-        <NotFound />
+      ) : (isError  && retryCount >= 3) ? (
+        <NotFound title='Unable to retrieve data' message='The server is currently unavailable. Please try again later.'/>
       ) : (
         <>
           <div className="data-grid-container" style={{ height: 700, width: '100%' }}>

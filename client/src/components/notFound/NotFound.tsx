@@ -2,11 +2,16 @@ import { Link } from 'react-router-dom';
 import styles from './not-found.module.scss'
 import { DotLottieReact } from '@lottiefiles/dotlottie-react'
 
-export default function NotFound() {
+interface NotFoundProps {
+  title?: string;
+  message?: string;
+}
+
+export default function NotFound({ title, message }: NotFoundProps) {
   return (
     <div className={styles.notFoundContainer}>
-         <h2 className={styles.heading}>The page you were looking for doesn't exist</h2>
-      <p className={styles.message}>This page appears to have been removed or no longer exists</p>
+         <h2 className={styles.heading}>{ title ? title : "The page you were looking for doesn't exist"}</h2>
+      <p className={styles.message}>{ message ? message : "This page appears to have been removed or no longer exists"}</p>
       <Link to="/" > Back to Home Page </Link>
       <script src="https://unpkg.com/@lottiefiles/dotlottie-wc@0.3.0/dist/dotlottie-wc.js" type="module"></script>
       <DotLottieReact

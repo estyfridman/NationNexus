@@ -3,7 +3,7 @@ import IconButton from '@mui/material/Button';
 import { countrySchema } from '../../models/countrySchema';
 import './editForm.scss';
 import { useMutation } from '@tanstack/react-query';
-import { cancelAlert } from '../../utils/sweet-alerts';
+import { cancelAlert, successAlert, errorAlert } from '../../utils/sweet-alerts';
 import { useNavigate } from 'react-router-dom';
 import { useUpdateCountry } from '../../services/hooks/useUpdateCountry';
 import { useParams } from 'react-router-dom';
@@ -25,11 +25,18 @@ export default function EditForm() {
   const updateCountryMutation = useUpdateCountry();
 
   const handleSubmit = (values: any) => {
-    console.log('Submitting form');
-    console.log(values);
     updateCountryMutation.mutate({
         id: id || selectedCountry._id || '',
         updatedData: values  
+    },
+    {
+      onSuccess: () => {
+        successAlert("Success", "Country updated successfully!");
+        navigate('/');
+      },
+      onError: (error: any) => {
+        errorAlert(error?.message || "Failed to update country.");
+      }
     });
     navigate('/');
   };
