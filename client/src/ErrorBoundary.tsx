@@ -7,29 +7,47 @@ interface Props {
 
 interface State {
   hasError: boolean;
+  error?: Error;
+  errorInfo?: ErrorInfo;
 }
 
 export default class ErrorBoundary extends Component<Props, State> {
   constructor(props: Props) {
     super(props);
-    this.state = { hasError: false };
-  }
+    this.state = { 
+      hasError: false,
+      error: undefined,
+      errorInfo: undefined
+    };  }
 
-  static getDerivedStateFromError(_: Error): State {
-    return { hasError: true };
-  }
+    static getDerivedStateFromError(error: Error): State {
+      return { 
+        hasError: true,
+        error 
+      };
+    }
+  
 
   componentDidCatch(error: Error, errorInfo: ErrorInfo) {
     console.error('Uncaught error:', error, errorInfo);
+    this.setState({
+      errorInfo
+    });
   }
 
   render() {
     if (this.state.hasError) {
+      const errorMessage = this.state.error?.message || "An unexpected error occurred";
+      const errorTitle = this.state.error?.name || "Error";
+      const errorDetails = this.state.errorInfo?.componentStack || "";
+
       return (
-        <NotFound/>
+        <NotFound
+          title={`${errorTitle}: Something went wrong`}
+          message={`${errorMessage} - ${errorDetails}`}
+        />
       );
     }
-
     return this.props.children;
   }
 }
