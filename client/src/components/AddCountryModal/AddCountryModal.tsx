@@ -1,5 +1,6 @@
-import { useState } from "react";
+import { useState, useCallback, useRef, useEffect } from "react";
 import { Button, Dialog, DialogActions, DialogContent, DialogTitle, TextField } from "@mui/material";
+import { Formik, Form, ErrorMessage, Field } from 'formik';
 import { useCreateCountry } from "../../services/hooks/useCreateCountry";
 import { errorAlert, successAlert } from "../../utils/sweet-alerts";
 import logger from "../../utils/logger";
@@ -9,7 +10,6 @@ interface AddCountryDialogProps {
     onClose: (event?: {}, reason?: "backdropClick" | "escapeKeyDown") => void;
   }
   
-
 export default function AddCountryDialog({ open, onClose }: AddCountryDialogProps){
   const { mutate: createNewCountry } = useCreateCountry();
   const [formData, setFormData] = useState({
@@ -19,9 +19,10 @@ export default function AddCountryDialog({ open, onClose }: AddCountryDialogProp
     population: "",
   });
 
-  const handleChange = (e:  React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
-    setFormData({ ...formData, [e.target.name]: e.target.value });
-  };
+  const handleChange = useCallback((e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
+    const { name, value } = e.target;
+    setFormData(prev => ({ ...prev, [name]: value }));
+  }, []);
 
   const handleSubmit = () => {
     createNewCountry(

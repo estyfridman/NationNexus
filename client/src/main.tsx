@@ -6,7 +6,7 @@ import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { ReactQueryDevtools } from '@tanstack/react-query-devtools';
 import { createBrowserRouter, RouterProvider } from 'react-router-dom';
 import NotFound from './components/notFound/NotFound.tsx';
-import EditForm from './components/editForm/EditForm.tsx';
+import CountryForm from './components/countryForm/CountryForm.tsx';
 import Grid from './components/grid/Grig.tsx';
 import Layout from './Layout.tsx';
 import ErrorBoundary from './ErrorBoundary.tsx'
@@ -28,7 +28,11 @@ const router = createBrowserRouter([
       },
       {
         path: 'edit/:id',
-        element: <EditForm />,
+        element: <CountryForm />,
+      },
+      {
+        path: 'create',
+        element: <CountryForm />,
       },
       {
         path: 'grid',

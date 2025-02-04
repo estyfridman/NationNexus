@@ -13,7 +13,6 @@ import EditIcon from '@mui/icons-material/Edit';
 import DeleteIcon from '@mui/icons-material/Delete';
 import { useDeleteCountry } from '../../services/hooks/useDeleteCountry ';
 import { deleteAlert, errorDeleteAlert, successAlert } from '../../utils/sweet-alerts';
-import AddCountryDialog from '../AddCountryModal/AddCountryModal';
 
 export default function Grid() {
   const [gridKey, setGridKey] = useState<number>(0);
@@ -22,8 +21,8 @@ export default function Grid() {
   const { data, isLoading, isError, refetch } = useFetchCountries();
   const deleteCountryMutation = useDeleteCountry();
   const navigate = useNavigate();
-    const [openModal, setOpenModal] = useState(false);
-    useEffect(() => {
+
+  useEffect(() => {
       if (isError && retryCount < 3) {
         const retryTimeout = setTimeout(() => {
           setRetryCount(retryCount + 1);
@@ -61,8 +60,7 @@ export default function Grid() {
             onClick={(e) => {
               e.stopPropagation();
               handleEdit(params.row);
-            }}
-          >
+            }}>
             <EditIcon />
           </IconButton>
           <IconButton
@@ -70,8 +68,7 @@ export default function Grid() {
             color="info"
             onClick={(e) => {
               handleDelete(e, params.row._id);
-            }}
-          >
+            }}>
             <DeleteIcon />
           </IconButton>
         </>
@@ -104,11 +101,6 @@ export default function Grid() {
     navigate(`/edit/${country._id}`);
   }
 
-  const handleonClose = () => {
-    setOpenModal(false)
-    successAlert()
-  };
-
   return (
     <>
       {isLoading ? (
@@ -128,8 +120,7 @@ export default function Grid() {
               />
             )}
           </div>
-          <IconButton onClick={()=> setOpenModal(true)}>+</IconButton>
-          <AddCountryDialog open={openModal} onClose={handleonClose}/>
+          <IconButton onClick={()=> navigate('/create')}>+</IconButton>
         </>
       )}
     </>
