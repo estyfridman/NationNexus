@@ -16,54 +16,53 @@ export default function CountryForm() {
   const { id } = useParams();
   const navigate = useNavigate();
   const selectedCountry = useRecoilValue(selectedCountryState);
-  
+
   const createCountryMutation = useCreateCountry();
   const updateCountryMutation = useUpdateCountry();
 
   const isEditMode = !!id;
 
-  const initialValues = isEditMode ? {
-    name: selectedCountry?.name || '',
-    flag: selectedCountry?.flag || '',
-    region: selectedCountry?.region || '',
-    population: selectedCountry?.population || 0
-  } : {
-    name: '',
-    flagUrl: '',
-    region: '',
-    population: 0
-  };
+  const initialValues = isEditMode
+    ? {
+        name: selectedCountry?.name || '',
+        flag: selectedCountry?.flag || '',
+        region: selectedCountry?.region || '',
+        population: selectedCountry?.population || 0,
+      }
+    : {
+        name: '',
+        flagUrl: '',
+        region: '',
+        population: 0,
+      };
 
   const handleSubmit = (values: any) => {
     if (isEditMode) {
       updateCountryMutation.mutate(
         {
           id: id || selectedCountry._id || '',
-          updatedData: values
+          updatedData: values,
         },
         {
           onSuccess: () => {
-            successAlert("Success", "Country updated successfully!");
+            successAlert('Success', 'Country updated successfully!');
             navigate('/');
           },
           onError: (error: any) => {
-            errorAlert(error?.message || "Failed to update country.");
-          }
+            errorAlert(error?.message || 'Failed to update country.');
+          },
         }
       );
     } else {
-      createCountryMutation.mutate(
-        values,
-        {
-          onSuccess: () => {
-            successAlert("Success", "Country created successfully!");
-            navigate('/');
-          },
-          onError: (error: any) => {
-            errorAlert(error?.message || "Failed to create country.");
-          }
-        }
-      );
+      createCountryMutation.mutate(values, {
+        onSuccess: () => {
+          successAlert('Success', 'Country created successfully!');
+          navigate('/');
+        },
+        onError: (error: any) => {
+          errorAlert(error?.message || 'Failed to create country.');
+        },
+      });
     }
   };
 
@@ -110,14 +109,11 @@ export default function CountryForm() {
               </div>
 
               <div className="buttons-container">
-                <IconButton
-                  type="submit"
-                  disabled={!dirty || !isValid || !hasChanged}>
+                <IconButton type="submit" disabled={!dirty || !isValid || !hasChanged}>
                   <SaveIcon /> {isEditMode ? 'Update' : 'Create'}
                 </IconButton>
-                
-                <IconButton
-                  onClick={() => navigate('/')}>
+
+                <IconButton onClick={() => navigate('/')}>
                   <CancelIcon /> Cancel
                 </IconButton>
               </div>

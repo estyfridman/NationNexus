@@ -1,10 +1,8 @@
-
 export enum RegionEnum {
-    Africa = 'Africa',
-    North_America = 'North America',
-    South_America = 'South America',
-    Asia = 'Asia',
-    Europe = 'Europe',
-    Oceania = 'Oceania',
-    Antarctica = 'Antarctica'
+  Africa = 'Africa',
+  Americas = 'Americas',
+  Asia = 'Asia',
+  Europe = 'Europe',
+  Oceania = 'Oceania',
+  Antarctica = 'Antarctica',
 }
