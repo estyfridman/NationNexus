@@ -1,6 +1,6 @@
 import { Formik, Form, ErrorMessage, Field } from 'formik';
 import IconButton from '@mui/material/Button';
-import { countrySchema } from '../../models/countrySchema';
+import { countrySchema } from '../../models/schemas/countrySchema';
 import './countryForm.scss';
 import { useNavigate, useParams } from 'react-router-dom';
 import { useRecoilValue } from 'recoil';
