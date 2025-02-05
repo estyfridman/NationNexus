@@ -17,7 +17,7 @@ A full-stack application for managing states and cities using MongoDB, Express.j
 ### Clone the Repository
 
 ```sh
-git clone https://github.com/your-repo/state-mng-project.git
+git clone https://github.com/estyfridman/NationNexus.git
 cd state-mng-project
 ```
 
