@@ -14,6 +14,8 @@ export const useLoginMutation = () => {
         user: data.user,
         token: data.token,
       });
+      localStorage.setItem('token', data.token);
+      localStorage.setItem('user', JSON.stringify(data.user));
     },
     onError: (error) => {
       logger.error(`Login failed ${error.message}`);

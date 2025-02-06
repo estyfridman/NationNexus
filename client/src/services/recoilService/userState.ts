@@ -10,10 +10,7 @@ export const userState = atom<UserState>({
   key: 'userState',
   default: {
     user: null,
-    token: '',
-  } as {
-    user: IUser | null;
-    token: string;
+    token: null,
   },
 });
 

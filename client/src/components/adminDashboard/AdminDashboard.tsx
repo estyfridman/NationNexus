@@ -1,24 +1,37 @@
 import { useState } from 'react';
-import { Typography, Box, Button,  Select,  MenuItem,  IconButton,  Avatar } from '@mui/material';
-import { useQueryClient } from '@tanstack/react-query';
+import { Typography, Box, Button, Select, MenuItem, IconButton, Avatar } from '@mui/material';
 import { useFormik } from 'formik';
 import * as Yup from 'yup';
-import IUser, { IUserUpdate } from '../../models/iUser';
+import IUser from '../../models/iUser';
 import Loading from '../loading/Loading';
 import { DataGrid } from '@mui/x-data-grid';
 import EditIcon from '@mui/icons-material/Edit';
 import DeleteIcon from '@mui/icons-material/Delete';
-import { useDeleteUser, useGetUsers, useGrantPermission, useUpdateUser } from '../../services/hooks/userHooks';
+import {
+  useDeleteUser,
+  useGetUsers,
+  useGrantPermission,
+  useUpdateUser,
+} from '../../services/hooks/userHooks';
 import { errorAlert } from '../../utils/sweet-alerts';
-
+import { useRecoilValue } from 'recoil';
+import { userState } from '../../services/recoilService/userState';
+import { initialUser } from '../../utils/initialValues';
+import { useNavigate } from 'react-router-dom';
+import { userSchema } from '../../models/schemas/userSchema';
 
 export default function AdminDashboard() {
   const [selectedUser, setSelectedUser] = useState<IUser | null>(null);
-  const queryClient = useQueryClient();
   const { data: users, isLoading, isError } = useGetUsers();
   const { mutate: grantPermission } = useGrantPermission();
   const { mutate: updateUserMutation } = useUpdateUser();
   const { mutate: deleteUserMutation } = useDeleteUser();
+  const { user } = useRecoilValue(userState);
+  const navigate = useNavigate();
+
+  if (!user || user.role !== 'admin') {
+    navigate('/');
+  }
 
   const handleRoleChange = (userId: string, newRole: string) => {
     if (!['admin', 'user', 'guest'].includes(newRole)) return;
@@ -33,44 +46,22 @@ export default function AdminDashboard() {
   };
 
   const formik = useFormik<IUser>({
-    initialValues: selectedUser || {
-      firstName: '',
-      lastName: '',
-      username: '',
-      email: '',
-      phone: '',
-      password: '',
-      profileImage: '',
-      role: 'guest' as 'admin' | 'user' | 'guest',
-      createdAt: new Date(),
-    },
+    initialValues: selectedUser || initialUser,
     enableReinitialize: true,
-    validationSchema: Yup.object({
-      _id: Yup.string().nullable(),
-      firstName: Yup.string().required('Required'),
-      lastName: Yup.string().required('Required'),
-      userName: Yup.string().required('Required'),
-      email: Yup.string().email('Invalid email').required('Required'),
-      phone: Yup.string()
-        .matches(/^\+?\d{10,14}$/, 'Invalid phone number')
-        .required('Required'),
-      password: Yup.string().min(6, 'Password must be at least 6 characters').nullable(),
-      profileImage: Yup.mixed().nullable(),
-      role: Yup.mixed<'admin' | 'user' | 'guest'>()
-        .oneOf(['admin', 'user', 'guest'], 'Invalid role')
-        .required('Required'),
-      createdAt: Yup.date().nullable(),
-    }),
+    validationSchema: userSchema,
     onSubmit: (values) => {
       if (!selectedUser?._id) {
         errorAlert();
         return;
-      }      
-      updateUserMutation({ id: selectedUser._id, updatedData: values },
-        {onError: (error) => {
-          errorAlert("Failed to update user. try again later...");
-        },}
-      );      
+      }
+      updateUserMutation(
+        { id: selectedUser._id, updatedData: values },
+        {
+          onError: (error) => {
+            errorAlert('Failed to update user. try again later...');
+          },
+        }
+      );
       setSelectedUser(null);
     },
   });
@@ -144,7 +135,7 @@ export default function AdminDashboard() {
   };
 
   if (isLoading) return <Loading />;
-  if (isError) return
+  if (isError) return;
 
   return (
     <div>

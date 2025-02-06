@@ -10,6 +10,7 @@ import { useCreateUser, useUpdateUser } from '../../services/hooks/userHooks';
 import { successAlert, errorAlert } from '../../utils/sweet-alerts';
 import { RoleEnum } from '../../models/enums/RoleEnum';
 import { userSchema } from '../../models/schemas/userSchema';
+import { initialUser } from '../../utils/initialValues';
 
 export default function UserForm() {
   const { id } = useParams();
@@ -23,34 +24,24 @@ export default function UserForm() {
 
   const initialValues = isEditMode
     ? {
-        firstName: selectedUser?.user.firstName || '',
-        lastName: selectedUser?.user.lastName || '',
-        username: selectedUser?.user.username || '',
-        email: selectedUser?.user.email || '',
-        phone: selectedUser?.user.phone || '',
-        password: selectedUser?.user.password || '',
-        profileImage: '', // שמירת הקובץ תיעשה בנפרד
-        role: selectedUser?.user.role || '',
-        createdAt: selectedUser?.user.createdAt,
+        firstName: selectedUser?.user?.firstName || '',
+        lastName: selectedUser?.user?.lastName || '',
+        username: selectedUser?.user?.username || '',
+        email: selectedUser?.user?.email || '',
+        phone: selectedUser?.user?.phone || '',
+        password: selectedUser?.user?.password || '',
+        profileImage: selectedUser?.user?.profileImage || '',
+        role: selectedUser?.user?.role || '',
+        createdAt: selectedUser?.user?.createdAt,
       }
-    : {
-        firstName: '',
-        lastName: '',
-        username: '',
-        email: '',
-        phone: '',
-        password: '',
-        profileImage: '',
-        role: '',
-        createdAt: new Date(),
-      };
+    : initialUser;
 
   const handleSubmit = (values: any) => {
     console.log(JSON.stringify(values));
     if (isEditMode) {
       updateUserMutation.mutate(
         {
-          id: id || selectedUser.user._id || '',
+          id: id || selectedUser.user?._id || '',
           updatedData: values,
         },
         {
