@@ -1,6 +1,6 @@
 import { Formik, Form, ErrorMessage, Field } from 'formik';
 import IconButton from '@mui/material/Button';
-import { countrySchema } from '../../models/countrySchema';
+import { countrySchema } from '../../models/schemas/countrySchema';
 import './editForm.scss';
 import { useMutation } from '@tanstack/react-query';
 import { cancelAlert, successAlert, errorAlert } from '../../utils/sweet-alerts';
@@ -25,19 +25,21 @@ export default function EditForm() {
   const updateCountryMutation = useUpdateCountry();
 
   const handleSubmit = (values: any) => {
-    updateCountryMutation.mutate({
+    updateCountryMutation.mutate(
+      {
         id: id || selectedCountry._id || '',
-        updatedData: values  
-    },
-    {
-      onSuccess: () => {
-        successAlert("Success", "Country updated successfully!");
-        navigate('/');
+        updatedData: values,
       },
-      onError: (error: any) => {
-        errorAlert(error?.message || "Failed to update country.");
+      {
+        onSuccess: () => {
+          successAlert('Success', 'Country updated successfully!');
+          navigate('/');
+        },
+        onError: (error: any) => {
+          errorAlert(error?.message || 'Failed to update country.');
+        },
       }
-    });
+    );
     navigate('/');
   };
 
@@ -76,18 +78,20 @@ export default function EditForm() {
                 <Field name="population" type="number" id="population" />
                 <ErrorMessage name="population" component="span" className="error" />
               </div>
-              <IconButton className='edit-button'
+              <IconButton
+                className="edit-button"
                 type="submit"
                 disabled={!dirty || !isValid || !hasChanged}
               >
-                <SaveIcon/>
+                <SaveIcon />
               </IconButton>
-              <IconButton className='edit-button'
+              <IconButton
+                className="edit-button"
                 type="button"
                 disabled={!dirty || !hasChanged}
                 onClick={() => cancelAlert(mutation.reset, navigate)}
               >
-                <CancelIcon/>
+                <CancelIcon />
               </IconButton>
             </Form>
           );

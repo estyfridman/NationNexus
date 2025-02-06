@@ -4,10 +4,12 @@ import helmet from 'helmet';
 import cors from 'cors';
 import connectDB from './config/connectDB';
 import path from 'path';
-import logger from "../src/utils/logger";
+import logger from '../src/utils/logger';
+import { limiter } from './utils/limiter';
 
 import countryRoutes from './routes/countryRoute';
 import userRoutes from './routes/userRoutes';
+import authRoutes from './routes/authRoutes';
 import { securityMiddlewares } from './middlewares/securityMiddleware';
 import fetchAndSaveCountries from './utils/seed';
 
@@ -16,18 +18,20 @@ const app = express();
 app.use(cors());
 app.use(express.json());
 app.use(helmet());
-app.use("/uploads", express.static("uploads"));
+app.use(limiter);
+app.use('/uploads', express.static('uploads'));
 app.use(securityMiddlewares);
 
 dotenv.config({ path: path.resolve(__dirname, 'config/.env') });
 const PORT = process.env.PORT || 8080;
 const MONGODB_URI = process.env.MONGO_URL || '';
 
+app.use('/api/auth', authRoutes);
 app.use('/api/countries', countryRoutes);
 app.use('/api/users', userRoutes);
 
 connectDB(MONGODB_URI)
- .then(async () => {
+  .then(async () => {
     await fetchAndSaveCountries();
   })
   .then(() => {
@@ -38,5 +42,3 @@ connectDB(MONGODB_URI)
   .catch((error) => {
     logger.error('Failed to connect to database:', error);
   });
-
-

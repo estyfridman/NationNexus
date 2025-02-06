@@ -1,7 +1,5 @@
-
-
 export interface IUser {
-  _id? : string;
+  _id?: string;
   firstName: string;
   lastName: string;
   username: string;
@@ -11,4 +9,14 @@ export interface IUser {
   profileImage?: string;
   role: 'admin' | 'user' | 'guest';
   createdAt: Date;
+}
+
+export interface UserData {
+  firstName: string;
+  lastName: string;
+  username: string;
+  email: string;
+  phone: string;
+  password: string;
+  profileImage?: string | null;
 }
