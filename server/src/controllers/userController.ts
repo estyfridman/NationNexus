@@ -1,6 +1,7 @@
+/// <reference path="../types/express.d.ts" />
+
 import { Request, Response } from 'express';
 import UserService from '../services/userService';
-import { IUser } from '../models/mongooseSchemas/userSchema';
 
 export const getAllUsers = async (req: Request, res: Response): Promise<void> => {
   try {
@@ -61,6 +62,10 @@ export const updateUser = async (req: Request, res: Response) => {
 };
 
 export const deleteUser = async (req: Request, res: Response) => {
+  if (req.user?.role !== 'admin' && req.user?._id !== req.params.id) {
+    res.status(403).json({ message: 'Not authorized' });
+    return;
+  }
   try {
     const { id } = req.params;
     await UserService.deleteUser(id);

@@ -15,6 +15,7 @@ import Login from './components/login/Login';
 import Logout from './components/logout/Logout';
 import SignUp from './components/signUp/signUp.tsx';
 import UserForm from './components/userForm/UserForm.tsx';
+import AdminDashboard from './components/adminDashboard/AdminDashboard.tsx';
 
 const queryClient = new QueryClient();
 
@@ -58,6 +59,10 @@ const router = createBrowserRouter([
       {
         path: 'editUser/:id',
         element: <UserForm />,
+      },
+      {
+        path: 'adminDashboard',
+        element: <AdminDashboard />,
       },
     ],
   },

@@ -1,28 +1,27 @@
 import { useFormik } from 'formik';
-import * as Yup from 'yup';
 import { TextField, Button, Container, Typography } from '@mui/material';
 import { useNavigate } from 'react-router-dom';
-import logger from "../../utils/logger";
+import logger from '../../utils/logger';
+import { useLoginMutation } from '../../services/hooks/userMutations/useLoginMutation';
+import { loginSchema } from '../../models/schemas/loginSchema';
 
-const Login = () => {
+export default function Login() {
   const navigate = useNavigate();
+  const loginMutation = useLoginMutation();
 
   const formik = useFormik({
     initialValues: {
-      email: '',
+      username: '',
       password: '',
     },
-    validationSchema: Yup.object({
-      email: Yup.string().email('Invalid email format').required('Email is required'),
-      password: Yup.string().min(6, 'Password must be at least 6 characters').required('Password is required'),
-    }),
+    validationSchema: loginSchema,
     onSubmit: async (values) => {
       try {
-        // const response = await loginUser(values) from mutation;
-        logger.info(`Login successful: ${values.email}`);
-        navigate('/dashboard'); 
+        await loginMutation.mutateAsync(values);
+        logger.info(`Login successful: ${values.username}`);
+        navigate('/');
       } catch (error) {
-        logger.error(`Login failed ${error} - ${values.email}`);
+        logger.error(`Login failed ${error} - ${values.username}`);
       }
     },
   });
@@ -34,16 +33,16 @@ const Login = () => {
         <TextField
           fullWidth
           margin="normal"
-          id="email"
-          name="email"
-          label="Email"
-          type="email"
+          id="username"
+          name="username"
+          label="User Name"
+          type="username"
           variant="outlined"
-          value={formik.values.email}
+          value={formik.values.username}
           onChange={formik.handleChange}
           onBlur={formik.handleBlur}
-          error={formik.touched.email && Boolean(formik.errors.email)}
-          helperText={formik.touched.email && formik.errors.email}
+          error={formik.touched.username && Boolean(formik.errors.username)}
+          helperText={formik.touched.username && formik.errors.username}
         />
         <TextField
           fullWidth
@@ -65,6 +64,4 @@ const Login = () => {
       </form>
     </Container>
   );
-};
-
-export default Login;
+}

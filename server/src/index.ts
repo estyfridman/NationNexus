@@ -5,6 +5,7 @@ import cors from 'cors';
 import connectDB from './config/connectDB';
 import path from 'path';
 import logger from '../src/utils/logger';
+import { limiter } from './utils/limiter';
 
 import countryRoutes from './routes/countryRoute';
 import userRoutes from './routes/userRoutes';
@@ -17,6 +18,7 @@ const app = express();
 app.use(cors());
 app.use(express.json());
 app.use(helmet());
+app.use(limiter);
 app.use('/uploads', express.static('uploads'));
 app.use(securityMiddlewares);
 
@@ -24,9 +26,9 @@ dotenv.config({ path: path.resolve(__dirname, 'config/.env') });
 const PORT = process.env.PORT || 8080;
 const MONGODB_URI = process.env.MONGO_URL || '';
 
+app.use('/api/auth', authRoutes);
 app.use('/api/countries', countryRoutes);
 app.use('/api/users', userRoutes);
-app.use('/api/auth', authRoutes);
 
 connectDB(MONGODB_URI)
   .then(async () => {

@@ -8,16 +8,17 @@ import {
   changeUserRole,
   requestRoleChange,
 } from '../controllers/userController';
+import { verifyToken, authorize } from '../middlewares/authMiddleware';
 import upload from '../services/multerService';
 
 const router = express.Router();
 
-router.get('/', getAllUsers);
-router.get('/:id', getUserById);
+router.get('/', verifyToken, authorize(['admin']), getAllUsers);
+router.get('/:id', verifyToken, authorize(['admin', 'user']), getUserById);
 router.post('/register', registerUser);
-router.patch('/:id', updateUser);
-router.patch('/requestRole', requestRoleChange);
-router.patch('/changeUserRole', changeUserRole);
-router.delete('/register', deleteUser);
+router.patch('/:id', verifyToken, authorize(['admin', 'user']), updateUser);
+router.patch('/requestRole', verifyToken, requestRoleChange);
+router.patch('/changeUserRole', verifyToken, authorize(['admin']), changeUserRole);
+router.delete('/:id', verifyToken, authorize(['admin', 'user']), deleteUser);
 
 export default router;

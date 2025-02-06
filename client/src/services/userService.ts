@@ -26,7 +26,7 @@ export const registerUser = async (formData: Record<string, any>) => {
 
 export const loginUser = async (credentials: { username: string; password: string }) => {
   try {
-    const response = await client.post('/users/login', credentials);
+    const response = await client.post('/auth/login', credentials);
     return response.data;
   } catch (error) {
     logger.error(`Error logging in: ${error}`);

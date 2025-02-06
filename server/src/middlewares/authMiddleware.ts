@@ -4,16 +4,20 @@ import logger from '../utils/logger';
 
 const JWT_SECRET = process.env.JWT_SECRET || 'hsjf38fks';
 
-export const verifyToken = async (req: Request, res: Response, next: NextFunction) => {
+export const verifyToken = (req: Request, res: Response, next: NextFunction): void => {
   const token = req.header('Authorization')?.replace('Bearer ', '');
 
   if (!token) {
-    return res.status(401).json({ message: 'No token, authorization denied' });
+    res.status(401).json({ message: 'No token, authorization denied' });
+    return;
   }
 
   try {
     const decoded = jwt.verify(token, JWT_SECRET) as { userId: string; role: string };
-    req.user = decoded;
+    req.user = {
+      _id: decoded.userId as string,
+      role: decoded.role as string,
+    };
     next();
   } catch (err) {
     logger.error(`Error verifying in ${new Date()}`);
@@ -22,10 +26,11 @@ export const verifyToken = async (req: Request, res: Response, next: NextFunctio
 };
 
 export const authorize = (roles: string[]) => {
-  return async (req: Request, res: Response, next: NextFunction) => {
+  return (req: Request, res: Response, next: NextFunction) => {
     try {
-      if (!req.user || !roles.includes(req.user.role)) {
-        return res.status(403).json({ message: 'Not authorized' });
+      if (!req.user || !roles.includes(req.user.role as string)) {
+        res.status(403).json({ message: 'Not authorized' });
+        return;
       }
       next();
     } catch (error) {

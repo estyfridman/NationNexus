@@ -6,7 +6,7 @@ import { IUser } from '../models/interfaces/iUser';
 class UserService {
   async getUsers() {
     try {
-      return await User.find({});
+      return await User.find().select('-password');
     } catch {
       throw new Error('Failed to get users');
     }
@@ -17,7 +17,7 @@ class UserService {
       throw new Error('Invalid ID format');
     }
     try {
-      const user = await User.findById(id);
+      const user = await User.findById(id).select('-password');
       return user;
     } catch {
       throw new Error('Failed to get user by id');
@@ -59,7 +59,8 @@ class UserService {
       const updatedUser = await User.findByIdAndUpdate(id, updateData, {
         new: true,
         runValidators: true,
-      });
+      }).select('-password');
+
       if (!updatedUser) {
         throw new Error('User not found');
       }
@@ -74,7 +75,7 @@ class UserService {
       throw new Error('Invalid ID format');
     }
     try {
-      const deletedUser = await User.findByIdAndDelete(id);
+      const deletedUser = await User.findByIdAndDelete(id).select('-password');
       if (!deletedUser) {
         throw new Error('User not found');
       }

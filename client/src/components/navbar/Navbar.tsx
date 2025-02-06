@@ -1,18 +1,22 @@
 import { useState, MouseEvent } from 'react';
 import { AppBar, Typography, Link, Box, IconButton, Menu, MenuItem } from '@mui/material';
-import { useRecoilValue } from 'recoil';
+import { useRecoilValue, useSetRecoilState } from 'recoil';
 import { selectedCountryState } from '../../services/recoilService/selectedCountry';
 import { useNavigate } from 'react-router-dom';
 import './navbar.scss';
 import { userState } from '../../services/recoilService/userState';
+import { useQueryClient } from '@tanstack/react-query';
 
 export default function Navbar() {
   const selectedCountry = useRecoilValue(selectedCountryState);
   const navigate = useNavigate();
   const userData = useRecoilValue(userState);
   const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
+  const queryClient = useQueryClient();
+  const setUserState = useSetRecoilState(userState);
 
   const handleLinkClick = (path: string) => {
+    handleMenuClose();
     navigate(path);
   };
 
@@ -23,6 +27,29 @@ export default function Navbar() {
   const handleMenuClose = () => {
     setAnchorEl(null);
   };
+
+  function handleLogout() {
+    setUserState({
+      user: {
+        firstName: '',
+        lastName: '',
+        username: '',
+        email: '',
+        phone: '',
+        password: '',
+        profileImage: '',
+        role: 'guest',
+        createdAt: new Date(),
+      },
+      token: '',
+    });
+
+    queryClient.invalidateQueries({
+      queryKey: ['Users'],
+    });
+    handleMenuClose();
+    navigate('/');
+  }
 
   return (
     <AppBar position="static">
@@ -45,7 +72,7 @@ export default function Navbar() {
         >
           Grid
         </Link>
-        {userData?.user.role === 'admin' && (
+        {userData && userData?.user?.role === 'admin' && (
           <Link
             underline="none"
             color="inherit"
@@ -60,24 +87,25 @@ export default function Navbar() {
             ? `Selected Country: ${selectedCountry.name}`
             : 'Please select a country'}
         </Typography>
+        {userData ? userData.user?.username : 'no user'}
         <IconButton color="inherit" onClick={handleMenuOpen} className="imageWrapper">
           <img
-            src={userData?.user.profileImage || '/Default_User.png'}
-            alt={userData?.user.firstName}
+            src={userData?.user?.profileImage || '/images/Default_User.jpg'}
+            alt={userData?.user?.firstName}
             className="imgUser"
             onError={(e) => {
               const target = e.target as HTMLImageElement;
               target.onerror = null;
-              target.src = '/Default_User.png';
+              target.src = '/images/Default_User.jpg';
             }}
           />
         </IconButton>
       </Box>
 
       <Menu anchorEl={anchorEl} open={Boolean(anchorEl)} onClose={handleMenuClose}>
-        {userData ? (
+        {userData && userData.user !== null ? (
           <>
-            <MenuItem onClick={() => handleLinkClick('/logout')} className="links">
+            <MenuItem onClick={handleLogout} className="links">
               Log Out
             </MenuItem>
           </>
