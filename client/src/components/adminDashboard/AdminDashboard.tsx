@@ -1,7 +1,6 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { Typography, Box, Button, Select, MenuItem, IconButton, Avatar } from '@mui/material';
 import { useFormik } from 'formik';
-import * as Yup from 'yup';
 import IUser from '../../models/iUser';
 import Loading from '../loading/Loading';
 import { DataGrid } from '@mui/x-data-grid';
@@ -19,19 +18,22 @@ import { userState } from '../../services/recoilService/userState';
 import { initialUser } from '../../utils/initialValues';
 import { useNavigate } from 'react-router-dom';
 import { userSchema } from '../../models/schemas/userSchema';
+import { styled } from '@mui/system';
+
+const Input = styled('input')({
+  display: 'none',
+});
 
 export default function AdminDashboard() {
-  const [selectedUser, setSelectedUser] = useState<IUser | null>(null);
+  const [selectedUser, setSelectedUser] = useState<IUser | null>(initialUser);
   const { data: users, isLoading, isError } = useGetUsers();
   const { mutate: grantPermission } = useGrantPermission();
   const { mutate: updateUserMutation } = useUpdateUser();
   const { mutate: deleteUserMutation } = useDeleteUser();
   const { user } = useRecoilValue(userState);
-  const navigate = useNavigate();
+  const [profileImage, setProfileImage] = useState<File | null>(null);
 
-  if (!user || user.role !== 'admin') {
-    navigate('/');
-  }
+  const navigate = useNavigate();
 
   const handleRoleChange = (userId: string, newRole: string) => {
     if (!['admin', 'user', 'guest'].includes(newRole)) return;
@@ -46,7 +48,19 @@ export default function AdminDashboard() {
   };
 
   const formik = useFormik<IUser>({
-    initialValues: selectedUser || initialUser,
+    initialValues: selectedUser
+      ? {
+          firstName: selectedUser.firstName || '',
+          lastName: selectedUser.lastName || '',
+          username: selectedUser.username || '',
+          email: selectedUser.email || '',
+          phone: selectedUser.phone || '',
+          password: selectedUser.password || '',
+          profileImage: selectedUser.profileImage || '',
+          role: selectedUser.role || 'user',
+          createdAt: selectedUser.createdAt || new Date(),
+        }
+      : initialUser,
     enableReinitialize: true,
     validationSchema: userSchema,
     onSubmit: (values) => {
@@ -133,6 +147,12 @@ export default function AdminDashboard() {
   const handleEdit = (user: IUser) => {
     setSelectedUser(user);
   };
+
+  useEffect(() => {
+    if (!user || user.role !== 'admin') {
+      navigate('/');
+    }
+  }, [user, navigate]);
 
   if (isLoading) return <Loading />;
   if (isError) return;

@@ -4,16 +4,14 @@ import { useNavigate } from 'react-router-dom';
 import logger from '../../utils/logger';
 import { useLoginMutation } from '../../services/hooks/userMutations/useLoginMutation';
 import { loginSchema } from '../../models/schemas/loginSchema';
+import { initialLogin } from '../../utils/initialValues';
 
 export default function Login() {
   const navigate = useNavigate();
   const loginMutation = useLoginMutation();
 
   const formik = useFormik({
-    initialValues: {
-      username: '',
-      password: '',
-    },
+    initialValues: initialLogin,
     validationSchema: loginSchema,
     onSubmit: async (values) => {
       try {

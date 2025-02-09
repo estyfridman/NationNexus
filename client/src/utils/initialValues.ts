@@ -9,3 +9,8 @@ export const initialUser = {
   role: 'guest' as 'admin' | 'user' | 'guest',
   createdAt: new Date(),
 };
+
+export const initialLogin = {
+  username: '',
+  password: '',
+};

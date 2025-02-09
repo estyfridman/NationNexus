@@ -23,7 +23,7 @@ export const userSchema = Yup.object().shape({
   password: Yup.string()
     .min(6, 'Password must be at least 6 characters long')
     .required('Password is required'),
-  profileImage: Yup.string().nullable().notRequired(),
+  profileImage: Yup.mixed().nullable().notRequired(),
   role: Yup.string().oneOf(['admin', 'user', 'guest'], 'Invalid role').nullable().notRequired(),
   createdAt: Yup.date().default(() => new Date()),
 });

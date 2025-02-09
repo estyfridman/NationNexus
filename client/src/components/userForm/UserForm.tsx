@@ -1,4 +1,4 @@
-import { Formik, Form, ErrorMessage, Field } from 'formik';
+import { Formik, Form, ErrorMessage, Field, useFormikContext } from 'formik';
 import IconButton from '@mui/material/Button';
 import './userForm.scss';
 import { useNavigate, useParams } from 'react-router-dom';
@@ -71,10 +71,20 @@ export default function UserForm() {
     <>
       <h2>{isEditMode ? 'Edit User' : 'Create New User'}</h2>
       <Formik initialValues={initialValues} validationSchema={userSchema} onSubmit={handleSubmit}>
-        {({ values, initialValues, dirty, isValid }) => {
+        {({
+          values,
+          initialValues,
+          dirty,
+          isValid,
+          handleChange,
+          handleSubmit,
+          setFieldValue,
+          errors,
+          touched,
+        }) => {
           const hasChanged = JSON.stringify(values) !== JSON.stringify(initialValues);
           return (
-            <Form className="edit-form">
+            <Form className="edit-form" onSubmit={handleSubmit}>
               <div className="field-container">
                 <label htmlFor="firstName">First Name</label>
                 <Field type="text" id="firstName" name="firstName" className="form-control" />
@@ -115,18 +125,19 @@ export default function UserForm() {
                 <label htmlFor="profileImage">Profile Image</label>
                 <Field type="file" id="profileImage" name="profileImage" className="form-control" />
               </div>
-
-              <div className="field-container">
-                <label htmlFor="role">Role</label>
-                <Field as="select" id="role" name="role" className="form-control">
-                  {Object.values(RoleEnum).map((role) => (
-                    <option key={role} value={role}>
-                      {role}
-                    </option>
-                  ))}
-                </Field>
-                <ErrorMessage name="role" component="div" className="error" />
-              </div>
+              {selectedUser && selectedUser.user?.role === 'admin' && (
+                <div className="field-container">
+                  <label htmlFor="role">Role</label>
+                  <Field as="select" id="role" name="role" className="form-control">
+                    {Object.values(RoleEnum).map((role) => (
+                      <option key={role} value={role}>
+                        {role}
+                      </option>
+                    ))}
+                  </Field>
+                  {touched.role && errors.role && <div className="error">{errors.role}</div>}
+                </div>
+              )}
 
               <div className="buttons-container">
                 <IconButton type="submit" disabled={!dirty || !isValid || !hasChanged}>

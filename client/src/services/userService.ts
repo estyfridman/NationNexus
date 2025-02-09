@@ -4,7 +4,15 @@ import logger from '../utils/logger';
 
 export const getAllUsers = async () => {
   try {
-    const response = await client.get<IUser[]>('/users');
+    const token = localStorage.getItem('token');
+    if (!token) {
+      throw new Error('No token found');
+    }
+    const response = await client.get<IUser[]>('/users', {
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+    });
     return response.data;
   } catch (error) {
     logger.error(`Error in getAllUsers: ${error}`);
@@ -36,7 +44,15 @@ export const loginUser = async (credentials: { username: string; password: strin
 
 export const updateUser = async ({ id, updatedData }: { id: string; updatedData: IUserUpdate }) => {
   try {
-    const response = await client.put(`/users/update-user/${id}`, updatedData);
+    const token = localStorage.getItem('token');
+    if (!token) {
+      throw new Error('No token found');
+    }
+    const response = await client.patch(`/users/${id}`, updatedData, {
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+    });
     return response.data;
   } catch (error) {
     logger.error(`Error updating user: ${error}`);
@@ -72,7 +88,15 @@ export const grantPermission = async ({
 
 export async function deleteUser(id: string): Promise<any> {
   try {
-    const response = await client.delete(`/users/${id}`);
+    const token = localStorage.getItem('token');
+    if (!token) {
+      throw new Error('No token found');
+    }
+    const response = await client.delete(`/users/${id}`, {
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+    });
     return response.data;
   } catch (error) {
     logger.error(`Error deleting user: ${error}`);

@@ -85,7 +85,7 @@ export default function Navbar() {
         {userData ? userData.user?.username : 'no user'}
         <IconButton color="inherit" onClick={handleMenuOpen} className="imageWrapper">
           <img
-            src={userData?.user?.profileImage || '/images/Default_User.jpg'}
+            src={'/images/Default_User.jpg'} //userData?.user?.profileImage ? userData?.user?.profileImage :
             alt={userData?.user?.firstName}
             className="imgUser"
             onError={(e) => {
