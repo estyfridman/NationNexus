@@ -6,6 +6,7 @@ import { useNavigate } from 'react-router-dom';
 import './navbar.scss';
 import { userState } from '../../services/recoilService/userState';
 import { useQueryClient } from '@tanstack/react-query';
+import { initialUser } from '../../utils/initialValues';
 
 export default function Navbar() {
   const selectedCountry = useRecoilValue(selectedCountryState);
@@ -30,23 +31,17 @@ export default function Navbar() {
 
   function handleLogout() {
     setUserState({
-      user: {
-        firstName: '',
-        lastName: '',
-        username: '',
-        email: '',
-        phone: '',
-        password: '',
-        profileImage: '',
-        role: 'guest',
-        createdAt: new Date(),
-      },
-      token: '',
+      user: null,
+      token: null,
     });
 
     queryClient.invalidateQueries({
       queryKey: ['Users'],
     });
+
+    localStorage.removeItem('token');
+    localStorage.removeItem('user');
+
     handleMenuClose();
     navigate('/');
   }
@@ -83,7 +78,7 @@ export default function Navbar() {
           </Link>
         )}
         <Typography component="div" className="customTypography">
-          {selectedCountry
+          {selectedCountry && selectedCountry.name
             ? `Selected Country: ${selectedCountry.name}`
             : 'Please select a country'}
         </Typography>
@@ -114,8 +109,8 @@ export default function Navbar() {
             <MenuItem onClick={() => handleLinkClick('/login')} className="links">
               Login
             </MenuItem>
-            <MenuItem onClick={() => handleLinkClick('/signin')} className="links">
-              Sign In
+            <MenuItem onClick={() => handleLinkClick('/register')} className="links">
+              Register
             </MenuItem>
           </>
         )}
