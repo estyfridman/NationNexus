@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'react';
 import { Typography, Box, Button, Select, MenuItem, IconButton, Avatar } from '@mui/material';
 import { useFormik } from 'formik';
-import IUser from '../../models/iUser';
+import IUser from '../../models/interfaces/iUser';
 import Loading from '../loading/Loading';
 import { DataGrid } from '@mui/x-data-grid';
 import EditIcon from '@mui/icons-material/Edit';
@@ -19,6 +19,7 @@ import { initialUser } from '../../utils/initialValues';
 import { useNavigate } from 'react-router-dom';
 import { userSchema } from '../../models/schemas/userSchema';
 import { styled } from '@mui/system';
+import { RoleEnum } from '../../models/enums/RoleEnum';
 
 const Input = styled('input')({
   display: 'none',
@@ -65,14 +66,14 @@ export default function AdminDashboard() {
     validationSchema: userSchema,
     onSubmit: (values) => {
       if (!selectedUser?._id) {
-        errorAlert();
+        errorAlert('Invalid update');
         return;
       }
       updateUserMutation(
         { id: selectedUser._id, updatedData: values },
         {
           onError: (error) => {
-            errorAlert('Failed to update user. try again later...');
+            errorAlert('Failed to update user. Reconnect and try again later...');
           },
         }
       );
@@ -99,17 +100,6 @@ export default function AdminDashboard() {
       headerName: 'Role',
       flex: 1,
       headerClassName: 'custom-header',
-      renderCell: (params: any) => (
-        <Select
-          value={params.value}
-          onChange={(e) => handleRoleChange(params.row._id, e.target.value)}
-          fullWidth
-        >
-          <MenuItem value="admin">Admin</MenuItem>
-          <MenuItem value="user">User</MenuItem>
-          <MenuItem value="guest">Guest</MenuItem>
-        </Select>
-      ),
     },
     {
       field: 'createdAt',
@@ -129,7 +119,7 @@ export default function AdminDashboard() {
           <IconButton
             onClick={(e) => {
               e.stopPropagation();
-              handleEdit(params.row);
+              handleSelectedUser(params.row);
             }}
             style={{ marginRight: '8px' }}
           >
@@ -144,15 +134,16 @@ export default function AdminDashboard() {
     },
   ];
 
-  const handleEdit = (user: IUser) => {
-    setSelectedUser(user);
-  };
-
   useEffect(() => {
     if (!user || user.role !== 'admin') {
       navigate('/');
     }
   }, [user, navigate]);
+
+  function handleSelectedUser(user: IUser) {
+    setSelectedUser(user);
+    navigate(`/editUser/${user._id}`);
+  }
 
   if (isLoading) return <Loading />;
   if (isError) return;
@@ -166,42 +157,10 @@ export default function AdminDashboard() {
             rows={users?.map((user) => ({ ...user, id: user._id })) || []}
             columns={columns}
             editMode="row"
-            onRowClick={(params) => setSelectedUser(params.row)}
+            onRowClick={(params) => handleSelectedUser(params.row)}
           />
         )}
       </div>
-
-      {selectedUser && (
-        <Box mt={3}>
-          <Typography variant="h5">Edit User</Typography>
-          <form onSubmit={formik.handleSubmit}>
-            <Box display="flex" flexDirection="column" gap={2}>
-              <input type="text" placeholder="First Name" {...formik.getFieldProps('firstName')} />
-              <input type="text" placeholder="Last Name" {...formik.getFieldProps('lastName')} />
-              <input type="text" placeholder="Username" {...formik.getFieldProps('username')} />
-              <input type="email" placeholder="Email" {...formik.getFieldProps('email')} />
-              <input type="tel" placeholder="Phone" {...formik.getFieldProps('phone')} />
-              <input type="password" placeholder="Password" {...formik.getFieldProps('password')} />
-              <input
-                type="text"
-                placeholder="Profile Image URL"
-                {...formik.getFieldProps('profileImage')}
-              />
-              <select {...formik.getFieldProps('role')}>
-                <option value="admin">Admin</option>
-                <option value="user">User</option>
-                <option value="guest">Guest</option>
-              </select>
-              <Button type="submit" variant="contained" color="primary">
-                Save
-              </Button>
-              <Button variant="outlined" color="secondary" onClick={() => setSelectedUser(null)}>
-                Cancel
-              </Button>
-            </Box>
-          </form>
-        </Box>
-      )}
     </div>
   );
 }

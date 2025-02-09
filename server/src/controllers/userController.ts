@@ -29,6 +29,9 @@ export const getUserById = async (req: Request, res: Response) => {
 
 export const registerUser = async (req: Request, res: Response) => {
   try {
+    const profileImage = req.file ? req.file.path : ' ';
+    const imagePath = req.file ? `/uploads/${profileImage}` : '/images/Default_User.jpg';
+
     const userData = {
       firstName: req.body.firstName as string,
       lastName: req.body.lastName as string,
@@ -36,6 +39,7 @@ export const registerUser = async (req: Request, res: Response) => {
       email: req.body.email as string,
       phone: req.body.phone as string,
       password: req.body.password as string,
+      profileImage: profileImage,
       role: req.body.role || 'guest',
       createdAt: new Date(),
     };

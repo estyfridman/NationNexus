@@ -1,7 +1,7 @@
 import { useEffect } from 'react';
 import { useSetRecoilState } from 'recoil';
 import { userState } from '../../services/recoilService/userState';
-import IUser from '../../models/iUser';
+import IUser from '../../models/interfaces/iUser';
 
 export const useAuth = () => {
   const setUserState = useSetRecoilState(userState);

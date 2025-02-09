@@ -1,6 +1,6 @@
 import { useRecoilState } from 'recoil';
 import { selectedCountryState } from '../../services/recoilService/selectedCountry';
-import { ICountry } from '../../models/iCountry';
+import { ICountry } from '../../models/interfaces/iCountry';
 import './grid.scss';
 import { useNavigate } from 'react-router-dom';
 import IconButton from '@mui/material/Button';
@@ -23,15 +23,15 @@ export default function Grid() {
   const navigate = useNavigate();
 
   useEffect(() => {
-      if (isError && retryCount < 3) {
-        const retryTimeout = setTimeout(() => {
-          setRetryCount(retryCount + 1);
-          refetch();
-        }, 3000);
-        return () => clearTimeout(retryTimeout);
-      }
-    }, [isError, retryCount, refetch]);
-    
+    if (isError && retryCount < 3) {
+      const retryTimeout = setTimeout(() => {
+        setRetryCount(retryCount + 1);
+        refetch();
+      }, 3000);
+      return () => clearTimeout(retryTimeout);
+    }
+  }, [isError, retryCount, refetch]);
+
   const columns = [
     { field: 'name', headerName: 'Name', flex: 1, headerClassName: 'custom-header' },
     {
@@ -52,7 +52,8 @@ export default function Grid() {
     {
       field: 'actions',
       headerName: 'Actions',
-      flex: 2, headerClassName: 'action-header',
+      flex: 2,
+      headerClassName: 'action-header',
       sortable: false,
       renderCell: (params: any) => (
         <>
@@ -60,7 +61,8 @@ export default function Grid() {
             onClick={(e) => {
               e.stopPropagation();
               handleEdit(params.row);
-            }}>
+            }}
+          >
             <EditIcon />
           </IconButton>
           <IconButton
@@ -68,7 +70,8 @@ export default function Grid() {
             color="info"
             onClick={(e) => {
               handleDelete(e, params.row._id);
-            }}>
+            }}
+          >
             <DeleteIcon />
           </IconButton>
         </>
@@ -87,7 +90,7 @@ export default function Grid() {
       deleteCountryMutation.mutate(id, {
         onSuccess: () => {
           setGridKey((prevKey) => prevKey + 1);
-          successAlert()
+          successAlert();
         },
         onError: () => {
           errorDeleteAlert('Failed to delete the record. Please try again.');
@@ -97,7 +100,7 @@ export default function Grid() {
   }
 
   function handleEdit(country: ICountry) {
-    setSelectedCountry(country)
+    setSelectedCountry(country);
     navigate(`/edit/${country._id}`);
   }
 
@@ -105,11 +108,14 @@ export default function Grid() {
     <>
       {isLoading ? (
         <Loading />
-      ) : (isError  && retryCount >= 3) ? (
-        <NotFound title='Unable to retrieve data' message='The server is currently unavailable. Please try again later.'/>
+      ) : isError && retryCount >= 3 ? (
+        <NotFound
+          title="Unable to retrieve data"
+          message="The server is currently unavailable. Please try again later."
+        />
       ) : (
         <>
-          <div className="data-grid-container" >
+          <div className="data-grid-container">
             {data && (
               <DataGrid
                 key={gridKey}
@@ -120,7 +126,7 @@ export default function Grid() {
               />
             )}
           </div>
-          <IconButton onClick={()=> navigate('/create')}>+</IconButton>
+          <IconButton onClick={() => navigate('/create')}>+</IconButton>
         </>
       )}
     </>

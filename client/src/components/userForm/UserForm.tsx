@@ -1,9 +1,7 @@
-import { Formik, Form, ErrorMessage, Field, useFormikContext } from 'formik';
+import { Formik, Form, ErrorMessage, Field } from 'formik';
 import IconButton from '@mui/material/Button';
 import './userForm.scss';
 import { useNavigate, useParams } from 'react-router-dom';
-import { useRecoilValue } from 'recoil';
-import { userState } from '../../services/recoilService/userState';
 import SaveIcon from '@mui/icons-material/Save';
 import CancelIcon from '@mui/icons-material/Cancel';
 import { useCreateUser, useUpdateUser } from '../../services/hooks/userHooks';
@@ -11,38 +9,60 @@ import { successAlert, errorAlert } from '../../utils/sweet-alerts';
 import { RoleEnum } from '../../models/enums/RoleEnum';
 import { userSchema } from '../../models/schemas/userSchema';
 import { initialUser } from '../../utils/initialValues';
+import { useSelectedUser } from '../../services/hooks/userMutations/userQueries';
+import { useRecoilValue } from 'recoil';
+import { userState } from '../../services/recoilService/userState';
 
 export default function UserForm() {
   const { id } = useParams();
   const navigate = useNavigate();
-  const selectedUser = useRecoilValue(userState);
-
+  const currentUser = useRecoilValue(userState);
   const createUserMutation = useCreateUser();
   const updateUserMutation = useUpdateUser();
 
   const isEditMode = !!id;
+  const { data: selectedUser } = useSelectedUser(id, isEditMode);
+
+  // const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>, setFieldValue: any) => {
+  //   const file = e.target.files?.[0];
+  //   if (file) {
+  //     setFieldValue('profileImage', file);
+  //   }
+  // };
 
   const initialValues = isEditMode
     ? {
-        firstName: selectedUser?.user?.firstName || '',
-        lastName: selectedUser?.user?.lastName || '',
-        username: selectedUser?.user?.username || '',
-        email: selectedUser?.user?.email || '',
-        phone: selectedUser?.user?.phone || '',
-        password: selectedUser?.user?.password || '',
-        profileImage: selectedUser?.user?.profileImage || '',
-        role: selectedUser?.user?.role || '',
-        createdAt: selectedUser?.user?.createdAt,
+        firstName: selectedUser?.firstName || '',
+        lastName: selectedUser?.lastName || '',
+        username: selectedUser?.username || '',
+        email: selectedUser?.email || '',
+        phone: selectedUser?.phone || '',
+        password: selectedUser?.password || '',
+        profileImage: selectedUser?.profileImage || '',
+        role: selectedUser?.role || '',
+        createdAt: selectedUser?.createdAt,
       }
     : initialUser;
 
-  const handleSubmit = (values: any) => {
-    console.log(JSON.stringify(values));
+  const handleSubmit = (values: Record<string, any>) => {
+    const formData = new FormData();
+    Object.entries(values).forEach(([key, value]) => {
+      if (key === 'profileImage' && value instanceof File) {
+        formData.append(key, value);
+      } else {
+        formData.append(key, value as string);
+      }
+    });
+
+    console.log('FormData being sent:');
+    for (let pair of formData.entries()) {
+      console.log(pair[0], pair[1]);
+    }
     if (isEditMode) {
       updateUserMutation.mutate(
         {
-          id: id || selectedUser.user?._id || '',
-          updatedData: values,
+          id: selectedUser?._id || id || '',
+          formData,
         },
         {
           onSuccess: () => {
@@ -55,7 +75,7 @@ export default function UserForm() {
         }
       );
     } else {
-      createUserMutation.mutate(values, {
+      createUserMutation.mutate(formData, {
         onSuccess: () => {
           successAlert('Success', 'User created successfully!');
           navigate('/');
@@ -76,11 +96,10 @@ export default function UserForm() {
           initialValues,
           dirty,
           isValid,
-          handleChange,
           handleSubmit,
-          setFieldValue,
           errors,
           touched,
+          setFieldValue,
         }) => {
           const hasChanged = JSON.stringify(values) !== JSON.stringify(initialValues);
           return (
@@ -123,9 +142,16 @@ export default function UserForm() {
 
               <div className="field-container">
                 <label htmlFor="profileImage">Profile Image</label>
-                <Field type="file" id="profileImage" name="profileImage" className="form-control" />
+                <input
+                  type="file"
+                  id="profileImage"
+                  accept="image/*"
+                  className="form-control"
+                  onChange={(e: any) => setFieldValue('profileImage', e.target.files?.[0])}
+                />
+                <ErrorMessage name="profileImage" component="div" className="error" />
               </div>
-              {selectedUser && selectedUser.user?.role === 'admin' && (
+              {currentUser && currentUser.user?.role === 'admin' && (
                 <div className="field-container">
                   <label htmlFor="role">Role</label>
                   <Field as="select" id="role" name="role" className="form-control">

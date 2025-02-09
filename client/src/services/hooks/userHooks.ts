@@ -8,7 +8,7 @@ import {
   requestPermission,
   grantPermission,
 } from '../userService';
-import IUser, { IUserUpdate } from '../../models/iUser';
+import IUser, { IUserUpdate } from '../../models/interfaces/iUser';
 import { errorAlert } from '../../utils/sweet-alerts';
 import logger from '../../utils/logger';
 

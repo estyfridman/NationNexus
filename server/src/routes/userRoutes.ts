@@ -15,7 +15,7 @@ const router = express.Router();
 
 router.get('/', verifyToken, authorize(['admin']), getAllUsers);
 router.get('/:id', verifyToken, authorize(['admin', 'user']), getUserById);
-router.post('/register', registerUser);
+router.post('/register', upload.single('profileImage'), registerUser);
 router.patch('/:id', verifyToken, authorize(['admin', 'user']), updateUser);
 router.patch('/requestRole', verifyToken, requestRoleChange);
 router.patch('/changeUserRole', verifyToken, authorize(['admin']), changeUserRole);

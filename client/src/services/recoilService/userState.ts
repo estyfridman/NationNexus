@@ -1,5 +1,5 @@
 import { atom } from 'recoil';
-import IUser from '../../models/iUser';
+import IUser from '../../models/interfaces/iUser';
 
 interface UserState {
   user: IUser | null;

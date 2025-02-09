@@ -4,8 +4,8 @@ import { useFormik } from 'formik';
 import * as Yup from 'yup';
 import { successAlert, errorAlert } from '../../utils/sweet-alerts';
 import { useCreateUser } from '../../services/hooks/userHooks';
-import { IUserFormData } from '../../models/iUser';
-import logger from "../../utils/logger";
+import { IUserFormData } from '../../models/interfaces/iUser';
+import logger from '../../utils/logger';
 
 export default function Register() {
   const [preview, setPreview] = useState<string | null>(null);
@@ -26,7 +26,10 @@ export default function Register() {
 
     mutate(formData, {
       onSuccess: () => successAlert('Success', 'Registration successful!'),
-      onError: () => { errorAlert('Error registering'); logger.error(`Error registering for ${values.email}`);},
+      onError: () => {
+        errorAlert('Error registering');
+        logger.error(`Error registering for ${values.email}`);
+      },
     });
   };
 

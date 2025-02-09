@@ -1,5 +1,5 @@
 import { client } from '../api/client';
-import IUser, { IUserUpdate } from '../models/iUser';
+import IUser, { IUserUpdate } from '../models/interfaces/iUser';
 import logger from '../utils/logger';
 
 export const getAllUsers = async () => {
@@ -20,10 +20,28 @@ export const getAllUsers = async () => {
   }
 };
 
-export const registerUser = async (formData: Record<string, any>) => {
+export const getUserById = async (id: string) => {
+  try {
+    const token = localStorage.getItem('token');
+    if (!token) {
+      throw new Error('No token found');
+    }
+    const response = await client.get<IUser>(`/users/${id}`, {
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+    });
+    return response.data;
+  } catch (error) {
+    logger.error(`Error in getAllUsers: ${error}`);
+    throw error;
+  }
+};
+
+export const registerUser = async (formData: FormData) => {
   try {
     const response = await client.post('/users/register', formData, {
-      headers: { 'Content-Type': 'application/json' },
+      headers: { 'Content-Type': 'multipart/form-data' },
     });
     return response.data;
   } catch (error) {
@@ -42,15 +60,16 @@ export const loginUser = async (credentials: { username: string; password: strin
   }
 };
 
-export const updateUser = async ({ id, updatedData }: { id: string; updatedData: IUserUpdate }) => {
+export const updateUser = async ({ id, formData }: { id: string; formData: FormData }) => {
   try {
     const token = localStorage.getItem('token');
     if (!token) {
       throw new Error('No token found');
     }
-    const response = await client.patch(`/users/${id}`, updatedData, {
+    const response = await client.patch(`/users/${id}`, formData, {
       headers: {
         Authorization: `Bearer ${token}`,
+        'Content-Type': 'multipart/form-data',
       },
     });
     return response.data;

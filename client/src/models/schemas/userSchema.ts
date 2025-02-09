@@ -25,5 +25,7 @@ export const userSchema = Yup.object().shape({
     .required('Password is required'),
   profileImage: Yup.mixed().nullable().notRequired(),
   role: Yup.string().oneOf(['admin', 'user', 'guest'], 'Invalid role').nullable().notRequired(),
-  createdAt: Yup.date().default(() => new Date()),
+  createdAt: Yup.date()
+    .default(() => new Date())
+    .notRequired(),
 });

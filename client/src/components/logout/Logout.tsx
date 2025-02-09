@@ -5,9 +5,9 @@ const Logout = () => {
   const navigate = useNavigate();
 
   const handleLogout = () => {
-    // Perform logout logic here, e.g., clearing user data or token
-    localStorage.removeItem('userToken'); // Clear stored token
-    navigate('/login'); // Redirect to login page after logout
+    localStorage.removeItem('token');
+    localStorage.removeItem('user');
+    navigate('/login');
   };
 
   return (

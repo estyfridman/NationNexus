@@ -1,8 +1,8 @@
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { deleteCountry } from '../countriesService';
-import { ICountry } from '../../models/iCountry';
+import { ICountry } from '../../models/interfaces/iCountry';
 import { errorAlert } from '../../utils/sweet-alerts';
-import logger from "../../utils/logger";
+import logger from '../../utils/logger';
 
 export const useDeleteCountry = () => {
   const queryClient = useQueryClient();
@@ -10,8 +10,9 @@ export const useDeleteCountry = () => {
   return useMutation({
     mutationFn: deleteCountry,
     onSuccess: (deletedCountry: ICountry) => {
-      queryClient.setQueryData<ICountry[]>(["Countries"], (oldData) =>
-        oldData?.filter((country) => country._id !== deletedCountry._id) ?? [] 
+      queryClient.setQueryData<ICountry[]>(
+        ['Countries'],
+        (oldData) => oldData?.filter((country) => country._id !== deletedCountry._id) ?? []
       );
     },
     onError: (err: Error, id: string, context) => {
