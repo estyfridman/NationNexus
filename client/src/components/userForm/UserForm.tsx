@@ -23,13 +23,6 @@ export default function UserForm() {
   const isEditMode = !!id;
   const { data: selectedUser } = useSelectedUser(id, isEditMode);
 
-  // const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>, setFieldValue: any) => {
-  //   const file = e.target.files?.[0];
-  //   if (file) {
-  //     setFieldValue('profileImage', file);
-  //   }
-  // };
-
   const initialValues = isEditMode
     ? {
         firstName: selectedUser?.firstName || '',
@@ -54,10 +47,6 @@ export default function UserForm() {
       }
     });
 
-    console.log('FormData being sent:');
-    for (let pair of formData.entries()) {
-      console.log(pair[0], pair[1]);
-    }
     if (isEditMode) {
       updateUserMutation.mutate(
         {

@@ -1,5 +1,5 @@
 import { client } from '../api/client';
-import IUser, { IUserUpdate } from '../models/interfaces/iUser';
+import IUser from '../models/interfaces/iUser';
 import logger from '../utils/logger';
 
 export const getAllUsers = async () => {

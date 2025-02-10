@@ -1,6 +1,7 @@
 import multer from 'multer';
 import path from 'path';
 import fs from 'fs';
+import generateFileName from '../utils/generateFileName';
 
 const uploadDir = path.join(__dirname, '../../uploads');
 if (!fs.existsSync(uploadDir)) {
@@ -12,12 +13,7 @@ const storage = multer.diskStorage({
     cb(null, uploadDir);
   },
   filename: (req, file, cb) => {
-    cb(
-      null,
-      `${Date.now()}-${Math.random().toString(36).substring(2, 8)}-${path.extname(
-        file.originalname
-      )}`
-    );
+    cb(null, generateFileName(req.body.lastName ? req.body.lastName : 'user', file.originalname));
   },
 });
 

@@ -2,6 +2,9 @@ import bcrypt from 'bcryptjs';
 import User from '../models/mongooseSchemas/userSchema';
 import { Types } from 'mongoose';
 import { IUser } from '../models/interfaces/iUser';
+import jwt from 'jsonwebtoken';
+
+const JWT_SECRET = process.env.JWT_SECRET || 'hsjf38fks';
 
 class UserService {
   async getUsers() {
@@ -42,7 +45,11 @@ class UserService {
         ...userData,
         password: hashedPassword,
       });
-      return await newUser.save();
+      await newUser.save();
+      const token = jwt.sign({ userId: newUser._id, role: newUser.role }, JWT_SECRET, {
+        expiresIn: '10d',
+      });
+      return { user: newUser, token };
     } catch {
       throw new Error('Failed to create user');
     }

@@ -6,7 +6,6 @@ import { useNavigate } from 'react-router-dom';
 import './navbar.scss';
 import { userState } from '../../services/recoilService/userState';
 import { useQueryClient } from '@tanstack/react-query';
-import { initialUser } from '../../utils/initialValues';
 
 export default function Navbar() {
   const selectedCountry = useRecoilValue(selectedCountryState);
@@ -15,6 +14,7 @@ export default function Navbar() {
   const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
   const queryClient = useQueryClient();
   const setUserState = useSetRecoilState(userState);
+  const apiPort = import.meta.env.VITE_API_PORT;
 
   const handleLinkClick = (path: string) => {
     handleMenuClose();
@@ -45,7 +45,6 @@ export default function Navbar() {
     handleMenuClose();
     navigate('/');
   }
-
   return (
     <AppBar position="static">
       <Box
@@ -65,7 +64,7 @@ export default function Navbar() {
           onClick={() => handleLinkClick('/grid')}
           className="links"
         >
-          Grid
+          Countries
         </Link>
         {userData && userData?.user?.role === 'admin' && (
           <Link
@@ -82,10 +81,13 @@ export default function Navbar() {
             ? `Selected Country: ${selectedCountry.name}`
             : 'Please select a country'}
         </Typography>
-        {userData ? userData.user?.username : 'no user'}
         <IconButton color="inherit" onClick={handleMenuOpen} className="imageWrapper">
           <img
-            src={'/images/Default_User.jpg'} //userData?.user?.profileImage ? userData?.user?.profileImage :
+            src={
+              userData?.user?.profileImage
+                ? `${apiPort}${userData.user.profileImage}`
+                : '/images/Default_User.jpg'
+            }
             alt={userData?.user?.firstName}
             className="imgUser"
             onError={(e) => {

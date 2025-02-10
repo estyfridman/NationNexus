@@ -29,8 +29,7 @@ export const getUserById = async (req: Request, res: Response) => {
 
 export const registerUser = async (req: Request, res: Response) => {
   try {
-    const profileImage = req.file ? req.file.path : ' ';
-    const imagePath = req.file ? `/uploads/${profileImage}` : '/images/Default_User.jpg';
+    const profileImage = req.file ? `/uploads/${req.file.filename}` : '/images/Default_User.jpg';
 
     const userData = {
       firstName: req.body.firstName as string,
@@ -43,8 +42,12 @@ export const registerUser = async (req: Request, res: Response) => {
       role: req.body.role || 'guest',
       createdAt: new Date(),
     };
-    const newUser = await UserService.createUser(userData);
-    res.status(201).json({ message: 'User registered successfully!', user: newUser });
+    const { user, token } = await UserService.createUser(userData);
+    res.status(201).json({
+      message: 'User registered successfully!',
+      user,
+      token,
+    });
   } catch (error) {
     res.status(500).json({ error: 'Error registering user' });
   }

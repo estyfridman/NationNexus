@@ -11,6 +11,8 @@ import {
 import IUser, { IUserUpdate } from '../../models/interfaces/iUser';
 import { errorAlert } from '../../utils/sweet-alerts';
 import logger from '../../utils/logger';
+import { useSetRecoilState } from 'recoil';
+import { userState } from '../recoilService/userState';
 
 export const useGetUsers = () => {
   return useQuery<IUser[]>({
@@ -28,12 +30,19 @@ export const useGetUserById = (id: string) => {
 
 export const useCreateUser = () => {
   const queryClient = useQueryClient();
+  const setUserState = useSetRecoilState(userState);
 
   return useMutation({
     mutationFn: registerUser,
-    onSuccess: (newUser) => {
+    onSuccess: (data) => {
+      setUserState({
+        user: data.user,
+        token: data.token,
+      });
+      localStorage.setItem('token', data.token);
+      localStorage.setItem('user', JSON.stringify(data.user));
       queryClient.setQueryData(['Users'], (oldUsers: any) => {
-        return oldUsers ? [...oldUsers, newUser] : [newUser];
+        return oldUsers ? [...oldUsers, data.user] : [data.user];
       });
     },
     onError: (error, newUser, context) => {

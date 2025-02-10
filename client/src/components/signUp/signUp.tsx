@@ -22,7 +22,6 @@ export default function Register() {
     formData.append('username', values.username);
     formData.append('email', values.email);
     formData.append('phone', values.phone);
-    formData.append('password', values.password);
 
     mutate(formData, {
       onSuccess: () => successAlert('Success', 'Registration successful!'),
