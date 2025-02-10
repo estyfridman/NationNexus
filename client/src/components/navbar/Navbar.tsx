@@ -1,20 +1,20 @@
 import { useState, MouseEvent } from 'react';
 import { AppBar, Typography, Link, Box, IconButton, Menu, MenuItem } from '@mui/material';
-import { useRecoilValue, useSetRecoilState } from 'recoil';
+import { useRecoilValue } from 'recoil';
 import { selectedCountryState } from '../../services/recoilService/selectedCountry';
 import { useNavigate } from 'react-router-dom';
 import './navbar.scss';
 import { userState } from '../../services/recoilService/userState';
-import { useQueryClient } from '@tanstack/react-query';
+import { useLogoutMutation } from '../../services/hooks/userMutations/useLogoutMutation';
 
 export default function Navbar() {
   const selectedCountry = useRecoilValue(selectedCountryState);
   const navigate = useNavigate();
   const userData = useRecoilValue(userState);
   const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
-  const queryClient = useQueryClient();
-  const setUserState = useSetRecoilState(userState);
+
   const apiPort = import.meta.env.VITE_API_PORT;
+  const { mutate: logout } = useLogoutMutation();
 
   const handleLinkClick = (path: string) => {
     handleMenuClose();
@@ -30,21 +30,11 @@ export default function Navbar() {
   };
 
   function handleLogout() {
-    setUserState({
-      user: null,
-      token: null,
-    });
-
-    queryClient.invalidateQueries({
-      queryKey: ['Users'],
-    });
-
-    localStorage.removeItem('token');
-    localStorage.removeItem('user');
-
+    logout();
     handleMenuClose();
     navigate('/');
   }
+
   return (
     <AppBar position="static">
       <Box
@@ -81,6 +71,7 @@ export default function Navbar() {
             ? `Selected Country: ${selectedCountry.name}`
             : 'Please select a country'}
         </Typography>
+        {userData && userData.user && <Typography>{userData.user.username}</Typography>}
         <IconButton color="inherit" onClick={handleMenuOpen} className="imageWrapper">
           <img
             src={
@@ -104,6 +95,12 @@ export default function Navbar() {
           <>
             <MenuItem onClick={handleLogout} className="links">
               Log Out
+            </MenuItem>
+            <MenuItem
+              onClick={() => handleLinkClick(`/editUser/${userData.user?._id}`)}
+              className="links"
+            >
+              Edit Profile
             </MenuItem>
           </>
         ) : (

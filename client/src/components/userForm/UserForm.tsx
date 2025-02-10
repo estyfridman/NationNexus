@@ -1,5 +1,8 @@
 import { Formik, Form, ErrorMessage, Field } from 'formik';
 import IconButton from '@mui/material/Button';
+import { Card, CardContent, Typography, Box, Button, CardActions } from '@mui/material';
+import WarningAmberIcon from '@mui/icons-material/WarningAmber';
+import RestrictedPermissionsCard from '../RestrictedPermissionsCard/RestrictedPermissionsCard';
 import './userForm.scss';
 import { useNavigate, useParams } from 'react-router-dom';
 import SaveIcon from '@mui/icons-material/Save';
@@ -12,6 +15,7 @@ import { initialUser } from '../../utils/initialValues';
 import { useSelectedUser } from '../../services/hooks/userMutations/userQueries';
 import { useRecoilValue } from 'recoil';
 import { userState } from '../../services/recoilService/userState';
+import { useEffect, useState } from 'react';
 
 export default function UserForm() {
   const { id } = useParams();
@@ -21,6 +25,13 @@ export default function UserForm() {
   const updateUserMutation = useUpdateUser();
 
   const isEditMode = !!id;
+  const [hasPermission, setHasPermission] = useState(true);
+
+  useEffect(() => {
+    if (currentUser.user?.role === 'guest') {
+      setHasPermission(false);
+    }
+  }, [currentUser]);
   const { data: selectedUser } = useSelectedUser(id, isEditMode);
 
   const initialValues = isEditMode
@@ -75,6 +86,10 @@ export default function UserForm() {
       });
     }
   };
+
+  if (!hasPermission) {
+    return <RestrictedPermissionsCard />;
+  }
 
   return (
     <>

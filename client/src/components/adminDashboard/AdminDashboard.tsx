@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react';
-import { Typography, Box, Button, Select, MenuItem, IconButton, Avatar } from '@mui/material';
+import { IconButton, Avatar } from '@mui/material';
 import { useFormik } from 'formik';
 import IUser from '../../models/interfaces/iUser';
 import Loading from '../loading/Loading';
@@ -18,21 +18,13 @@ import { userState } from '../../services/recoilService/userState';
 import { initialUser } from '../../utils/initialValues';
 import { useNavigate } from 'react-router-dom';
 import { userSchema } from '../../models/schemas/userSchema';
-import { styled } from '@mui/system';
-import { RoleEnum } from '../../models/enums/RoleEnum';
-
-const Input = styled('input')({
-  display: 'none',
-});
 
 export default function AdminDashboard() {
   const [selectedUser, setSelectedUser] = useState<IUser | null>(initialUser);
   const { data: users, isLoading, isError } = useGetUsers();
   const { mutate: grantPermission } = useGrantPermission();
-  const { mutate: updateUserMutation } = useUpdateUser();
   const { mutate: deleteUserMutation } = useDeleteUser();
   const { user } = useRecoilValue(userState);
-  const [profileImage, setProfileImage] = useState<File | null>(null);
 
   const navigate = useNavigate();
 
@@ -47,39 +39,6 @@ export default function AdminDashboard() {
       deleteUserMutation(userId);
     }
   };
-
-  const formik = useFormik<IUser>({
-    initialValues: selectedUser
-      ? {
-          firstName: selectedUser.firstName || '',
-          lastName: selectedUser.lastName || '',
-          username: selectedUser.username || '',
-          email: selectedUser.email || '',
-          phone: selectedUser.phone || '',
-          password: selectedUser.password || '',
-          profileImage: selectedUser.profileImage || '',
-          role: selectedUser.role || 'user',
-          createdAt: selectedUser.createdAt || new Date(),
-        }
-      : initialUser,
-    enableReinitialize: true,
-    validationSchema: userSchema,
-    onSubmit: (values) => {
-      if (!selectedUser?._id) {
-        errorAlert('Invalid update');
-        return;
-      }
-      updateUserMutation(
-        { id: selectedUser._id, updatedData: values },
-        {
-          onError: (error) => {
-            errorAlert('Failed to update user. Reconnect and try again later...');
-          },
-        }
-      );
-      setSelectedUser(null);
-    },
-  });
 
   const columns = [
     { field: 'firstName', headerName: 'First Name', flex: 1, headerClassName: 'custom-header' },

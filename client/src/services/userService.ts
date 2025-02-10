@@ -1,18 +1,11 @@
 import { client } from '../api/client';
 import IUser from '../models/interfaces/iUser';
 import logger from '../utils/logger';
+import { getAuthHeaders } from '../utils/getAuthorization';
 
 export const getAllUsers = async () => {
   try {
-    const token = localStorage.getItem('token');
-    if (!token) {
-      throw new Error('No token found');
-    }
-    const response = await client.get<IUser[]>('/users', {
-      headers: {
-        Authorization: `Bearer ${token}`,
-      },
-    });
+    const response = await client.get<IUser[]>('/users', { headers: getAuthHeaders() });
     return response.data;
   } catch (error) {
     logger.error(`Error in getAllUsers: ${error}`);
@@ -22,18 +15,10 @@ export const getAllUsers = async () => {
 
 export const getUserById = async (id: string) => {
   try {
-    const token = localStorage.getItem('token');
-    if (!token) {
-      throw new Error('No token found');
-    }
-    const response = await client.get<IUser>(`/users/${id}`, {
-      headers: {
-        Authorization: `Bearer ${token}`,
-      },
-    });
+    const response = await client.get<IUser>(`/users/${id}`, { headers: getAuthHeaders() });
     return response.data;
   } catch (error) {
-    logger.error(`Error in getAllUsers: ${error}`);
+    logger.error(`Error in getUserById: ${error}`);
     throw error;
   }
 };
@@ -62,16 +47,7 @@ export const loginUser = async (credentials: { username: string; password: strin
 
 export const updateUser = async ({ id, formData }: { id: string; formData: FormData }) => {
   try {
-    const token = localStorage.getItem('token');
-    if (!token) {
-      throw new Error('No token found');
-    }
-    const response = await client.patch(`/users/${id}`, formData, {
-      headers: {
-        Authorization: `Bearer ${token}`,
-        'Content-Type': 'multipart/form-data',
-      },
-    });
+    const response = await client.patch(`/users/${id}`, formData, { headers: getAuthHeaders() });
     return response.data;
   } catch (error) {
     logger.error(`Error updating user: ${error}`);
@@ -81,7 +57,11 @@ export const updateUser = async ({ id, formData }: { id: string; formData: FormD
 
 export const requestPermission = async (role: 'admin' | 'user' | 'guest') => {
   try {
-    const response = await client.post('/users/request-permission', { role });
+    const response = await client.post(
+      '/users/request-permission',
+      { role },
+      { headers: getAuthHeaders() }
+    );
     return response.data;
   } catch (error) {
     logger.error(`Error requesting permission: ${error}`);
@@ -97,7 +77,11 @@ export const grantPermission = async ({
   role: 'admin' | 'user' | 'guest';
 }) => {
   try {
-    const response = await client.patch(`/users/permission/${userId}`, role);
+    const response = await client.patch(
+      `/users/permission/${userId}`,
+      { role },
+      { headers: getAuthHeaders() }
+    );
     return { userId, updatedUser: response.data };
   } catch (error) {
     logger.error(`Error granting permission: ${error}`);
@@ -107,15 +91,7 @@ export const grantPermission = async ({
 
 export async function deleteUser(id: string): Promise<any> {
   try {
-    const token = localStorage.getItem('token');
-    if (!token) {
-      throw new Error('No token found');
-    }
-    const response = await client.delete(`/users/${id}`, {
-      headers: {
-        Authorization: `Bearer ${token}`,
-      },
-    });
+    const response = await client.delete(`/users/${id}`, { headers: getAuthHeaders() });
     return response.data;
   } catch (error) {
     logger.error(`Error deleting user: ${error}`);

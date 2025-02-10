@@ -3,6 +3,7 @@ import User from '../models/mongooseSchemas/userSchema';
 import { Types } from 'mongoose';
 import { IUser } from '../models/interfaces/iUser';
 import jwt from 'jsonwebtoken';
+import { IPermissionRequest } from '../models/interfaces/IPermissionRequest';
 
 const JWT_SECRET = process.env.JWT_SECRET || 'hsjf38fks';
 
@@ -71,7 +72,11 @@ class UserService {
       if (!updatedUser) {
         throw new Error('User not found');
       }
-      return updatedUser;
+      const token = jwt.sign({ userId: updatedUser._id, role: updatedUser.role }, JWT_SECRET, {
+        expiresIn: '10d',
+      });
+
+      return { user: updatedUser, token };
     } catch {
       throw new Error('Failed to update user');
     }

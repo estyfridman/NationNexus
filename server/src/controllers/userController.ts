@@ -49,20 +49,22 @@ export const registerUser = async (req: Request, res: Response) => {
       token,
     });
   } catch (error) {
-    res.status(500).json({ error: 'Error registering user' });
+    res.status(500).json({ error: `Error registering user: ${(error as Error).message}` });
   }
 };
 
 export const updateUser = async (req: Request, res: Response) => {
   try {
     const { id } = req.params;
+    const profileImage = req.file ? `/uploads/${req.file.filename}` : undefined;
+
     const updateData = {
       ...req.body,
-      profileImage: req.file ? req.file.filename : undefined,
+      profileImage: profileImage ? profileImage : undefined,
     };
 
-    const updatedUser = await UserService.updateUser(id, updateData);
-    res.status(200).json({ message: 'User updated successfully!', user: updatedUser });
+    const { user, token } = await UserService.updateUser(id, updateData);
+    res.status(200).json({ message: 'User updated successfully!', user, token });
   } catch (error) {
     res.status(500).json({ error: 'Error updating user' });
   }
