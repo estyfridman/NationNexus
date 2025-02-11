@@ -1,7 +1,5 @@
 import { Formik, Form, ErrorMessage, Field } from 'formik';
 import IconButton from '@mui/material/Button';
-import { Card, CardContent, Typography, Box, Button, CardActions } from '@mui/material';
-import WarningAmberIcon from '@mui/icons-material/WarningAmber';
 import RestrictedPermissionsCard from '../RestrictedPermissionsCard/RestrictedPermissionsCard';
 import './userForm.scss';
 import { useNavigate, useParams } from 'react-router-dom';

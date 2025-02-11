@@ -20,11 +20,11 @@ export class MailService {
     const mailOptions = {
       from: process.env.EMAIL_USER,
       to: email,
-      subject: 'איפוס סיסמה',
+      subject: 'Password Reset',
       html: `
         <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto;">
-          <h2>איפוס סיסמה</h2>
-          <p>קיבלנו בקשה לאיפוס הסיסמה שלך. אם זו לא הייתה את, התעלמי מהמייל.</p>
+          <h2>Password Reset</h2>
+          <p>We've received a request to reset your password. If it wasn't you, ignore the email..</p>
           <a href="${resetUrl}" 
              style="display: inline-block; 
                     background-color: #4CAF50; 
@@ -32,9 +32,9 @@ export class MailService {
                     padding: 10px 20px; 
                     text-decoration: none; 
                     border-radius: 5px;">
-            איפוס סיסמה
+            Password Reset
           </a>
-          <p>קישור זה יפוג תוך 1 שעה.</p>
+          <p>This link will expire in 1 hour.</p>
         </div>
       `,
     };
@@ -45,7 +45,7 @@ export class MailService {
       return true;
     } catch (error) {
       logger.error('Error sending email', error);
-      throw new Error('שליחת מייל נכשלה');
+      throw new Error('Email failed');
     }
   }
 }
