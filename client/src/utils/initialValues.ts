@@ -1,3 +1,5 @@
+import { RoleEnum } from '../../../shared/enums';
+
 export const initialUser = {
   firstName: '',
   lastName: '',
@@ -6,11 +8,18 @@ export const initialUser = {
   phone: '',
   password: '',
   profileImage: null as File | null,
-  role: 'guest' as 'admin' | 'user' | 'guest',
+  role: RoleEnum.GUEST,
   createdAt: new Date(),
 };
 
 export const initialLogin = {
   username: '',
   password: '',
+};
+
+export const initialCountry = {
+  name: '',
+  flag: '',
+  region: '',
+  population: '',
 };
