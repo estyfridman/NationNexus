@@ -1,4 +1,4 @@
-import mongoose from 'mongoose';
+import mongoose, { Schema } from 'mongoose';
 import ICountry from '../interfaces/iCountry';
 import { VALID_REGIONS } from '../regionEnum';
 
@@ -40,6 +40,7 @@ const CountrySchema = new mongoose.Schema({
       message: '{VALUE} is not a valid region',
     },
   },
+  cityIds: [{ type: Schema.Types.ObjectId, ref: 'City' }],
 });
 
 export default mongoose.model<ICountry>('Country', CountrySchema);

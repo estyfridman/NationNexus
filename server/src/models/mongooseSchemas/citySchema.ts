@@ -12,7 +12,7 @@ const CitySchema = new Schema<ICity & Document>({
     required: true,
     min: 0,
   },
-  country: {
+  countryId: {
     type: Schema.Types.ObjectId,
     ref: 'Country',
     required: true,

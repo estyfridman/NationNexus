@@ -26,6 +26,21 @@ class CitiesService {
     }
   }
 
+  async getCitiesByCountryId(id: string) {
+    if (!Types.ObjectId.isValid(id)) {
+      throw new Error('Invalid ID format');
+    }
+    try {
+      const cities = await City.find({ countryId: id });
+      if (!cities || cities.length === 0) {
+        return [];
+      }
+      return cities;
+    } catch (error) {
+      throw new Error(`Error fetching cities: ${(error as Error).message}`);
+    }
+  }
+
   async createCity(cityData: ICity) {
     try {
       const existCity = await City.findOne({ name: cityData.name });

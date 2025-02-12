@@ -1,9 +1,10 @@
 import { Types } from 'mongoose';
 
 interface ICity {
+  _id?: Types.ObjectId;
   name: string;
   population: number;
-  country: Types.ObjectId;
+  countryId: Types.ObjectId;
 }
 
 export default ICity;
