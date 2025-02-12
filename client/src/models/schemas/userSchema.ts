@@ -1,4 +1,5 @@
 import * as Yup from 'yup';
+import { RoleEnum } from '../../../../shared/enums';
 
 const phoneRegExp =
   /^((\\+[1-9]{1,4}[ \\-]*)|(\\([0-9]{2,3}\\)[ \\-]*)|([0-9]{2,4})[ \\-]*)*?[0-9]{3,4}?[ \\-]*[0-9]{3,4}?$/;
@@ -24,7 +25,7 @@ export const userSchema = Yup.object().shape({
     .min(6, 'Password must be at least 6 characters long')
     .required('Password is required'),
   profileImage: Yup.mixed().nullable().notRequired(),
-  role: Yup.string().oneOf(['admin', 'user', 'guest'], 'Invalid role').nullable().notRequired(),
+  role: Yup.string().oneOf(Object.values(RoleEnum), 'Invalid role').nullable().notRequired(),
   createdAt: Yup.date()
     .default(() => new Date())
     .notRequired(),

@@ -25,7 +25,11 @@ export const useGetUsers = () => {
 export const useGetUserById = (id: string) => {
   const queryClient = useQueryClient();
   const users = queryClient.getQueryData<IUser[]>(['Users']);
-  return users ? users.find((user) => user._id === id) : null;
+  const userFromUsers = users ? users.find((user) => user._id === id) : null;
+
+  const userFromCache = queryClient.getQueryData<IUser>(['user', id]);
+
+  return userFromUsers || userFromCache || null;
 };
 
 export const useCreateUser = () => {

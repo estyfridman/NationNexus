@@ -1,3 +1,5 @@
+import { RoleEnum } from '../../../../shared/enums';
+
 export default interface IUser {
   _id?: string;
   firstName: string;
@@ -7,7 +9,7 @@ export default interface IUser {
   phone: string;
   password?: string;
   profileImage?: string | File | null;
-  role: 'admin' | 'user' | 'guest';
+  role: RoleEnum;
   createdAt: Date;
 }
 

@@ -2,6 +2,7 @@ import { client } from '../api/client';
 import IUser from '../models/interfaces/iUser';
 import logger from '../utils/logger';
 import { getAuthHeaders } from '../utils/getAuthorization';
+import { RoleEnum } from '../../../shared/enums';
 
 export const getAllUsers = async () => {
   try {
@@ -55,7 +56,7 @@ export const updateUser = async ({ id, formData }: { id: string; formData: FormD
   }
 };
 
-export const requestPermission = async (role: 'admin' | 'user' | 'guest') => {
+export const requestPermission = async (role: RoleEnum) => {
   try {
     const response = await client.post(
       '/users/request-permission',
@@ -69,13 +70,7 @@ export const requestPermission = async (role: 'admin' | 'user' | 'guest') => {
   }
 };
 
-export const grantPermission = async ({
-  userId,
-  role,
-}: {
-  userId: string;
-  role: 'admin' | 'user' | 'guest';
-}) => {
+export const grantPermission = async ({ userId, role }: { userId: string; role: RoleEnum }) => {
   try {
     const response = await client.patch(
       `/users/permission/${userId}`,

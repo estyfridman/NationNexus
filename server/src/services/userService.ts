@@ -4,6 +4,7 @@ import { Types } from 'mongoose';
 import { IUser } from '../models/interfaces/iUser';
 import jwt from 'jsonwebtoken';
 import { IPermissionRequest } from '../models/interfaces/IPermissionRequest';
+import { RoleEnum } from '../../../shared/enums';
 
 const JWT_SECRET = process.env.JWT_SECRET || 'hsjf38fks';
 
@@ -97,12 +98,9 @@ class UserService {
     }
   }
 
-  async changeUserRole(id: string, role: 'admin' | 'user' | 'guest') {
+  async changeUserRole(id: string, role: RoleEnum) {
     if (!Types.ObjectId.isValid(id)) {
       throw new Error('Invalid ID format');
-    }
-    if (!['admin', 'user', 'guest'].includes(role)) {
-      throw new Error('Invalid role');
     }
     try {
       const updatedUser = await User.findByIdAndUpdate(
@@ -119,7 +117,7 @@ class UserService {
     }
   }
 
-  async requestRoleChange(userId: string, requestedRole: 'admin' | 'user' | 'guest') {
+  async requestRoleChange(userId: string, requestedRole: RoleEnum) {
     if (!Types.ObjectId.isValid(userId)) {
       throw new Error('Invalid ID format');
     }

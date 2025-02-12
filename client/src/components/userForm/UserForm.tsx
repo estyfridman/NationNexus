@@ -10,15 +10,19 @@ import { successAlert, errorAlert } from '../../utils/sweet-alerts';
 import { RoleEnum } from '../../models/enums/RoleEnum';
 import { userSchema } from '../../models/schemas/userSchema';
 import { initialUser } from '../../utils/initialValues';
-import { useSelectedUser } from '../../services/hooks/userMutations/userQueries';
 import { useRecoilValue } from 'recoil';
 import { userState } from '../../services/recoilService/userState';
 import { useEffect, useState } from 'react';
+import { selectedUserState } from '../../services/recoilService/selectedUserState';
+// הרשאות לפי המשתמש שבהוק יוזר
+// עריכה של פרטי משתמש מריקוייל
 
 export default function UserForm() {
   const { id } = useParams();
   const navigate = useNavigate();
   const currentUser = useRecoilValue(userState);
+  const selectedUser = useRecoilValue(selectedUserState);
+
   const createUserMutation = useCreateUser();
   const updateUserMutation = useUpdateUser();
 
@@ -26,25 +30,12 @@ export default function UserForm() {
   const [hasPermission, setHasPermission] = useState(true);
 
   useEffect(() => {
-    if (currentUser.user?.role === 'guest') {
+    if (currentUser.user?.role === RoleEnum.GUEST) {
       setHasPermission(false);
     }
   }, [currentUser]);
-  const { data: selectedUser } = useSelectedUser(id, isEditMode);
 
-  const initialValues = isEditMode
-    ? {
-        firstName: selectedUser?.firstName || '',
-        lastName: selectedUser?.lastName || '',
-        username: selectedUser?.username || '',
-        email: selectedUser?.email || '',
-        phone: selectedUser?.phone || '',
-        password: selectedUser?.password || '',
-        profileImage: selectedUser?.profileImage || '',
-        role: selectedUser?.role || '',
-        createdAt: selectedUser?.createdAt,
-      }
-    : initialUser;
+  const initialValues = isEditMode ? selectedUser || initialUser : initialUser;
 
   const handleSubmit = (values: Record<string, any>) => {
     const formData = new FormData();
@@ -92,6 +83,9 @@ export default function UserForm() {
   return (
     <>
       <h2>{isEditMode ? 'Edit User' : 'Create New User'}</h2>
+      <h4>
+        currentUser: {currentUser.user?.lastName} - selectedUser: {selectedUser?.lastName}
+      </h4>
       <Formik initialValues={initialValues} validationSchema={userSchema} onSubmit={handleSubmit}>
         {({
           values,
