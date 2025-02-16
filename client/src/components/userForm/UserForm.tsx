@@ -83,9 +83,7 @@ export default function UserForm() {
   return (
     <>
       <h2>{isEditMode ? 'Edit User' : 'Create New User'}</h2>
-      <h4>
-        currentUser: {currentUser.user?.lastName} - selectedUser: {selectedUser?.lastName}
-      </h4>
+
       <Formik initialValues={initialValues} validationSchema={userSchema} onSubmit={handleSubmit}>
         {({
           values,

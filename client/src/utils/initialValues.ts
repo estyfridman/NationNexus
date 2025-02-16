@@ -23,3 +23,10 @@ export const initialCountry = {
   region: '',
   population: '',
 };
+
+export const initialCity = {
+  _id: '',
+  name: '',
+  population: 0,
+  countryId: '',
+};

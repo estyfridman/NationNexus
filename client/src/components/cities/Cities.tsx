@@ -12,13 +12,15 @@ import NotFound from '../notFound/NotFound';
 import { DataGrid } from '@mui/x-data-grid';
 import { useRecoilState } from 'recoil';
 import { selectedCityState } from '../../services/recoilService/selectedCityState';
+import { ModeEnum } from '../../models/enums/modeEnum';
+import { CityForm } from '../cityForm/CityForm';
 
 export default function CitiesGrid() {
   const { countryId } = useParams();
   const [gridKey, setGridKey] = useState<number>(0);
   const [retryCount, setRetryCount] = useState(0);
   const [selectedCity, setSelectedCity] = useRecoilState<ICity | null>(selectedCityState);
-  const [usEditMode, setIsEditMode] = useState<boolean>(false);
+  const [mode, setMode] = useState<ModeEnum>(ModeEnum.NONE);
 
   const deleteCityMutation = useDeleteCity();
   const { data, isError, isLoading, refetch } = useFetchCities();
@@ -43,11 +45,12 @@ export default function CitiesGrid() {
   function handleEdit(e: React.MouseEvent<HTMLButtonElement, MouseEvent>, city: ICity) {
     e.stopPropagation();
     setSelectedCity(city);
-    setIsEditMode(true);
+    setMode(ModeEnum.EDIT);
   }
 
   function handleCitySelect(city: ICity) {
     setSelectedCity(city);
+    setMode(ModeEnum.NONE);
   }
 
   useEffect(() => {
@@ -81,7 +84,6 @@ export default function CitiesGrid() {
       ),
     },
   ];
-
   return (
     <>
       {isLoading ? (
@@ -103,6 +105,22 @@ export default function CitiesGrid() {
               />
             )}
           </div>
+          {(mode === ModeEnum.CREATE || mode === ModeEnum.EDIT) && (
+            <CityForm
+              city={selectedCity}
+              mode={mode}
+              onSave={() => {
+                setGridKey((prevKey) => prevKey + 1);
+                setMode(ModeEnum.NONE);
+                setSelectedCity(null);
+                refetch();
+              }}
+              onCancel={() => {
+                setMode(ModeEnum.NONE);
+                setSelectedCity(null);
+              }}
+            />
+          )}
           <IconButton onClick={() => navigate('/create-city')}>+</IconButton>
         </>
       )}

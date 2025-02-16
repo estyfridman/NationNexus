@@ -1,6 +1,7 @@
 import City from '../models/mongooseSchemas/citySchema';
 import { Types } from 'mongoose';
 import ICity from '../models/interfaces/iCity';
+import CountryCity from '../models/mongooseSchemas/CountryCity';
 
 class CitiesService {
   async getAllCities() {
@@ -31,7 +32,8 @@ class CitiesService {
       throw new Error('Invalid ID format');
     }
     try {
-      const cities = await City.find({ countryId: id });
+      const countryCities = await CountryCity.find({ country: id }).populate('city');
+      const cities = countryCities.map((countryCity) => countryCity.city);
       if (!cities || cities.length === 0) {
         return [];
       }
@@ -49,7 +51,15 @@ class CitiesService {
       }
       const newCity = new City(cityData);
       await newCity.validate();
-      return await newCity.save();
+      const savedCity = await newCity.save();
+
+      const countryCityLink = new CountryCity({
+        country: cityData.countryId,
+        city: savedCity._id,
+      });
+      await countryCityLink.save();
+
+      return savedCity;
     } catch (error) {
       throw new Error(`Failed to create city: ${(error as Error).message}`);
     }
@@ -64,6 +74,13 @@ class CitiesService {
       if (!city) {
         throw new Error('City not found');
       }
+      if (city.countryId) {
+        await CountryCity.findOneAndUpdate(
+          { city: id },
+          { country: updateData.countryId },
+          { new: true }
+        );
+      }
       return city;
     } catch {
       throw new Error('Failed to update city');
@@ -75,6 +92,7 @@ class CitiesService {
       throw new Error('Invalid ID format');
     }
     try {
+      await CountryCity.deleteMany({ city: id });
       const city = await City.findByIdAndDelete(id);
       if (!city) {
         throw new Error('City not found');
