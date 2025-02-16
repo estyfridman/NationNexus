@@ -16,6 +16,7 @@ import Logout from './components/logout/Logout';
 import SignUp from './components/signUp/signUp.tsx';
 import UserForm from './components/userForm/UserForm.tsx';
 import AdminDashboard from './components/adminDashboard/AdminDashboard.tsx';
+import CitiesGrid from './components/cities/Cities.tsx';
 
 const queryClient = new QueryClient();
 
@@ -39,6 +40,14 @@ const router = createBrowserRouter([
       {
         path: 'grid',
         element: <Grid />,
+      },
+      {
+        path: 'editCity/:id',
+        element: <CitiesGrid />,
+      },
+      {
+        path: 'createCity',
+        element: <CitiesGrid />,
       },
       {
         path: 'login',

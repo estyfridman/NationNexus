@@ -12,6 +12,18 @@ export const getAllCities = async (req: Request, res: Response): Promise<void> =
   }
 };
 
+export const getCityById = async (req: Request, res: Response): Promise<void> => {
+  try {
+    const { Id } = req.params;
+    const cities = await cityService.getCityById(Id);
+    res.json(cities);
+  } catch (error: unknown) {
+    res
+      .status(500)
+      .json({ error: error instanceof Error ? error.message : 'An unknown error occurred' });
+  }
+};
+
 export const getCitiesByCountryId = async (req: Request, res: Response): Promise<void> => {
   try {
     const { countryId } = req.params;

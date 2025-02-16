@@ -6,5 +6,5 @@ export default interface ICountry {
   flag: string;
   region: string;
   population: number;
-  cityIds: mongoose.Types.ObjectId[];
+  cities: mongoose.Types.ObjectId[];
 }

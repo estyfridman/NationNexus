@@ -1,4 +1,5 @@
 import * as Yup from 'yup';
+import { RegionEnum } from '../../../../shared/enums';
 
 export const countrySchema = Yup.object().shape({
   name: Yup.string()
@@ -7,8 +8,7 @@ export const countrySchema = Yup.object().shape({
     .required('Name is required'),
   flag: Yup.string().url('Must be a valid URL').required('Flag URL is required'),
   region: Yup.string()
-    .min(2, 'Name must be at least 2 characters long')
-    .max(20, 'Name must not exceed 20 characters')//TODO: במקום בדיקה של מספר תוים, להחליף שמדובר באחד מהENUMS
+    .oneOf(Object.values(RegionEnum), 'Invalid role')
     .required('Region is required'),
   population: Yup.number()
     .positive('Population must be a positive number')
@@ -16,4 +16,7 @@ export const countrySchema = Yup.object().shape({
     .min(0, 'Population cannot be negative')
     .max(10000000000, 'Population is unrealistically high')
     .required('Population is required'),
+  cities: Yup.array()
+    .of(Yup.string().matches(/^[0-9a-fA-F]{24}$/, 'Invalid ObjectId'))
+    .default([]),
 });

@@ -14,7 +14,7 @@ export async function getAllCountries(): Promise<ICountry[]> {
 
 export async function getCountryById(id: string): Promise<ICountry> {
   try {
-    const response = await client.get(`/countries/findById${id}`);
+    const response = await client.get(`/countries/${id}`);
     return response.data.documents;
   } catch (error) {
     logger.error(`Error fetching countries by ID: ${error} - ${id}`);

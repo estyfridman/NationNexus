@@ -74,6 +74,18 @@ export default function Grid() {
           >
             <DeleteIcon />
           </IconButton>
+          <IconButton
+            onClick={(e) => {
+              e.stopPropagation();
+              navigate(`/cities/${params.row._id}`);
+            }}
+          >
+            <img
+              src="/images/gemini-cities.jpg"
+              alt="Cities Icon"
+              style={{ width: '24px', height: '24px' }}
+            />
+          </IconButton>
         </>
       ),
     },

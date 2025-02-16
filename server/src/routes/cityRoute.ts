@@ -1,6 +1,7 @@
 import { Router } from 'express';
 import {
   getAllCities,
+  getCityById,
   getCitiesByCountryId,
   createCity,
   updateCity,
@@ -10,7 +11,8 @@ import {
 const router = Router();
 
 router.get('/', getAllCities);
-router.get('/:id', getCitiesByCountryId);
+router.get('/:id', getCityById);
+router.get('/by-country/:countryId', getCitiesByCountryId); // for many to many relations
 router.post('/', createCity);
 router.patch('/:id', updateCity);
 router.delete('/:id', deleteCity);
