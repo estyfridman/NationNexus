@@ -21,7 +21,7 @@ export const initialCountry = {
   name: '',
   flag: '',
   region: '',
-  population: '',
+  population: 0,
 };
 
 export const initialCity = {

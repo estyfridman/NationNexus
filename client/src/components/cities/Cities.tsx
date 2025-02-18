@@ -14,6 +14,10 @@ import { useRecoilState } from 'recoil';
 import { selectedCityState } from '../../services/recoilService/selectedCityState';
 import { ModeEnum } from '../../models/enums/modeEnum';
 import { CityForm } from '../cityForm/CityForm';
+import AddCircleOutlineIcon from '@mui/icons-material/AddCircleOutline';
+import Button from '@mui/material/Button';
+import { initialCity } from '../../utils/initialValues';
+import './cities.scss';
 
 export default function CitiesGrid() {
   const { countryId } = useParams();
@@ -48,6 +52,11 @@ export default function CitiesGrid() {
     setMode(ModeEnum.EDIT);
   }
 
+  function handleClear() {
+    setSelectedCity(null);
+    refetch();
+    setMode(ModeEnum.NONE);
+  }
   function handleCitySelect(city: ICity) {
     setSelectedCity(city);
     setMode(ModeEnum.NONE);
@@ -94,7 +103,7 @@ export default function CitiesGrid() {
           message="The server is currently unavailable. Please try again later."
         />
       ) : (
-        <>
+        <div className="main-container">
           <div className="data-grid-container">
             {data && (
               <DataGrid
@@ -105,24 +114,24 @@ export default function CitiesGrid() {
               />
             )}
           </div>
-          {(mode === ModeEnum.CREATE || mode === ModeEnum.EDIT) && (
-            <CityForm
-              city={selectedCity}
-              mode={mode}
-              onSave={() => {
-                setGridKey((prevKey) => prevKey + 1);
-                setMode(ModeEnum.NONE);
-                setSelectedCity(null);
-                refetch();
-              }}
-              onCancel={() => {
-                setMode(ModeEnum.NONE);
-                setSelectedCity(null);
-              }}
-            />
-          )}
-          <IconButton onClick={() => navigate('/create-city')}>+</IconButton>
-        </>
+          <div className="form-container">
+            <Button
+              onClick={() => setMode(ModeEnum.CREATE)}
+              startIcon={<AddCircleOutlineIcon />}
+              size="large"
+            >
+              Add new city
+            </Button>
+
+            {(mode === ModeEnum.CREATE || mode === ModeEnum.EDIT) && (
+              <CityForm
+                city={mode === ModeEnum.EDIT ? selectedCity : initialCity}
+                mode={mode}
+                onClear={() => handleClear}
+              />
+            )}
+          </div>
+        </div>
       )}
     </>
   );

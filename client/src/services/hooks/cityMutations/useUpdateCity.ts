@@ -9,9 +9,11 @@ export const useUpdateCity = () => {
 
   return useMutation({
     mutationFn: updateCity,
-    onSuccess: ({ id, updatedData }: { id: string; updatedData: ICityUpdate }) => {
+    onSuccess: ({ updatedData }: { updatedData: ICityUpdate }) => {
       queryClient.setQueryData<ICity[] | undefined>(['cities'], (old) =>
-        old?.map((oldCity) => (oldCity._id === id ? { ...oldCity, ...updatedData } : oldCity))
+        old?.map((oldCity) =>
+          oldCity._id === updatedData._id ? { ...oldCity, ...updatedData } : oldCity
+        )
       );
     },
     onError: (error) => {

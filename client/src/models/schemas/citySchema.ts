@@ -9,4 +9,7 @@ export const citySchema = Yup.object().shape({
     .integer('Population must be a whole number')
     .positive('Population must be a positive number')
     .required('Population is required'),
+  countryId: Yup.string()
+    .matches(/^[0-9a-fA-F]{24}$/, 'Invalid ObjectId')
+    .required('Country is required'),
 });

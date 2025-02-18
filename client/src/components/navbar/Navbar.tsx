@@ -7,6 +7,8 @@ import './navbar.scss';
 import { userState } from '../../services/recoilService/userState';
 import { useLogoutMutation } from '../../services/hooks/userMutations/useLogoutMutation';
 
+const links = ['/home', '/countries', '/cities'];
+
 export default function Navbar() {
   const selectedCountry = useRecoilValue(selectedCountryState);
   const navigate = useNavigate();
@@ -40,22 +42,20 @@ export default function Navbar() {
       <Box
         sx={{ flexGrow: 1, display: 'flex', flexDirection: 'row', gap: 2, padding: '20px 24px' }}
       >
-        <Link
-          underline="none"
-          color="inherit"
-          onClick={() => handleLinkClick('/')}
-          className="links"
-        >
-          Home
-        </Link>
-        <Link
-          underline="none"
-          color="inherit"
-          onClick={() => handleLinkClick('/grid')}
-          className="links"
-        >
-          Countries
-        </Link>
+        {links.map((link) => {
+          return (
+            <Link
+              key={link}
+              underline="none"
+              color="inherit"
+              onClick={() => handleLinkClick(link)}
+              className="links"
+            >
+              {link.replace('/', '').toUpperCase()}
+            </Link>
+          );
+        })}
+
         {userData && userData?.user?.role === 'admin' && (
           <Link
             underline="none"

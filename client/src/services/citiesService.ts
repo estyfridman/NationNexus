@@ -30,15 +30,13 @@ export const getCitiesByCountryId = async (countryId: string): Promise<ICity[]> 
 };
 
 export const updateCity = async ({
-  id,
   updatedData,
 }: {
-  id: string;
   updatedData: ICityUpdate;
-}): Promise<{ id: string; updatedData: ICityUpdate }> => {
+}): Promise<{ updatedData: ICityUpdate }> => {
   try {
-    const response = await client.patch(`/cities/${id}`, updatedData);
-    return { id, updatedData: response.data };
+    const response = await client.patch(`/cities/${updatedData._id}`, updatedData);
+    return { updatedData: response.data };
   } catch (error: any) {
     throw handleApiError(error);
   }

@@ -30,6 +30,10 @@ const router = createBrowserRouter([
         element: <App />,
       },
       {
+        path: 'home',
+        element: <App />,
+      },
+      {
         path: 'edit/:id',
         element: <CountryForm />,
       },
@@ -38,15 +42,15 @@ const router = createBrowserRouter([
         element: <CountryForm />,
       },
       {
-        path: 'grid',
+        path: 'countries',
         element: <Grid />,
       },
       {
-        path: 'editCity/:id',
+        path: 'cities/:countryId',
         element: <CitiesGrid />,
       },
       {
-        path: 'createCity',
+        path: 'cities',
         element: <CitiesGrid />,
       },
       {
