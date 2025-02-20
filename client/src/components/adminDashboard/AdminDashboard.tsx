@@ -26,6 +26,7 @@ import { RoleEnum } from '../../../../shared/enums';
 import './adminDashboard.scss';
 import { generateCurrentPath } from '../../utils/generateCurrentPath';
 import { selectedUserState } from '../../services/recoilService/selectedUserState';
+import RequestsComponent from '../requestsComponent/RequestsComponent';
 
 export default function AdminDashboard() {
   const [selectedUser, setSelectedUser] = useState<IUser | null>(initialUser);
@@ -112,8 +113,13 @@ export default function AdminDashboard() {
 
   return (
     <div>
-      <Typography className="admin-dashboard-title">Admin Dashboard</Typography>
-      <div>
+      <Typography className="admin-dashboard-title" variant="h2">
+        Admin Dashboard
+      </Typography>
+      <div style={{ width: '98%' }}>
+        <Typography className="admin-dashboard-title" variant="h4">
+          Users
+        </Typography>
         {users && (
           <DataGrid
             rows={users?.map((user) => ({ ...user, id: user._id })) || []}
@@ -123,6 +129,7 @@ export default function AdminDashboard() {
           />
         )}
       </div>
+      <RequestsComponent />
       {selectedUser && selectedUser.firstName && (
         <div className="container">
           <Card className="user-details-card">
@@ -177,7 +184,6 @@ export default function AdminDashboard() {
               type="submit"
               onClick={() => handleRoleChange(selectedUser._id || '', newRole || selectedUser.role)}
             >
-              {' '}
               Change Role
             </Button>
           </div>

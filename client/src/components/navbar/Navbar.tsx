@@ -6,6 +6,7 @@ import { useNavigate } from 'react-router-dom';
 import './navbar.scss';
 import { userState } from '../../services/recoilService/userState';
 import { useLogoutMutation } from '../../services/hooks/userMutations/useLogoutMutation';
+import { requestPermissionsAlert } from '../../utils/sweet-alerts';
 
 const links = ['/home', '/countries', '/cities'];
 
@@ -38,9 +39,9 @@ export default function Navbar() {
   }
 
   return (
-    <AppBar position="static">
+    <AppBar position="static" sx={{ backgroundColor: '#3a506b' }}>
       <Box
-        sx={{ flexGrow: 1, display: 'flex', flexDirection: 'row', gap: 2, padding: '20px 24px' }}
+        sx={{ flexGrow: 1, display: 'flex', flexDirection: 'row', gap: 3, padding: '10px 30px' }}
       >
         {links.map((link) => {
           return (
@@ -101,6 +102,12 @@ export default function Navbar() {
               className="links"
             >
               Edit Profile
+            </MenuItem>
+            <MenuItem
+              onClick={() => requestPermissionsAlert(navigate, userData.user?._id || '')}
+              className="links"
+            >
+              Request for permissions
             </MenuItem>
           </>
         ) : (

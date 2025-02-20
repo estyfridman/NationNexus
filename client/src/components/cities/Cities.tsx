@@ -6,7 +6,10 @@ import { useNavigate, useParams } from 'react-router-dom';
 import ICity from '../../models/interfaces/iCity';
 import { deleteAlert, successAlert, errorDeleteAlert } from '../../utils/sweet-alerts';
 import { useDeleteCity } from '../../services/hooks/cityMutations/useDeleteCity';
-import { useFetchCities } from '../../services/hooks/cityMutations/useFetchCities';
+import {
+  useFetchCities,
+  useFetchCitiesByCountryId,
+} from '../../services/hooks/cityMutations/useFetchCities';
 import Loading from '../loading/Loading';
 import NotFound from '../notFound/NotFound';
 import { DataGrid } from '@mui/x-data-grid';
@@ -25,10 +28,22 @@ export default function CitiesGrid() {
   const [retryCount, setRetryCount] = useState(0);
   const [selectedCity, setSelectedCity] = useRecoilState<ICity | null>(selectedCityState);
   const [mode, setMode] = useState<ModeEnum>(ModeEnum.NONE);
+  const navigate = useNavigate();
 
   const deleteCityMutation = useDeleteCity();
-  const { data, isError, isLoading, refetch } = useFetchCities();
-  const navigate = useNavigate();
+  const { data, isError, isLoading, refetch } = countryId
+    ? useFetchCitiesByCountryId(countryId)
+    : useFetchCities();
+
+  useEffect(() => {
+    if (isError && retryCount < 3) {
+      const retryTimeout = setTimeout(() => {
+        setRetryCount(retryCount + 1);
+        refetch();
+      }, 3000);
+      return () => clearTimeout(retryTimeout);
+    }
+  }, [isError, retryCount, refetch]);
 
   function handleDelete(e: React.MouseEvent<HTMLButtonElement, MouseEvent>, id: string) {
     e.stopPropagation();
@@ -61,16 +76,6 @@ export default function CitiesGrid() {
     setSelectedCity(city);
     setMode(ModeEnum.NONE);
   }
-
-  useEffect(() => {
-    if (isError && retryCount < 3) {
-      const retryTimeout = setTimeout(() => {
-        setRetryCount(retryCount + 1);
-        refetch();
-      }, 3000);
-      return () => clearTimeout(retryTimeout);
-    }
-  }, [isError, retryCount, refetch]);
 
   const columns = [
     { field: 'name', headerName: 'Name', flex: 1, headerClassName: 'custom-header' },
@@ -119,6 +124,7 @@ export default function CitiesGrid() {
               onClick={() => setMode(ModeEnum.CREATE)}
               startIcon={<AddCircleOutlineIcon />}
               size="large"
+              variant="contained"
             >
               Add new city
             </Button>

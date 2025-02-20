@@ -8,7 +8,7 @@ import { useFetchCountries } from '../../services/hooks/useFetchCountries';
 import Loading from '../loading/Loading';
 import NotFound from '../notFound/NotFound';
 import { DataGrid } from '@mui/x-data-grid';
-import { useEffect, useState } from 'react';
+import { useCallback, useEffect, useState } from 'react';
 import EditIcon from '@mui/icons-material/Edit';
 import DeleteIcon from '@mui/icons-material/Delete';
 import { useDeleteCountry } from '../../services/hooks/useDeleteCountry ';
@@ -91,30 +91,31 @@ export default function Grid() {
     },
   ];
 
-  const handleCountrySelect = (country: ICountry) => {
-    setSelectedCountry(country);
-    navigate(`/edit/${country._id}`);
-  };
-
-  function handleDelete(e: React.MouseEvent<HTMLButtonElement, MouseEvent>, id: string) {
-    e.stopPropagation();
-    deleteAlert(() => {
-      deleteCountryMutation.mutate(id, {
-        onSuccess: () => {
-          setGridKey((prevKey) => prevKey + 1);
-          successAlert();
-        },
-        onError: () => {
-          errorDeleteAlert('Failed to delete the record. Please try again.');
-        },
+  const handleDelete = useCallback(
+    (e: React.MouseEvent<HTMLButtonElement, MouseEvent>, id: string) => {
+      e.stopPropagation();
+      deleteAlert(() => {
+        deleteCountryMutation.mutate(id, {
+          onSuccess: () => {
+            setGridKey((prevKey) => prevKey + 1);
+            successAlert();
+          },
+          onError: () => {
+            errorDeleteAlert('Failed to delete the record. Please try again.');
+          },
+        });
       });
-    });
-  }
+    },
+    [deleteCountryMutation]
+  );
 
-  function handleEdit(country: ICountry) {
-    setSelectedCountry(country);
-    navigate(`/edit/${country._id}`);
-  }
+  const handleEdit = useCallback(
+    (country: ICountry) => {
+      setSelectedCountry(country);
+      navigate(`/edit/${country._id}`);
+    },
+    [navigate, setSelectedCountry]
+  );
 
   return (
     <>
@@ -134,7 +135,7 @@ export default function Grid() {
                 rows={data?.map((country) => ({ ...country, id: country._id })) || []}
                 columns={columns}
                 editMode="row"
-                onRowClick={(params) => handleCountrySelect(params.row)}
+                onRowClick={(params) => setSelectedCountry(params.row)}
               />
             )}
           </div>

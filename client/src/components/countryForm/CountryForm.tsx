@@ -11,6 +11,7 @@ import { useCreateCountry } from '../../services/hooks/useCreateCountry';
 import { useUpdateCountry } from '../../services/hooks/useUpdateCountry';
 import { successAlert, errorAlert } from '../../utils/sweet-alerts';
 import { RegionEnum } from '../../models/enums/RegionEnum';
+import { initialCountry } from '../../utils/initialValues';
 
 export default function CountryForm() {
   const { id } = useParams();
@@ -29,12 +30,7 @@ export default function CountryForm() {
         region: selectedCountry?.region || '',
         population: selectedCountry?.population || 0,
       }
-    : {
-        name: '',
-        flagUrl: '',
-        region: '',
-        population: 0,
-      };
+    : initialCountry;
 
   const handleSubmit = (values: any) => {
     if (isEditMode) {

@@ -5,6 +5,7 @@ import { IUser } from '../models/interfaces/iUser';
 import jwt from 'jsonwebtoken';
 import { IPermissionRequest } from '../models/interfaces/IPermissionRequest';
 import { RoleEnum } from '../../../shared/enums';
+import RoleRequest from '../models/mongooseSchemas/requestSchema';
 
 const JWT_SECRET = process.env.JWT_SECRET || 'hsjf38fks';
 
@@ -98,21 +99,22 @@ class UserService {
     }
   }
 
-  async changeUserRole(id: string, role: RoleEnum) {
+  async changeUserRole(id: string, role: string) {
     if (!Types.ObjectId.isValid(id)) {
       throw new Error('Invalid ID format');
     }
     try {
       const updatedUser = await User.findByIdAndUpdate(
         id,
-        { role },
+        { role: role.toLowerCase() },
         { new: true, runValidators: true }
       );
       if (!updatedUser) {
         throw new Error('User not found');
       }
       return updatedUser;
-    } catch {
+    } catch (error) {
+      console.log(error);
       throw new Error('Failed to update user role');
     }
   }
@@ -126,6 +128,8 @@ class UserService {
       if (!user) {
         throw new Error('User not found');
       }
+      const newRequest = new RoleRequest({ userId, requestedRole });
+      await newRequest.save();
       return { message: `Request for role change to ${requestedRole} has been sent for approval.` };
     } catch {
       throw new Error('Failed to request role change');

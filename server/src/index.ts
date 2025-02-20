@@ -6,12 +6,11 @@ import connectDB from './config/connectDB';
 import path from 'path';
 import logger from '../src/utils/logger';
 import { limiter } from './utils/limiter';
-
 import countryRoutes from './routes/countryRoute';
 import cityRoutes from './routes/cityRoute';
-
 import userRoutes from './routes/userRoutes';
 import authRoutes from './routes/authRoutes';
+import permissionsRoutes from './routes/permissionsRoutes';
 import { securityMiddlewares } from './middlewares/securityMiddleware';
 import fetchAndSaveCountries from './utils/seed';
 
@@ -42,6 +41,7 @@ app.use('/api/auth', authRoutes);
 app.use('/api/countries', countryRoutes);
 app.use('/api/users', userRoutes);
 app.use('/api/cities', cityRoutes);
+app.use('/api/permissions', permissionsRoutes);
 
 connectDB(MONGODB_URI)
   .then(async () => {

@@ -1,12 +1,9 @@
 @use '../../styles/variables.scss' as vars;
 
 .admin-dashboard-title {
-  font-size: 24px;
-  margin: 2%;
   padding: 2%;
   width: 100%;
   color: vars.$secondary-color;
-  font-weight: 600;
 }
 
 .container {

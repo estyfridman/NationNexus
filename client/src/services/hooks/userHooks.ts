@@ -105,24 +105,24 @@ export const useLoginUser = () => {
   });
 };
 
-export const useRequestPermission = () => {
-  const queryClient = useQueryClient();
+// export const useRequestPermission = () => {
+//   const queryClient = useQueryClient();
 
-  return useMutation({
-    mutationFn: requestPermission,
-    onSuccess: (updatedUser: IUser) => {
-      queryClient.setQueryData(['User'], updatedUser);
-    },
-    onError: (error, role, context) => {
-      errorAlert(`${error} - ${role} - ${context}`);
-      logger.error(
-        `Error: ${
-          error.message
-        } - RequestPermission - ${role} - ${context} - in ${new Date().toLocaleString()}`
-      );
-    },
-  });
-};
+//   return useMutation({
+//     mutationFn: requestPermission,
+//     onSuccess: (updatedUser: IUser) => {
+//       queryClient.setQueryData(['User'], updatedUser);
+//     },
+//     onError: (error, role, context) => {
+//       errorAlert(`${error} - ${role} - ${context}`);
+//       logger.error(
+//         `Error: ${
+//           error.message
+//         } - RequestPermission - ${role} - ${context} - in ${new Date().toLocaleString()}`
+//       );
+//     },
+//   });
+// };
 
 export const useGrantPermission = () => {
   const queryClient = useQueryClient();

@@ -1,6 +1,5 @@
 import { StrictMode } from 'react';
 import { createRoot } from 'react-dom/client';
-import './styles/main.scss';
 import App from './App.tsx';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { ReactQueryDevtools } from '@tanstack/react-query-devtools';
@@ -17,6 +16,7 @@ import SignUp from './components/signUp/signUp.tsx';
 import UserForm from './components/userForm/UserForm.tsx';
 import AdminDashboard from './components/adminDashboard/AdminDashboard.tsx';
 import CitiesGrid from './components/cities/Cities.tsx';
+import './styles/main.scss';
 
 const queryClient = new QueryClient();
 

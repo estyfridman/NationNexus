@@ -27,7 +27,7 @@ function RestrictedPermissionsCard() {
           </Typography>
           <Typography variant="body1" sx={{ mb: 2 }}>
             You don't have permission to edit users. Please contact your administrator for
-            appropriate permissions{' '}
+            appropriate permissions
           </Typography>
         </CardContent>
         <CardActions sx={{ justifyContent: 'center' }}>
@@ -38,8 +38,7 @@ function RestrictedPermissionsCard() {
               /* ניתן להוסיף פעולה כגון פנייה למנהל */
             }}
           >
-            {' '}
-            Contact a manager{' '}
+            Contact a manager
           </Button>
         </CardActions>
       </Card>

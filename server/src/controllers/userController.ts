@@ -98,8 +98,8 @@ export const changeUserRole = async (req: Request, res: Response) => {
 
 export const requestRoleChange = async (req: Request, res: Response) => {
   try {
-    const { userId, requestedRole } = req.body;
-    const result = await UserService.requestRoleChange(userId, requestedRole);
+    const { userId, role } = req.body;
+    const result = await UserService.requestRoleChange(userId, role);
     res.status(200).json(result);
   } catch (error) {
     res.status(500).json({ error: 'Error requesting role change' });

@@ -56,11 +56,11 @@ export const updateUser = async ({ id, formData }: { id: string; formData: FormD
   }
 };
 
-export const requestPermission = async (role: RoleEnum) => {
+export const requestPermission = async (role: RoleEnum, userId: string) => {
   try {
     const response = await client.post(
-      '/users/request-permission',
-      { role },
+      '/permissions/request-permission',
+      { role, userId },
       { headers: getAuthHeaders() }
     );
     return response.data;
@@ -73,13 +73,39 @@ export const requestPermission = async (role: RoleEnum) => {
 export const grantPermission = async ({ userId, role }: { userId: string; role: RoleEnum }) => {
   try {
     const response = await client.patch(
-      `/users/permission/${userId}`,
+      `/permissions/${userId}`,
       { role },
       { headers: getAuthHeaders() }
     );
     return { userId, updatedUser: response.data };
   } catch (error) {
     logger.error(`Error granting permission: ${error}`);
+    throw error;
+  }
+};
+
+export const updateRequestStatus = async ({
+  requestId,
+  status,
+  userId,
+  role,
+}: {
+  requestId: string;
+  status: string;
+  userId: string;
+  role: RoleEnum;
+}) => {
+  console.log('from role service');
+  console.log(requestId, status, userId, role);
+  try {
+    const response = await client.patch(
+      `/permissions/${requestId}`,
+      { status, userId, role },
+      { headers: getAuthHeaders() }
+    );
+    return response.data;
+  } catch (error) {
+    logger.error(`Error updating request status: ${error}`);
     throw error;
   }
 };
