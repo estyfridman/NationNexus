@@ -1,12 +1,12 @@
-import { client } from '../api/client';
+import {client} from '../api/client';
 import IUser from '../models/interfaces/iUser';
 import logger from '../utils/logger';
-import { getAuthHeaders } from '../utils/getAuthorization';
-import { RoleEnum } from '../../../shared/enums';
+import {getAuthHeaders} from '../utils/getAuthorization';
+import {RoleEnum} from '../../../shared/enums';
 
 export const getAllUsers = async () => {
   try {
-    const response = await client.get<IUser[]>('/users', { headers: getAuthHeaders() });
+    const response = await client.get<IUser[]>('/users', {headers: getAuthHeaders()});
     return response.data;
   } catch (error) {
     logger.error(`Error in getAllUsers: ${error}`);
@@ -16,7 +16,7 @@ export const getAllUsers = async () => {
 
 export const getUserById = async (id: string) => {
   try {
-    const response = await client.get<IUser>(`/users/${id}`, { headers: getAuthHeaders() });
+    const response = await client.get<IUser>(`/users/${id}`, {headers: getAuthHeaders()});
     return response.data;
   } catch (error) {
     logger.error(`Error in getUserById: ${error}`);
@@ -27,7 +27,7 @@ export const getUserById = async (id: string) => {
 export const registerUser = async (formData: FormData) => {
   try {
     const response = await client.post('/users/register', formData, {
-      headers: { 'Content-Type': 'multipart/form-data' },
+      headers: {'Content-Type': 'multipart/form-data'},
     });
     return response.data;
   } catch (error) {
@@ -36,7 +36,7 @@ export const registerUser = async (formData: FormData) => {
   }
 };
 
-export const loginUser = async (credentials: { username: string; password: string }) => {
+export const loginUser = async (credentials: {username: string; password: string}) => {
   try {
     const response = await client.post('/auth/login', credentials);
     return response.data;
@@ -46,9 +46,9 @@ export const loginUser = async (credentials: { username: string; password: strin
   }
 };
 
-export const updateUser = async ({ id, formData }: { id: string; formData: FormData }) => {
+export const updateUser = async ({id, formData}: {id: string; formData: FormData}) => {
   try {
-    const response = await client.patch(`/users/${id}`, formData, { headers: getAuthHeaders() });
+    const response = await client.patch(`/users/${id}`, formData, {headers: getAuthHeaders()});
     return response.data;
   } catch (error) {
     logger.error(`Error updating user: ${error}`);
@@ -58,11 +58,7 @@ export const updateUser = async ({ id, formData }: { id: string; formData: FormD
 
 export const requestPermission = async (role: RoleEnum, userId: string) => {
   try {
-    const response = await client.post(
-      '/permissions/request-permission',
-      { role, userId },
-      { headers: getAuthHeaders() }
-    );
+    const response = await client.post('/permissions/request-permission', {role, userId}, {headers: getAuthHeaders()});
     return response.data;
   } catch (error) {
     logger.error(`Error requesting permission: ${error}`);
@@ -70,39 +66,19 @@ export const requestPermission = async (role: RoleEnum, userId: string) => {
   }
 };
 
-export const grantPermission = async ({ userId, role }: { userId: string; role: RoleEnum }) => {
+export const grantPermission = async ({userId, role}: {userId: string; role: RoleEnum}) => {
   try {
-    const response = await client.patch(
-      `/permissions/${userId}`,
-      { role },
-      { headers: getAuthHeaders() }
-    );
-    return { userId, updatedUser: response.data };
+    const response = await client.patch(`/permissions/${userId}`, {role}, {headers: getAuthHeaders()});
+    return {userId, updatedUser: response.data};
   } catch (error) {
     logger.error(`Error granting permission: ${error}`);
     throw error;
   }
 };
 
-export const updateRequestStatus = async ({
-  requestId,
-  status,
-  userId,
-  role,
-}: {
-  requestId: string;
-  status: string;
-  userId: string;
-  role: RoleEnum;
-}) => {
-  console.log('from role service');
-  console.log(requestId, status, userId, role);
+export const updateRequestStatus = async ({requestId, status, userId, role}: {requestId: string; status: string; userId: string; role: RoleEnum}) => {
   try {
-    const response = await client.patch(
-      `/permissions/${requestId}`,
-      { status, userId, role },
-      { headers: getAuthHeaders() }
-    );
+    const response = await client.patch(`/permissions/${requestId}`, {status, userId, role}, {headers: getAuthHeaders()});
     return response.data;
   } catch (error) {
     logger.error(`Error updating request status: ${error}`);
@@ -112,7 +88,7 @@ export const updateRequestStatus = async ({
 
 export async function deleteUser(id: string): Promise<any> {
   try {
-    const response = await client.delete(`/users/${id}`, { headers: getAuthHeaders() });
+    const response = await client.delete(`/users/${id}`, {headers: getAuthHeaders()});
     return response.data;
   } catch (error) {
     logger.error(`Error deleting user: ${error}`);

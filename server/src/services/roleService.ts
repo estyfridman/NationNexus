@@ -1,6 +1,5 @@
-import { RoleEnum } from '../../../shared/enums';
 import RoleRequest from '../models/mongooseSchemas/requestSchema';
-import { Types } from 'mongoose';
+import {Types} from 'mongoose';
 
 export async function getAllRoleRequests() {
   try {
@@ -33,7 +32,7 @@ export async function patchRoleRequests(id: string, status: string) {
     throw new Error('Invalid ID format');
   }
   try {
-    const updateRequest = await RoleRequest.findByIdAndUpdate(id, { status }, { new: true });
+    const updateRequest = await RoleRequest.findByIdAndUpdate(id, {status}, {new: true});
     if (!updateRequest) {
       throw new Error('Permission request not found');
     }

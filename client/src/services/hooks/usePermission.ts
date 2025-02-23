@@ -1,7 +1,6 @@
-import { useMutation, useQueryClient } from '@tanstack/react-query';
-import { grantPermission, updateRequestStatus } from '../userService';
+import {useMutation, useQueryClient} from '@tanstack/react-query';
+import {grantPermission, updateRequestStatus} from '../userService';
 import IRoleRequest from '../../models/interfaces/iRoleRequests';
-import IUser from '../../models/interfaces/iUser';
 import logger from '../../utils/logger';
 
 export const useUpdateStatusMutation = () => {
@@ -11,9 +10,7 @@ export const useUpdateStatusMutation = () => {
     onSuccess: (updatedRequest) => {
       queryClient.setQueryData<IRoleRequest[] | undefined>(['requests'], (old) => {
         if (!old) return undefined;
-        return old.map((request) =>
-          request._id === updatedRequest._id ? updatedRequest : request
-        );
+        return old.map((request) => (request._id === updatedRequest._id ? updatedRequest : request));
       });
     },
     onError: (error) => {
@@ -32,15 +29,14 @@ export const useGrantPermissionMutation = () => {
         if (!old) return undefined;
         return old.map((request) => {
           if (request.userId._id === updatedUser.userId) {
-            return { ...request, status: 'APPROVED' };
+            return {...request, status: 'APPROVED'};
           }
           return request;
         });
       });
-      console.log(updatedUser);
     },
     onError: (error) => {
-      console.error('Error updating user role:', error);
+      logger.error(`Error updating user role: ${error}`);
     },
   });
 };
