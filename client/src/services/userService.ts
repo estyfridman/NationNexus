@@ -68,8 +68,8 @@ export const requestPermission = async (role: RoleEnum, userId: string) => {
 
 export const grantPermission = async ({userId, role}: {userId: string; role: RoleEnum}) => {
   try {
-    const response = await client.patch(`/permissions/${userId}`, {role}, {headers: getAuthHeaders()});
-    return {userId, updatedUser: response.data};
+    const response = await client.patch(`/users/changeUserRole/${userId}`, {role}, {headers: getAuthHeaders()});
+    return {userId, updatedUser: response.data.user};
   } catch (error) {
     logger.error(`Error granting permission: ${error}`);
     throw error;

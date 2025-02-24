@@ -1,18 +1,10 @@
-import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
-import {
-  getAllUsers,
-  registerUser,
-  deleteUser,
-  loginUser,
-  updateUser,
-  requestPermission,
-  grantPermission,
-} from '../userService';
-import IUser, { IUserUpdate } from '../../models/interfaces/iUser';
-import { errorAlert } from '../../utils/sweet-alerts';
+import {useMutation, useQuery, useQueryClient} from '@tanstack/react-query';
+import {getAllUsers, registerUser, deleteUser, loginUser, updateUser, grantPermission} from '../userService';
+import IUser, {IUserUpdate} from '../../models/interfaces/iUser';
+import {errorAlert} from '../../utils/sweet-alerts';
 import logger from '../../utils/logger';
-import { useSetRecoilState } from 'recoil';
-import { userState } from '../recoilService/userState';
+import {useSetRecoilState} from 'recoil';
+import {userState} from '../recoilService/userState';
 
 export const useGetUsers = () => {
   return useQuery<IUser[]>({
@@ -61,9 +53,9 @@ export const useUpdateUser = () => {
 
   return useMutation({
     mutationFn: updateUser,
-    onSuccess: ({ id, updatedData }: { id: string; updatedData: IUserUpdate }) => {
+    onSuccess: ({id, updatedData}: {id: string; updatedData: IUserUpdate}) => {
       queryClient.setQueryData<IUser[] | undefined>(['Users'], (old) =>
-        old?.map((oldUser) => (oldUser._id === id ? { ...oldUser, ...updatedData } : oldUser))
+        old?.map((oldUser) => (oldUser._id === id ? {...oldUser, ...updatedData} : oldUser))
       );
     },
     onError: (error, variables, context) => {
@@ -79,9 +71,7 @@ export const useDeleteUser = () => {
   return useMutation({
     mutationFn: deleteUser,
     onSuccess: (id: string) => {
-      queryClient.setQueryData<IUser[] | undefined>(['Users'], (old) =>
-        old ? old.filter((user) => user._id !== id) : []
-      );
+      queryClient.setQueryData<IUser[] | undefined>(['Users'], (old) => (old ? old.filter((user) => user._id !== id) : []));
     },
     onError: (error, id, context) => {
       errorAlert(`${error} - ${id} - ${context}`);
@@ -105,42 +95,19 @@ export const useLoginUser = () => {
   });
 };
 
-// export const useRequestPermission = () => {
-//   const queryClient = useQueryClient();
-
-//   return useMutation({
-//     mutationFn: requestPermission,
-//     onSuccess: (updatedUser: IUser) => {
-//       queryClient.setQueryData(['User'], updatedUser);
-//     },
-//     onError: (error, role, context) => {
-//       errorAlert(`${error} - ${role} - ${context}`);
-//       logger.error(
-//         `Error: ${
-//           error.message
-//         } - RequestPermission - ${role} - ${context} - in ${new Date().toLocaleString()}`
-//       );
-//     },
-//   });
-// };
-
 export const useGrantPermission = () => {
   const queryClient = useQueryClient();
 
   return useMutation({
     mutationFn: grantPermission,
-    onSuccess: ({ userId, updatedUser }: { userId: string; updatedUser: IUser }) => {
+    onSuccess: ({userId, updatedUser}: {userId: string; updatedUser: IUser}) => {
       queryClient.setQueryData<IUser[] | undefined>(['Users'], (oldUsers) =>
-        oldUsers?.map((user) => (user._id === userId ? updatedUser : user))
+        oldUsers?.map((user) => (user._id === userId ? {...updatedUser, id: updatedUser._id} : user))
       );
     },
-    onError: (error, { userId, role }, context) => {
+    onError: (error, {userId, role}, context) => {
       errorAlert(`${error} - ${userId} - ${role} - ${context}`);
-      logger.error(
-        `Error: ${
-          error.message
-        } - GrantPermission - ${userId} - ${role} - ${context} - in ${new Date().toLocaleString()}`
-      );
+      logger.error(`Error: ${error.message} - GrantPermission - ${userId} - ${role} - ${context} - in ${new Date().toLocaleString()}`);
     },
   });
 };

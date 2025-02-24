@@ -100,7 +100,7 @@ export default function AdminDashboard() {
   return (
     <div>
       <Typography className='admin-dashboard-title' variant='h2'>
-        {BUTTON_TEXT.ADMIN}{' '}
+        {BUTTON_TEXT.ADMIN}
       </Typography>
       <div style={{width: '98%'}}>
         <Typography className='admin-dashboard-title' variant='h4'>
@@ -108,9 +108,9 @@ export default function AdminDashboard() {
         </Typography>
         {users && (
           <DataGrid
-            rows={users?.map((user) => ({...user, id: user._id})) || []}
+            rows={users}
             columns={columns}
-            editMode='row'
+            getRowId={(row) => row._id ?? crypto.randomUUID()}
             onRowClick={(params) => setSelectedUser(params.row)}
           />
         )}

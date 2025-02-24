@@ -34,7 +34,7 @@ export default function UserCard({selectedUser}: UserCardProps) {
             {LABELS.ROLE}: {selectedUser.role}
           </Typography>
           <Typography variant='body2' color='text.secondary'>
-            {LABELS.CREATED}: {new Date(selectedUser.createdAt).toLocaleDateString()}{' '}
+            {LABELS.CREATED}: {new Date(selectedUser.createdAt).toLocaleDateString()}
           </Typography>
         </CardContent>
       </Card>
