@@ -5,6 +5,8 @@ body {
   margin: 0;
   padding: 0;
   background-color: vars.$secondary-bg;
+  height: 100vh;
+  width: 100vw;
 }
 
 ::-webkit-scrollbar {
@@ -27,87 +29,28 @@ body {
   border-radius: 10px;
 }
 
-$button-size: 50px;
-$button-hover-width: 140px;
-$button-bg-color: rgb(20, 20, 20);
-$button-hover-bg-color: rgb(181, 160, 255);
-$box-shadow-color: rgba(180, 160, 255, 0.253);
-$icon-size: 12px;
-$transition-duration: 0.3s;
-$text-color: white;
-$text-size: 13px;
-
-.button {
-  width: 50px;
-  height: 50px;
-  border-radius: 50%;
-  background-color: $button-bg-color;
-  border: none;
-  font-weight: 600;
+.buttons-container {
   display: flex;
-  align-items: center;
+  gap: 1rem;
+  margin-top: 3.5rem;
   justify-content: center;
-  box-shadow: 0px 0px 0px 4px $box-shadow-color;
-  cursor: pointer;
-  transition-duration: $transition-duration;
-  overflow: hidden;
-  position: relative;
+  align-items: center;
 
-  .svgIcon {
-    width: $icon-size;
-    transition-duration: $transition-duration;
+  button {
+    color: vars.$secondary-color;
+    background-color: vars.$primary-color;
+    border: none;
+    border-radius: 4px;
+    padding: 0.75rem 1.5rem;
+    cursor: pointer;
+    transition: background-color 0.3s ease, transform 0.2s ease;
 
-    path {
-      fill: $text-color;
+    &:hover {
+      background-color: #4e809c;
     }
-  }
-
-  &:hover {
-    width: $button-hover-width;
-    border-radius: $button-hover-width / 2;
-    transition-duration: $transition-duration;
-    background-color: $button-hover-bg-color;
-    align-items: center;
-
-    .svgIcon {
-      transition-duration: $transition-duration;
-      transform: translateY(-200%);
-    }
-
-    &::before {
-      font-size: $text-size;
-      opacity: 1;
-      bottom: auto;
-      transition-duration: $transition-duration;
-      content: 'Back to Top';
-      color: $text-color;
-    }
-  }
-
-  &::before {
-    position: absolute;
-    bottom: -$text-size - 7px;
-    content: 'Back to Top';
-    color: $text-color;
-    font-size: 0px;
-    transition-duration: $transition-duration;
   }
 }
 
-// .action-button {
-//   background-color: vars.$primary-color;
-//   color: vars.$primary-bg;
-//   border: none;
-//   border-radius: 40px;
-//   font-size: 1rem;
-//   padding: 10px 20px;
-//   cursor: pointer;
-//   transition: background-color 0.3s ease;
-
-//   &:hover {
-//     background-color: #4e809c;
-//   }
-// }
 .swal2-popup {
   font-family: 'Arial', sans-serif;
   border-radius: 20px;

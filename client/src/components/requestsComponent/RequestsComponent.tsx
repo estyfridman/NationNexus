@@ -9,6 +9,8 @@ import {useRequests} from '../../services/hooks/useRequests';
 import {useRecoilValue} from 'recoil';
 import {userState} from '../../services/recoilService/userState';
 import {useUpdateStatusMutation} from '../../services/hooks/usePermission';
+import {LABELS, RR_OPTIONS} from '../../../../shared/constants';
+import './requestsComponent.scss';
 
 const RequestsComponent = () => {
   const {data: requests, isLoading, error} = useRequests();
@@ -45,9 +47,11 @@ const RequestsComponent = () => {
               role: requestedRole,
             });
           }}>
-          <MenuItem value='PENDING'>Pending</MenuItem>
-          <MenuItem value='APPROVED'>Approved</MenuItem>
-          <MenuItem value='REJECTED'>Rejected</MenuItem>
+          {RR_OPTIONS.map((option) => (
+            <MenuItem key={option} value={option.toUpperCase()}>
+              {option}
+            </MenuItem>
+          ))}
         </Select>
       </FormControl>
     );
@@ -82,16 +86,18 @@ const RequestsComponent = () => {
   if (error) return <NotFound />;
 
   return (
-    <div style={{width: '98%'}}>
+    <div className='container'>
       <Typography className='admin-dashboard-title' variant='h4'>
-        User Permission Requests
+        {LABELS.UP_REQUEST}
       </Typography>
-      <Button variant={showPendingOnly ? 'contained' : 'outlined'} onClick={() => setShowPendingOnly(true)}>
-        Pending Requests
-      </Button>
-      <Button variant={!showPendingOnly ? 'contained' : 'outlined'} onClick={() => setShowPendingOnly(false)}>
-        All Requests
-      </Button>
+      <div className='buttons-container'>
+        <Button variant={showPendingOnly ? 'contained' : 'outlined'} onClick={() => setShowPendingOnly(true)} className='action-button'>
+          {LABELS.P_REQUEST}
+        </Button>
+        <Button variant={!showPendingOnly ? 'contained' : 'outlined'} onClick={() => setShowPendingOnly(false)} className='action-button'>
+          {LABELS.A_REQUEST}
+        </Button>
+      </div>
       {requests && requests.length > 0 && <DataGrid rows={processedRequests} columns={columns} getRowId={(row) => row._id} />}
     </div>
   );

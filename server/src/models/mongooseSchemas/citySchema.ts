@@ -1,4 +1,4 @@
-import mongoose, { Schema, Document } from 'mongoose';
+import mongoose, {Schema, Document} from 'mongoose';
 import ICity from '../interfaces/iCity';
 
 const CitySchema = new Schema<ICity & Document>({
@@ -6,16 +6,6 @@ const CitySchema = new Schema<ICity & Document>({
     type: String,
     required: true,
     trim: true,
-  },
-  population: {
-    type: Number,
-    required: true,
-    min: 0,
-  },
-  countryId: {
-    type: Schema.Types.ObjectId,
-    ref: 'Country',
-    required: true,
   },
 });
 

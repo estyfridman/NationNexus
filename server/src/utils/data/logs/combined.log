@@ -1,0 +1,1 @@
+2025-02-25T12:43:42.537Z [[31MERROR[39M]: MongoDB connection error: MongooseServerSelectionError: connect ECONNREFUSED ::1:27017, connect ECONNREFUSED 127.0.0.1:27017

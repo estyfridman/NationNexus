@@ -1,7 +1,7 @@
 import Swal from 'sweetalert2';
 import 'sweetalert2/src/sweetalert2.scss';
-import { ResetFormType, NavigateType } from '../models/swalTypes';
-import { requestPermission } from '../services/userService';
+import {ResetFormType, NavigateType} from '../models/swalTypes';
+import {requestPermission} from '../services/userService';
 
 export const successAlert = async (title?: string, text?: string) => {
   Swal.fire({
@@ -64,6 +64,10 @@ export const cancelAlert = async (resetForm: ResetFormType, navigate: NavigateTy
 };
 
 export const requestPermissionsAlert = async (navigate: NavigateType, userId: string) => {
+  if (!userId) {
+    navigate('/login');
+    return;
+  }
   const result = await Swal.fire({
     title: 'Request Permissions',
     text: 'Select the role you are requesting:',

@@ -39,7 +39,16 @@ export default function Navbar() {
 
   return (
     <AppBar position='static' sx={{backgroundColor: '#3a506b'}}>
-      <Box sx={{flexGrow: 1, display: 'flex', flexDirection: 'row', gap: 3, padding: '10px 30px'}}>
+      <Box
+        sx={{
+          flexGrow: 1,
+          display: 'flex',
+          flexDirection: 'row',
+          gap: 3,
+          padding: '10px 30px',
+          flexWrap: 'wrap',
+          justifyContent: 'space-between',
+        }}>
         {NAVBAR_LINKS.map((link) => {
           return (
             <Link key={link} underline='none' color='inherit' onClick={() => handleLinkClick(link)} className='links'>
@@ -53,11 +62,11 @@ export default function Navbar() {
             {BUTTON_TEXT.ADMIN}
           </Link>
         )}
-        <Typography component='div' className='customTypography'>
+        <Typography className='customTypography'>
           {selectedCountry && selectedCountry.name ? ` ${LABELS.SELECTED_COUNTRY} ${selectedCountry.name}` : LABELS.TO_SELECT_COUNTRY}
         </Typography>
-        {userData && userData.user && <Typography>{userData.user.username}</Typography>}
         <IconButton color='inherit' onClick={handleMenuOpen} className='imageWrapper'>
+          {userData && userData.user && <Typography>{userData.user.username}</Typography>}
           <img
             src={userData?.user?.profileImage ? `${apiPort}${userData.user.profileImage}` : PATH.USER_IMG}
             alt={userData?.user?.firstName}

@@ -1,5 +1,5 @@
 import {useEffect, useState} from 'react';
-import {IconButton, Typography, FormControl, InputLabel, Select, MenuItem, Button} from '@mui/material';
+import {IconButton, Typography, FormControl, InputLabel, Select, MenuItem, Button, Card, CardContent, CardActions} from '@mui/material';
 import IUser from '../../models/interfaces/iUser';
 import Loading from '../loading/Loading';
 import {DataGrid} from '@mui/x-data-grid';
@@ -15,8 +15,9 @@ import {RoleEnum} from '../../../../shared/enums';
 import './adminDashboard.scss';
 import {selectedUserState} from '../../services/recoilService/selectedUserState';
 import RequestsComponent from '../requestsComponent/RequestsComponent';
-import {ALERT_MESSAGES, BUTTON_TEXT, LABELS} from '../../../../shared/constants';
+import {ALERT_MESSAGES, BUTTON_TEXT} from '../../../../shared/constants';
 import UserCard from '../userCard/UserCard';
+import RoleSelect from '../roleSelect/RoleSelect';
 
 export default function AdminDashboard() {
   const [selectedUser, setSelectedUser] = useState<IUser | null>(initialUser);
@@ -47,7 +48,7 @@ export default function AdminDashboard() {
           successAlert(ALERT_MESSAGES.SUCCESS_DELETE_USER);
         },
         onError: () => {
-          errorDeleteAlert(ALERT_MESSAGES.ERROR_DELETE_USER);
+          errorDeleteAlert(ALERT_MESSAGES.ERROR_DELETE);
         },
       });
     });
@@ -98,11 +99,11 @@ export default function AdminDashboard() {
   if (isError) return;
 
   return (
-    <div>
+    <div className='container'>
       <Typography className='admin-dashboard-title' variant='h2'>
         {BUTTON_TEXT.ADMIN}
       </Typography>
-      <div style={{width: '98%'}}>
+      <div style={{width: '96%', marginLeft: '30px'}}>
         <Typography className='admin-dashboard-title' variant='h4'>
           {BUTTON_TEXT.USERS}
         </Typography>
@@ -114,34 +115,15 @@ export default function AdminDashboard() {
             onRowClick={(params) => setSelectedUser(params.row)}
           />
         )}
+        <Button onClick={() => navigate('/register')} className='links'>
+          {BUTTON_TEXT.PROFILE}
+        </Button>
       </div>
       <RequestsComponent />
       {selectedUser && selectedUser.firstName && (
-        <div className='container'>
+        <div className='user-detail-container'>
           <UserCard selectedUser={selectedUser} />
-          <div className='role-change-section'>
-            <Typography variant='h6'>
-              {LABELS.CHANDE_ROLE_F} {selectedUser.firstName} {selectedUser.lastName}
-            </Typography>
-            <FormControl>
-              <InputLabel id='role-select-label'>{LABELS.ROLE}</InputLabel>
-              <Select
-                labelId='role-select-label'
-                id='role-select'
-                value={newRole || selectedUser.role}
-                label='Role'
-                onChange={(e) => setNewRole(e.target.value as RoleEnum)}>
-                {Object.values(RoleEnum).map((role) => (
-                  <MenuItem key={role} value={role}>
-                    {role}
-                  </MenuItem>
-                ))}
-              </Select>
-            </FormControl>
-            <Button type='submit' onClick={() => handleRoleChange(selectedUser._id || '', newRole || selectedUser.role)}>
-              {LABELS.CHANDE_ROLE}
-            </Button>
-          </div>
+          <RoleSelect selectedUser={selectedUser} newRole={newRole} setNewRole={setNewRole} handleRoleChange={handleRoleChange} />
         </div>
       )}
     </div>

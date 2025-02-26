@@ -1,7 +1,8 @@
 import {useMutation, useQueryClient} from '@tanstack/react-query';
-import {grantPermission, updateRequestStatus} from '../userService';
+import {grantPermission} from '../userService';
 import IRoleRequest from '../../models/interfaces/iRoleRequests';
 import logger from '../../utils/logger';
+import {updateRequestStatus} from '../roleService';
 
 export const useUpdateStatusMutation = () => {
   const queryClient = useQueryClient();

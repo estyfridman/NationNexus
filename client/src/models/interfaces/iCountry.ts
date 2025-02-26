@@ -1,10 +1,12 @@
+import ICity from './iCity';
+
 export interface ICountry {
   _id?: string;
   name: string;
   flag: string;
   region: string;
   population: number;
-  cities?: string[]; // Types.ObjectId
+  cityIds?: ICity[];
 }
 
 export interface ICountryUpdate extends Partial<ICountry> {}

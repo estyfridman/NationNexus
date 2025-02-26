@@ -1,26 +1,44 @@
-import { useFormikContext, ErrorMessage } from 'formik';
-import { RoleEnum } from '../../models/enums/RoleEnum';
+import {RoleEnum} from '../../models/enums/RoleEnum';
+import {LABELS} from '../../../../shared/constants';
+import {Button, Card, CardActions, CardContent, FormControl, InputLabel, MenuItem, Select, Typography} from '@mui/material';
+import IUser from '../../models/interfaces/iUser';
+import './roleSelect.scss';
 
-export default function RoleSelect() {
-  const { values, setFieldValue } = useFormikContext<any>();
+interface RoleChangeCardProps {
+  selectedUser: IUser;
+  newRole: RoleEnum | null;
+  setNewRole: React.Dispatch<React.SetStateAction<RoleEnum | null>>;
+  handleRoleChange: (userId: string, newRole: RoleEnum) => void;
+}
 
+export default function RoleSelect({selectedUser, newRole, setNewRole, handleRoleChange}: RoleChangeCardProps) {
   return (
-    <div className="field-container">
-      <label htmlFor="role">Role</label>
-      <select
-        id="role"
-        name="role"
-        className="form-control"
-        value={values.role}
-        onChange={(e) => setFieldValue('role', e.target.value)}
-      >
-        {Object.values(RoleEnum).map((role) => (
-          <option key={role} value={role}>
-            {role}
-          </option>
-        ))}
-      </select>
-      <ErrorMessage name="role" component="div" className="error" />
-    </div>
+    <Card className='role-change-section'>
+      <CardContent>
+        <Typography variant='h6'>
+          {LABELS.CHANDE_ROLE_F} {selectedUser.firstName} {selectedUser.lastName}
+        </Typography>
+        <FormControl>
+          <InputLabel id='role-select-label'>{LABELS.ROLE}</InputLabel>
+          <Select
+            labelId='role-select-label'
+            id='role-select'
+            value={newRole || selectedUser.role}
+            label='Role'
+            onChange={(e) => setNewRole(e.target.value as RoleEnum)}>
+            {Object.values(RoleEnum).map((role) => (
+              <MenuItem key={role} value={role}>
+                {role}
+              </MenuItem>
+            ))}
+          </Select>
+        </FormControl>
+      </CardContent>
+      <CardActions>
+        <Button type='submit' onClick={() => handleRoleChange(selectedUser._id || '', newRole || selectedUser.role)}>
+          {LABELS.CHANDE_ROLE}
+        </Button>
+      </CardActions>
+    </Card>
   );
 }

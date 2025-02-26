@@ -76,16 +76,6 @@ export const grantPermission = async ({userId, role}: {userId: string; role: Rol
   }
 };
 
-export const updateRequestStatus = async ({requestId, status, userId, role}: {requestId: string; status: string; userId: string; role: RoleEnum}) => {
-  try {
-    const response = await client.patch(`/permissions/${requestId}`, {status, userId, role}, {headers: getAuthHeaders()});
-    return response.data;
-  } catch (error) {
-    logger.error(`Error updating request status: ${error}`);
-    throw error;
-  }
-};
-
 export async function deleteUser(id: string): Promise<any> {
   try {
     const response = await client.delete(`/users/${id}`, {headers: getAuthHeaders()});
