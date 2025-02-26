@@ -22,30 +22,23 @@ export default function UserForm() {
   const navigate = useNavigate();
   const currentUser = useRecoilValue(userState);
   const selectedUser = useRecoilValue(selectedUserState);
-  const [userToEdit, setUserToEdit] = useState<IUser | null>(null);
 
   const createUserMutation = useCreateUser();
   const updateUserMutation = useUpdateUser();
 
   const isEditMode = !!id;
-  const isEditingSelf = id === currentUser.user?._id;
+  const userToEdit = isEditMode ? selectedUser || currentUser : null;
   const [hasPermission, setHasPermission] = useState(true);
 
   useEffect(() => {
     if (currentUser.user?.role === RoleEnum.GUEST) {
       setHasPermission(false);
     }
-
-    if (isEditMode) {
-      if (isEditingSelf) {
-        setUserToEdit(currentUser.user);
-      } else if (selectedUser) {
-        setUserToEdit(selectedUser);
-      }
-    }
   }, [id, currentUser, selectedUser]);
 
-  const initialValues = isEditMode ? selectedUser || (id === currentUser.user?._id ? currentUser.user : initialUser) : initialUser;
+  const initialValues = userToEdit ? {...userToEdit} : initialUser;
+
+  const userId = userToEdit && 'user' in userToEdit && userToEdit.user?._id ? userToEdit.user._id : (userToEdit as IUser)?._id || id;
 
   const handleSubmit = (values: Record<string, any>) => {
     const formData = new FormData();
@@ -60,7 +53,7 @@ export default function UserForm() {
     if (isEditMode) {
       updateUserMutation.mutate(
         {
-          id: selectedUser?._id || id || '',
+          id: userId || '',
           formData,
         },
         {
@@ -146,7 +139,7 @@ export default function UserForm() {
                 />
                 <ErrorMessage name='profileImage' component='div' className='error' />
               </div>
-              {currentUser && currentUser.user?.role === 'admin' && (
+              {currentUser && currentUser.user?.role === RoleEnum.ADMIN && (
                 <div className='field-container'>
                   <label htmlFor='role'>{LABELS.ROLE}</label>
                   <Field as='select' id='role' name='role' className='form-control'>
@@ -156,7 +149,6 @@ export default function UserForm() {
                       </option>
                     ))}
                   </Field>
-                  {touched.role && errors.role && <div className='error'>{errors.role}</div>}
                 </div>
               )}
 
