@@ -12,10 +12,10 @@ import {useUpdateCountry} from '../../services/hooks/useUpdateCountry';
 import {successAlert, errorAlert} from '../../utils/sweet-alerts';
 import {RegionEnum} from '../../models/enums/RegionEnum';
 import {initialCountry} from '../../utils/initialValues';
-import {LABELS, BUTTON_TEXT, ALERT_MESSAGES} from './../../../../shared/constants';
+import {LABELS, BUTTON_TEXT, ALERT_MESSAGES} from './../../constants';
 import {userState} from '../../services/recoilService/userState';
 import {useEffect} from 'react';
-import {RoleEnum} from '../../../../shared/enums';
+import {RoleEnum} from '../../models/enums/RoleEnum';
 
 export default function CountryForm() {
   const {id} = useParams();

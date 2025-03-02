@@ -15,7 +15,7 @@ import {userState} from '../../services/recoilService/userState';
 import {useEffect, useState} from 'react';
 import {selectedUserState} from '../../services/recoilService/selectedUserState';
 import IUser from '../../models/interfaces/iUser';
-import {ALERT_MESSAGES, BUTTON_TEXT, LABELS} from '../../../../shared/constants';
+import {ALERT_MESSAGES, BUTTON_TEXT, LABELS} from '../../constants';
 
 export default function UserForm() {
   const {id} = useParams();
@@ -27,7 +27,7 @@ export default function UserForm() {
   const updateUserMutation = useUpdateUser();
 
   const isEditMode = !!id;
-  const userToEdit = isEditMode ? selectedUser || currentUser : null;
+  const userToEdit = isEditMode ? selectedUser || currentUser.user : initialUser;
   const [hasPermission, setHasPermission] = useState(true);
 
   useEffect(() => {
@@ -38,7 +38,7 @@ export default function UserForm() {
 
   const initialValues = userToEdit ? {...userToEdit} : initialUser;
 
-  const userId = userToEdit && 'user' in userToEdit && userToEdit.user?._id ? userToEdit.user._id : (userToEdit as IUser)?._id || id;
+  const userId = userToEdit && 'user' in userToEdit && userToEdit._id ? userToEdit._id : (userToEdit as IUser)?._id || id;
 
   const handleSubmit = (values: Record<string, any>) => {
     const formData = new FormData();
@@ -88,7 +88,7 @@ export default function UserForm() {
       <h2>{isEditMode ? LABELS.EDIT_USER : LABELS.CREATE_USER}</h2>
 
       <Formik initialValues={initialValues} validationSchema={userSchema} onSubmit={handleSubmit}>
-        {({values, initialValues, dirty, isValid, handleSubmit, errors, touched, setFieldValue}) => {
+        {({values, initialValues, dirty, isValid, handleSubmit, setFieldValue}) => {
           const hasChanged = JSON.stringify(values) !== JSON.stringify(initialValues);
           return (
             <Form className='edit-form' onSubmit={handleSubmit}>

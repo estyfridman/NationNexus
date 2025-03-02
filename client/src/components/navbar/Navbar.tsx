@@ -7,7 +7,7 @@ import './navbar.scss';
 import {userState} from '../../services/recoilService/userState';
 import {useLogoutMutation} from '../../services/hooks/userMutations/useLogoutMutation';
 import {requestPermissionsAlert} from '../../utils/sweet-alerts';
-import {NAVBAR_LINKS, PATH, LABELS, BUTTON_TEXT} from '../../../../shared/constants';
+import {NAVBAR_LINKS, PATH, LABELS, BUTTON_TEXT} from '../../constants';
 
 export default function Navbar() {
   const selectedCountry = useRecoilValue(selectedCountryState);

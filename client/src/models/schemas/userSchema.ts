@@ -1,8 +1,7 @@
 import * as Yup from 'yup';
-import { RoleEnum } from '../../../../shared/enums';
+import {RoleEnum} from '../enums/RoleEnum';
 
-const phoneRegExp =
-  /^((\\+[1-9]{1,4}[ \\-]*)|(\\([0-9]{2,3}\\)[ \\-]*)|([0-9]{2,4})[ \\-]*)*?[0-9]{3,4}?[ \\-]*[0-9]{3,4}?$/;
+const phoneRegExp = /^((\\+[1-9]{1,4}[ \\-]*)|(\\([0-9]{2,3}\\)[ \\-]*)|([0-9]{2,4})[ \\-]*)*?[0-9]{3,4}?[ \\-]*[0-9]{3,4}?$/;
 
 export const userSchema = Yup.object().shape({
   firstName: Yup.string()
@@ -18,12 +17,8 @@ export const userSchema = Yup.object().shape({
     .max(40, 'Username must not exceed 40 characters')
     .required('Username is required'),
   email: Yup.string().email('Must be a valid email address').required('Email is required'),
-  phone: Yup.string()
-    .matches(phoneRegExp, 'Must be a valid phone number')
-    .required('Phone number is required'),
-  password: Yup.string()
-    .min(6, 'Password must be at least 6 characters long')
-    .required('Password is required'),
+  phone: Yup.string().matches(phoneRegExp, 'Must be a valid phone number').required('Phone number is required'),
+  password: Yup.string().min(6, 'Password must be at least 6 characters long').required('Password is required'),
   profileImage: Yup.mixed().nullable().notRequired(),
   role: Yup.string().oneOf(Object.values(RoleEnum), 'Invalid role').nullable().notRequired(),
   createdAt: Yup.date()

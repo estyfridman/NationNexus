@@ -1,4 +1,4 @@
-import {PATH, LABELS} from '../../../../shared/constants';
+import {PATH, LABELS} from '../../constants';
 import {Typography, Card, CardMedia, CardContent, Box} from '@mui/material';
 import {generateCurrentPath} from '../../utils/generateCurrentPath';
 import IUser from '../../models/interfaces/iUser';

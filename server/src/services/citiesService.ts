@@ -1,7 +1,7 @@
 import City from '../models/mongooseSchemas/citySchema';
 import {Types} from 'mongoose';
 import ICity from '../models/interfaces/iCity';
-import {ERRORS} from '../../../shared/constants';
+import {ERRORS} from '../constants';
 
 class CitiesService {
   async getAllCities() {

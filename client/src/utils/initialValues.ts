@@ -1,6 +1,7 @@
-import { RoleEnum } from '../../../shared/enums';
+import {RoleEnum} from '../models/enums/RoleEnum';
 
 export const initialUser = {
+  _id: '',
   firstName: '',
   lastName: '',
   username: '',

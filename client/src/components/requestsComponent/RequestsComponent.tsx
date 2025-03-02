@@ -1,6 +1,6 @@
-import {useEffect, useState} from 'react';
+import {useState} from 'react';
 import {DataGrid, GridColDef, GridRenderCellParams} from '@mui/x-data-grid';
-import {RoleEnum} from '../../../../shared/enums';
+import {RoleEnum} from '../../models/enums/RoleEnum';
 import {MenuItem, Select, FormControl, InputLabel, Button, Typography} from '@mui/material';
 import Loading from '../loading/Loading';
 import NotFound from '../notFound/NotFound';
@@ -9,7 +9,7 @@ import {useRequests} from '../../services/hooks/useRequests';
 import {useRecoilValue} from 'recoil';
 import {userState} from '../../services/recoilService/userState';
 import {useUpdateStatusMutation} from '../../services/hooks/usePermission';
-import {LABELS, RR_OPTIONS} from '../../../../shared/constants';
+import {LABELS, RR_OPTIONS} from '../../constants';
 import './requestsComponent.scss';
 
 const RequestsComponent = () => {

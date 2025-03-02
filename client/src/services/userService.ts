@@ -2,7 +2,7 @@ import {client} from '../api/client';
 import IUser from '../models/interfaces/iUser';
 import logger from '../utils/logger';
 import {getAuthHeaders} from '../utils/getAuthorization';
-import {RoleEnum} from '../../../shared/enums';
+import {RoleEnum} from '../models/enums/RoleEnum';
 
 export const getAllUsers = async () => {
   try {

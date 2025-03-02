@@ -3,8 +3,7 @@ import User from '../models/mongooseSchemas/userSchema';
 import {Types} from 'mongoose';
 import {IUser} from '../models/interfaces/iUser';
 import jwt from 'jsonwebtoken';
-import {IPermissionRequest} from '../models/interfaces/IPermissionRequest';
-import {RoleEnum} from '../../../shared/enums';
+import {RoleEnum} from '../models/enums/roleEnum';
 import RoleRequest from '../models/mongooseSchemas/requestSchema';
 
 const JWT_SECRET = process.env.JWT_SECRET || 'hsjf38fks';

@@ -14,8 +14,8 @@ import DeleteIcon from '@mui/icons-material/Delete';
 import {useDeleteCountry} from '../../services/hooks/useDeleteCountry ';
 import {deleteAlert, errorDeleteAlert, successAlert} from '../../utils/sweet-alerts';
 import {userState} from '../../services/recoilService/userState';
-import {RoleEnum} from '../../../../shared/enums';
-import {LABELS, BUTTON_TEXT, ALERT_MESSAGES} from './../../../../shared/constants';
+import {RoleEnum} from '../../models/enums/RoleEnum';
+import {LABELS, BUTTON_TEXT, ALERT_MESSAGES} from './../../constants';
 import {requestPermissionsAlert} from '../../utils/sweet-alerts';
 import Button from '@mui/material/Button';
 

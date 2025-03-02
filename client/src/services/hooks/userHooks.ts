@@ -3,8 +3,10 @@ import {getAllUsers, registerUser, deleteUser, loginUser, updateUser, grantPermi
 import IUser, {IUserUpdate} from '../../models/interfaces/iUser';
 import {errorAlert} from '../../utils/sweet-alerts';
 import logger from '../../utils/logger';
-import {useSetRecoilState} from 'recoil';
+import {useRecoilValue, useSetRecoilState} from 'recoil';
 import {userState} from '../recoilService/userState';
+import {RoleEnum} from '../../models/enums/RoleEnum';
+import {getUserById} from '../userService';
 
 export const useGetUsers = () => {
   return useQuery<IUser[]>({
@@ -16,30 +18,45 @@ export const useGetUsers = () => {
 
 export const useGetUserById = (id: string) => {
   const queryClient = useQueryClient();
-  const users = queryClient.getQueryData<IUser[]>(['Users']);
-  const userFromUsers = users ? users.find((user) => user._id === id) : null;
 
-  const userFromCache = queryClient.getQueryData<IUser>(['user', id]);
+  return useQuery<IUser, Error>({
+    queryKey: ['user', id],
+    queryFn: async () => {
+      const cachedUsers = queryClient.getQueryData<IUser[]>(['Users']);
+      const userFromCache = cachedUsers?.find((user) => user._id === id);
 
-  return userFromUsers || userFromCache || null;
+      if (userFromCache) {
+        return userFromCache;
+      }
+
+      const userFromApi = await getUserById(id);
+      queryClient.setQueryData(['user', id], userFromApi);
+      return userFromApi;
+    },
+    staleTime: 5 * 60 * 1000,
+  });
 };
 
 export const useCreateUser = () => {
   const queryClient = useQueryClient();
   const setUserState = useSetRecoilState(userState);
+  const currentUser = useRecoilValue(userState);
 
   return useMutation({
     mutationFn: registerUser,
     onSuccess: (data) => {
-      setUserState({
-        user: data.user,
-        token: data.token,
-      });
-      localStorage.setItem('token', data.token);
-      localStorage.setItem('user', JSON.stringify(data.user));
       queryClient.setQueryData(['Users'], (oldUsers: any) => {
         return oldUsers ? [...oldUsers, data.user] : [data.user];
       });
+
+      if (!(currentUser && currentUser?.user?.role === RoleEnum.ADMIN)) {
+        setUserState({
+          user: data.user,
+          token: data.token,
+        });
+        localStorage.setItem('token', data.token);
+        localStorage.setItem('user', JSON.stringify(data.user)); //check and delete
+      }
     },
     onError: (error, newUser, context) => {
       errorAlert(`${error} - ${newUser} - ${context}`);

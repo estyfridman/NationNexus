@@ -5,13 +5,13 @@ import cors from 'cors';
 import connectDB from './config/connectDB';
 import path from 'path';
 import logger from '../src/utils/logger';
-import { limiter } from './utils/limiter';
+import {limiter} from './utils/limiter';
 import countryRoutes from './routes/countryRoute';
 import cityRoutes from './routes/cityRoute';
 import userRoutes from './routes/userRoutes';
 import authRoutes from './routes/authRoutes';
 import permissionsRoutes from './routes/permissionsRoutes';
-import { securityMiddlewares } from './middlewares/securityMiddleware';
+import {securityMiddlewares} from './middlewares/securityMiddleware';
 import fetchAndSaveCountries from './utils/seed';
 
 const app = express();
@@ -30,10 +30,10 @@ app.use('/uploads', (req, res, next) => {
   res.setHeader('Cross-Origin-Resource-Policy', 'cross-origin');
   next();
 });
-app.use('/uploads', express.static(path.join(process.cwd(), 'uploads')));
+app.use('/uploads', express.static(path.join(__dirname, '..', 'uploads')));
 app.use(securityMiddlewares);
 
-dotenv.config({ path: path.resolve(__dirname, 'config/.env') });
+dotenv.config({path: path.resolve(__dirname, 'config/.env')});
 const PORT = process.env.PORT || 8080;
 const MONGODB_URI = process.env.MONGO_URL || '';
 

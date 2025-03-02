@@ -1,5 +1,5 @@
 import {useEffect, useState} from 'react';
-import {IconButton, Typography, FormControl, InputLabel, Select, MenuItem, Button, Card, CardContent, CardActions} from '@mui/material';
+import {IconButton, Typography, Button} from '@mui/material';
 import IUser from '../../models/interfaces/iUser';
 import Loading from '../loading/Loading';
 import {DataGrid} from '@mui/x-data-grid';
@@ -11,11 +11,11 @@ import {useRecoilValue, useSetRecoilState} from 'recoil';
 import {userState} from '../../services/recoilService/userState';
 import {initialUser} from '../../utils/initialValues';
 import {useNavigate} from 'react-router-dom';
-import {RoleEnum} from '../../../../shared/enums';
+import {RoleEnum} from '../../models/enums/RoleEnum';
 import './adminDashboard.scss';
 import {selectedUserState} from '../../services/recoilService/selectedUserState';
 import RequestsComponent from '../requestsComponent/RequestsComponent';
-import {ALERT_MESSAGES, BUTTON_TEXT} from '../../../../shared/constants';
+import {ALERT_MESSAGES, BUTTON_TEXT, LABELS} from '../../constants';
 import UserCard from '../userCard/UserCard';
 import RoleSelect from '../roleSelect/RoleSelect';
 
@@ -116,7 +116,7 @@ export default function AdminDashboard() {
           />
         )}
         <Button onClick={() => navigate('/register')} className='links'>
-          {BUTTON_TEXT.PROFILE}
+          {LABELS.CREATE_USER}
         </Button>
       </div>
       <RequestsComponent />

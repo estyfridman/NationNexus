@@ -2,7 +2,7 @@ import logger from '../utils/logger';
 import {client} from '../api/client';
 import {getAuthHeaders} from '../utils/getAuthorization';
 import IRoleRequest from '../models/interfaces/iRoleRequests';
-import {RoleEnum} from '../../../shared/enums';
+import {RoleEnum} from '../models/enums/RoleEnum';
 
 export const getAllRoleRequests = async () => {
   try {

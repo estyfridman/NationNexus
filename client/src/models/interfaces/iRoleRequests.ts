@@ -1,4 +1,4 @@
-import { RoleEnum } from '../../../../shared/enums';
+import {RoleEnum} from '../enums/RoleEnum';
 
 export default interface IRoleRequest {
   _id?: string;

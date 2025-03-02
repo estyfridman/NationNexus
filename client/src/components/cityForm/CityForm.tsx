@@ -14,9 +14,9 @@ import {useFetchCountries} from '../../services/hooks/useFetchCountries';
 import {Autocomplete, TextField} from '@mui/material';
 import {ICountry} from '../../models/interfaces/iCountry';
 import './cityForm.scss';
-import {ALERT_MESSAGES, LABELS, BUTTON_TEXT} from '../../../../shared/constants';
+import {ALERT_MESSAGES, LABELS, BUTTON_TEXT} from '../../constants';
 import {userState} from '../../services/recoilService/userState';
-import {RoleEnum} from '../../../../shared/enums';
+import {RoleEnum} from '../../models/enums/RoleEnum';
 import {useRecoilValue} from 'recoil';
 import {useNavigate} from 'react-router-dom';
 
@@ -115,7 +115,7 @@ export function CityForm({city, mode, onClear}: CityFormProps) {
                 options={countries}
                 getOptionLabel={(option: ICountry) => option.name}
                 getOptionKey={(option: ICountry) => option._id || Math.random()}
-                value={countries.find((country) => country._id === values.countryId) || null}
+                value={countries.find((country) => country._id === values._id) || null} //TODO:שיהיה בלתי ניתן לשינוי אם מגיעים מתוך מדינה
                 onChange={(event, newValue) => {
                   setFieldValue('countryId', newValue?._id || '');
                 }}
