@@ -2,13 +2,15 @@ import mongoose from 'mongoose';
 import Country from '../models/mongooseSchemas/countrySchema';
 import City from '../models/mongooseSchemas/citySchema';
 import ICity from '../models/interfaces/iCity';
+import {MSG_FUNC} from '../constants';
+import logger from '../utils/logger';
 
 export const addCitiesToCountry = async (countryName: string, cities: {name: string; population: number}[]) => {
   try {
     const country = await Country.findOne({name: countryName});
 
     if (!country) {
-      throw new Error(`Country '${countryName}' not found.`);
+      throw new Error(MSG_FUNC.COUNTRY_NOT_FOUND(countryName));
     }
 
     const countryIdObject = new mongoose.Types.ObjectId(country._id);
@@ -24,7 +26,7 @@ export const addCitiesToCountry = async (countryName: string, cities: {name: str
     await country.save();
     return {country, cities: cityDocuments};
   } catch (error) {
-    console.error(`Error adding cities to country: ${(error as Error).message}`);
+    logger.error(MSG_FUNC.ERROR_ADDING_CITIES((error as Error).message));
     throw error;
   }
 };

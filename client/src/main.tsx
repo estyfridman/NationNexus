@@ -1,28 +1,27 @@
-import { StrictMode } from 'react';
-import { createRoot } from 'react-dom/client';
+import {StrictMode} from 'react';
+import {createRoot} from 'react-dom/client';
 import App from './App.tsx';
-import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
-import { ReactQueryDevtools } from '@tanstack/react-query-devtools';
-import { createBrowserRouter, RouterProvider } from 'react-router-dom';
+import {QueryClient, QueryClientProvider} from '@tanstack/react-query';
+import {ReactQueryDevtools} from '@tanstack/react-query-devtools';
+import {createBrowserRouter, RouterProvider} from 'react-router-dom';
 import NotFound from './components/notFound/NotFound.tsx';
 import CountryForm from './components/countryForm/CountryForm.tsx';
 import Grid from './components/grid/Grig.tsx';
 import Layout from './Layout.tsx';
 import ErrorBoundary from './ErrorBoundary.tsx';
-import { RecoilRoot } from 'recoil';
+import {RecoilRoot} from 'recoil';
 import Login from './components/login/Login';
-import Logout from './components/logout/Logout';
-import SignUp from './components/signUp/signUp.tsx';
 import UserForm from './components/userForm/UserForm.tsx';
 import AdminDashboard from './components/adminDashboard/AdminDashboard.tsx';
 import CitiesGrid from './components/cities/Cities.tsx';
 import './styles/main.scss';
+import {PATH} from './constants.ts';
 
 const queryClient = new QueryClient();
 
 const router = createBrowserRouter([
   {
-    path: '/',
+    path: PATH.ROOT,
     element: <Layout />,
     children: [
       {
@@ -30,57 +29,49 @@ const router = createBrowserRouter([
         element: <App />,
       },
       {
-        path: 'home',
+        path: PATH.HOME,
         element: <App />,
       },
       {
-        path: 'edit/:id',
+        path: PATH.EDIT,
         element: <CountryForm />,
       },
       {
-        path: 'create',
+        path: PATH.CREATE,
         element: <CountryForm />,
       },
       {
-        path: 'countries',
+        path: PATH.COUNTRIES,
         element: <Grid />,
       },
       {
-        path: 'cities/:countryId',
+        path: PATH.CITIES_BY_COUNTRY,
         element: <CitiesGrid />,
       },
       {
-        path: 'cities',
+        path: PATH.CITIES,
         element: <CitiesGrid />,
       },
       {
-        path: 'login',
+        path: PATH.LOGIN,
         element: <Login />,
       },
       {
-        path: 'logout',
-        element: <Logout />,
-      },
-      {
-        path: 'signup',
-        element: <SignUp />,
-      },
-      {
-        path: 'register',
+        path: PATH.REGISTER,
         element: <UserForm />,
       },
       {
-        path: 'editUser/:id',
+        path: PATH.EDIT_USER,
         element: <UserForm />,
       },
       {
-        path: 'adminDashboard',
+        path: PATH.ADMIN_DASHBOARD,
         element: <AdminDashboard />,
       },
     ],
   },
   {
-    path: '*',
+    path: PATH.NF,
     element: <NotFound />,
   },
 ]);

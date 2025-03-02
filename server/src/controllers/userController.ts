@@ -1,14 +1,15 @@
 /// <reference path="../types/express.d.ts" />
-
+import {MESSAGES, PATH, TEXT} from '../constants';
 import {Request, Response} from 'express';
 import UserService from '../services/userService';
+import {RoleEnum} from '../models/enums/roleEnum';
 
 export const getAllUsers = async (req: Request, res: Response): Promise<void> => {
   try {
     const users = await UserService.getUsers();
     res.json(users);
   } catch (error) {
-    error instanceof Error ? res.status(400).json({error: error.message}) : res.status(500).json({error: 'An unknown error occurred'});
+    error instanceof Error ? res.status(400).json({error: error.message}) : res.status(500).json({error: MESSAGES.UNKNOWN_ERROR});
   }
 };
 
@@ -17,17 +18,17 @@ export const getUserById = async (req: Request, res: Response) => {
     const {id} = req.params;
     const user = await UserService.getUserById(id);
     if (!user) {
-      res.status(404).json({error: 'User not found'});
+      res.status(404).json({error: MESSAGES.USER_NOT_FOUND});
     }
     res.json(user);
   } catch (error) {
-    res.status(500).json({error: 'Error retrieving user'});
+    res.status(500).json({error: MESSAGES.ERR_RETRIEVE_USER});
   }
 };
 
 export const registerUser = async (req: Request, res: Response) => {
   try {
-    const profileImage = req.file ? `/uploads/${req.file.filename}` : '/images/Default_User.jpg';
+    const profileImage = req.file ? `${PATH.UPS}/${req.file.filename}` : PATH.DEFAULT_USER;
 
     const userData = {
       firstName: req.body.firstName as string,
@@ -42,19 +43,19 @@ export const registerUser = async (req: Request, res: Response) => {
     };
     const {user, token} = await UserService.createUser(userData);
     res.status(201).json({
-      message: 'User registered successfully!',
+      message: MESSAGES.SUCCESS_REGIS_USER,
       user,
       token,
     });
   } catch (error) {
-    res.status(500).json({error: `Error registering user: ${(error as Error).message}`});
+    res.status(500).json({error: `${MESSAGES.ERR_REGIS_USER} ${(error as Error).message}`});
   }
 };
 
 export const updateUser = async (req: Request, res: Response) => {
   try {
     const {id} = req.params;
-    const profileImage = req.file ? `/uploads/${req.file.filename}` : undefined;
+    const profileImage = req.file ? `${PATH.UPS}/${req.file.filename}` : undefined;
 
     const updateData = {
       ...req.body,
@@ -62,23 +63,23 @@ export const updateUser = async (req: Request, res: Response) => {
     };
 
     const {user, token} = await UserService.updateUser(id, updateData);
-    res.status(200).json({message: 'User updated successfully!', user, token});
+    res.status(200).json({message: MESSAGES.SUCCESS_UPDATE_USER, user, token});
   } catch (error) {
-    res.status(500).json({error: 'Error updating user'});
+    res.status(500).json({error: MESSAGES.ERR_UPDATE_USER});
   }
 };
 
 export const deleteUser = async (req: Request, res: Response) => {
-  if (req.user?.role !== 'admin' && req.user?._id !== req.params.id) {
-    res.status(403).json({message: 'Not authorized'});
+  if (req.user?.role !== RoleEnum.ADMIN && req.user?._id !== req.params.id) {
+    res.status(403).json({message: MESSAGES.NOT_AUTH});
     return;
   }
   try {
     const {id} = req.params;
     await UserService.deleteUser(id);
-    res.status(200).json({message: 'User deleted successfully!'});
+    res.status(200).json({message: MESSAGES.SUCCESS_DELETE_USER});
   } catch (error) {
-    res.status(500).json({error: 'Error deleting user'});
+    res.status(500).json({error: MESSAGES.ERR_DELETE_USER});
   }
 };
 
@@ -88,9 +89,9 @@ export const changeUserRole = async (req: Request, res: Response) => {
     const {role} = req.body;
 
     const updatedUser = await UserService.changeUserRole(id, role);
-    res.status(200).json({message: 'User role updated successfully!', user: updatedUser});
+    res.status(200).json({message: MESSAGES.SUCCESS_UPDATE_ROLE, user: updatedUser});
   } catch (error) {
-    res.status(500).json({error: 'Error updating user role'});
+    res.status(500).json({error: MESSAGES.ERR_UPDATE_ROLE});
   }
 };
 
@@ -100,6 +101,6 @@ export const requestRoleChange = async (req: Request, res: Response) => {
     const result = await UserService.requestRoleChange(userId, role);
     res.status(200).json(result);
   } catch (error) {
-    res.status(500).json({error: 'Error requesting role change'});
+    res.status(500).json({error: MESSAGES.ERR_REQ_ROLE});
   }
 };

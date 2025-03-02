@@ -3,7 +3,8 @@ import mongoose from 'mongoose';
 export const METHODS = ['GET', 'POST', 'PUT', 'PATCH', 'DELETE'];
 export const ORIGIN = '*';
 export const ALLOWED_HEADERS = ['Content-Type', 'Authorization'];
-export const JWT_SECRET = process.env.JWT_SECRET || 'hsjf38fks';
+
+export const JWT_SECRET = process.env.JWT_SECRET || 'default_secret';
 
 export const TEST = {
   COUNTRY_DESC_TEST: 'Country API (Mocked)',
@@ -91,15 +92,72 @@ export const MESSAGES = {
   NOT_AUTH: 'Not authorized',
   AUTH_FAIL: 'Authorization failed in',
   AUTH_FAILED: 'Authorization failed',
-  ERROR_CREATE_COUNTRY: 'There was an issue adding the country. Please try again.',
-  ERROR_CREATE_COUNTRY_LOG: 'Failed to add country:',
+  LOGIN_FAILED: 'Login failed',
+  USER_NOT_FOUND: 'User Not Found',
+  RESET_PASS_SEND: 'A password reset link was sent to the email',
+  RESET_PASS_NOT_SEND: 'Error in the password reset process',
+  INVALID_TOKEN: 'Invalid or expired token',
+  PASS_UPDATE_SUCCESS: 'Password updated successfully',
+  ERROR_RESET_PASS: 'Password reset error',
+  UNKNOWN_ERROR: 'An unknown error occurred',
+  SUCCESS_DELETE_CITY: 'City deleted successfully',
+  APPROVED_ERR_MSG: 'Missing userId or role for APPROVED status.',
+  ERR_REQ_ROLE: 'Error requesting role change',
+  SUCCESS_UPDATE_ROLE: 'User role updated successfully!',
+  ERR_UPDATE_ROLE: 'Error updating user role',
   SUCCESS_UPDATE_COUNTRY_B: 'Country updated successfully!',
   ERROR_UPDATE_COUNTRY: 'Failed to update country.',
   GUEST: 'Only admins and users can create countries.',
-  NO_ADMIN: 'Only admins can edit countries.',
+  NO_ADMIN_EDIT: 'Only admins can edit countries.',
+  NO_ADMIN: 'Only admins can delete.',
+  NO_PERMISSIONS: 'Permissions...',
   NOT_FOUND_TITLE: 'Unable to retrieve data',
   NOT_FOUND_MESSAGE: 'The server is currently unavailable. Please try again later.',
   SUCCESS: 'Success',
+  SUCCESS_DELETE_USER: 'User deleted successfully!',
+  SUCCESS_UPDATE_USER: 'User updated successfully!',
+  SUCCESS_REGIS_USER: 'User registered successfully!',
+  ERR_RETRIEVE_USER: 'Error retrieving user',
+  ERR_REGIS_USER: 'Error registering user: ',
+  ERR_DELETE_USER: 'Error deleting user',
+  ERR_UPDATE_USER: 'Error updating user',
+  MONGO_CONNECTION_ERR: 'MongoDB connection error: ',
+  INVALID_CREDENTIALS: 'Invalid credentials',
+  USERNAME_PASSWORD_REQUIRED: 'Username and password are required',
+  AUTHENTICATION_FAILED: 'Failed to authenticate user',
+  INVALID_ID: 'Invalid ID format',
+  COUNTRY_NOT_FOUND_B: 'Country not found',
+  UPDATE_COUNTRY_FAILED: 'Failed to update country',
+  DELETE_COUNTRY_FAILED: 'Failed to delete country',
+  EMAIL_FAILED: 'Email failed',
+  ERR_EMAIL: 'Error sending email',
+  PERMISSION_GET_FAILED: 'Failed to get permission requests',
+  PERMISSION_DELETE_FAILED: 'Failed to delete permission requests',
+  PERMISSION_NOT_FOUND: 'Permission request not found',
+  FAILED_GET_USERS: 'Failed to get users',
+  FAILED_GET_USER: 'Failed to get user by id',
+  MISS_FIELDS: 'Missing required fields',
+  EMAIL_EXISTS: 'Email already exists',
+  USERNAME_EXISTS: 'Username already exists',
+  FAILED_CREATE_USER: 'Failed to create user',
+  FAILED_UPDATE_USER: 'Failed to update user',
+  FAILED_DELETE_USER: 'Failed to delete user',
+  FAILED_UPDATE_USER_ROLE: 'Failed to update user role',
+  FAILED_REQUEST_ROLE: 'Failed to request role change',
+  IMG_FILE_ERR: 'Only image files are allowed!',
+};
+
+export const MSG_FUNC = {
+  COUNTRY_EXISTS: (countryName: string) => `${countryName} already exists`,
+  CREATE_COUNTRY_FAILED: (errorMessage: string) => `Failed to create country: ${errorMessage}`,
+  COUNTRY_NOT_FOUND: (countryName: string) => `Country '${countryName}' not found.`,
+  ERROR_ADDING_CITIES: (errorMessage: string) => `Error adding cities to country: ${errorMessage}`,
+  FETCH_COUNTRIES: (errorMessage: string) => `Error fetching countries: ${errorMessage}`,
+  FETCH_COUNTRY: (errorMessage: string) => `Error fetching country: ${errorMessage}`,
+  RESET_URL: (resetToken: string) => `${APP_CONFIG.FRONTEND_URL}/reset-password?token=${resetToken}`,
+  EMAIL_INFO: (infoMessage: string) => `Email sent: ${infoMessage}`,
+  PERMISSION_UPDATE_FAILED: (errorMessage: string) => `Failed to update permission request: ${errorMessage}`,
+  REQUEST_ROLE_SEND: (requestedRole: string) => `Request for role change to ${requestedRole} has been sent for approval.`,
 };
 
 export const PATH = {
@@ -119,6 +177,8 @@ export const PATH = {
   COUNTRIES: '/countries',
   POST_COUNTRIES: 'POST /countries',
   TEST: '/test',
+  DEFAULT_USER: '/images/Default_User.jpg',
+  IMG: 'image/',
 };
 
 export const ERRORS = {
@@ -174,6 +234,11 @@ export const LABELS = {
 export const TEXT = {
   STRING: 'string',
   OBJECT: 'object',
+  SHA: 'sha256',
+  APPROVED: 'APPROVED',
+  SERVICE_MAIL: 'gmail',
+  USER: 'user',
+
   SAVE: 'Save',
   CANCEL: 'Cancel',
   RESET: 'Reset',
@@ -190,3 +255,31 @@ export const TEXT = {
 };
 
 export const RR_OPTIONS = ['Pending', 'Approved', 'Rejected'];
+
+export const EMAIL_TEMPLATES = {
+  PASSWORD_RESET_SUBJECT: 'Password Reset',
+  PASSWORD_RESET_HTML: (resetUrl: string) => `
+    <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto;">
+      <h2>Password Reset</h2>
+      <p>We've received a request to reset your password. If it wasn't you, ignore this email.</p>
+      <a href="${resetUrl}" 
+         style="display: inline-block; 
+                background-color: #4CAF50; 
+                color: white; 
+                padding: 10px 20px; 
+                text-decoration: none; 
+                border-radius: 5px;">
+        Reset Password
+      </a>
+      <p>This link will expire in 1 hour.</p>
+    </div>
+  `,
+};
+
+export const APP_CONFIG = {
+  FRONTEND_URL: process.env.FRONTEND_URL || 'http://localhost:3000',
+  EMAIL_USER: process.env.EMAIL_USER,
+  EMAIL_PASS: process.env.EMAIL_PASS,
+};
+
+export const FILESIZE = 5 * 1024 * 1024;

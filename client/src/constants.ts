@@ -96,4 +96,16 @@ export const RR_OPTIONS = ['Pending', 'Approved', 'Rejected'];
 
 export const PATH = {
   USER_IMG: '/images/Default_User.jpg',
+  ROOT: '/',
+  HOME: '/home',
+  EDIT: '/edit/:id',
+  CREATE: '/create',
+  COUNTRIES: '/countries',
+  CITIES_BY_COUNTRY: '/cities/:countryId',
+  CITIES: '/cities',
+  LOGIN: '/login',
+  REGISTER: '/register',
+  EDIT_USER: '/editUser/:id',
+  ADMIN_DASHBOARD: '/adminDashboard',
+  NF: '*',
 };

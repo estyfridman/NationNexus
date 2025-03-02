@@ -5,42 +5,41 @@ import {IUser} from '../models/interfaces/iUser';
 import jwt from 'jsonwebtoken';
 import {RoleEnum} from '../models/enums/roleEnum';
 import RoleRequest from '../models/mongooseSchemas/requestSchema';
-
-const JWT_SECRET = process.env.JWT_SECRET || 'hsjf38fks';
+import {MESSAGES, JWT_SECRET, MSG_FUNC} from '../constants';
 
 class UserService {
   async getUsers() {
     try {
       return await User.find().select('-password');
     } catch {
-      throw new Error('Failed to get users');
+      throw new Error(MESSAGES.FAILED_GET_USERS);
     }
   }
 
   async getUserById(id: string) {
     if (!Types.ObjectId.isValid(id)) {
-      throw new Error('Invalid ID format');
+      throw new Error(MESSAGES.INVALID_ID);
     }
     try {
       const user = await User.findById(id).select('-password');
       return user;
     } catch {
-      throw new Error('Failed to get user by id');
+      throw new Error(MESSAGES.FAILED_GET_USER);
     }
   }
 
   async createUser(userData: IUser) {
     if (!userData.firstName || !userData.username || !userData.email || !userData.password) {
-      throw new Error('Missing required fields');
+      throw new Error(MESSAGES.MISS_FIELDS);
     }
     try {
       const existingUser = await User.findOne({username: userData.username});
       if (existingUser) {
-        throw new Error('Username already exists');
+        throw new Error(MESSAGES.USERNAME_EXISTS);
       }
       const existingEmail = await User.findOne({email: userData.email});
       if (existingEmail) {
-        throw new Error('Email already exists');
+        throw new Error(MESSAGES.EMAIL_EXISTS);
       }
       const hashedPassword = await bcrypt.hash(userData.password, 10);
       const newUser = new User({
@@ -53,13 +52,13 @@ class UserService {
       });
       return {user: newUser, token};
     } catch {
-      throw new Error('Failed to create user');
+      throw new Error(MESSAGES.FAILED_CREATE_USER);
     }
   }
 
   async updateUser(id: string, updateData: Partial<IUser>) {
     if (!Types.ObjectId.isValid(id)) {
-      throw new Error('Invalid ID format');
+      throw new Error(MESSAGES.INVALID_ID);
     }
     try {
       if (updateData.password) {
@@ -71,7 +70,7 @@ class UserService {
       }).select('-password');
 
       if (!updatedUser) {
-        throw new Error('User not found');
+        throw new Error(MESSAGES.USER_NOT_FOUND);
       }
       const token = jwt.sign({userId: updatedUser._id, role: updatedUser.role}, JWT_SECRET, {
         expiresIn: '10d',
@@ -79,54 +78,54 @@ class UserService {
 
       return {user: updatedUser, token};
     } catch {
-      throw new Error('Failed to update user');
+      throw new Error(MESSAGES.FAILED_UPDATE_USER);
     }
   }
 
   async deleteUser(id: string) {
     if (!Types.ObjectId.isValid(id)) {
-      throw new Error('Invalid ID format');
+      throw new Error(MESSAGES.INVALID_ID);
     }
     try {
       const deletedUser = await User.findByIdAndDelete(id).select('-password');
       if (!deletedUser) {
-        throw new Error('User not found');
+        throw new Error(MESSAGES.USER_NOT_FOUND);
       }
       return deletedUser;
     } catch {
-      throw new Error('Failed to delete user');
+      throw new Error(MESSAGES.FAILED_DELETE_USER);
     }
   }
 
   async changeUserRole(id: string, role: string) {
     if (!Types.ObjectId.isValid(id)) {
-      throw new Error('Invalid ID format');
+      throw new Error(MESSAGES.INVALID_ID);
     }
     try {
       const updatedUser = await User.findByIdAndUpdate(id, {role: role.toLowerCase()}, {new: true, runValidators: true});
       if (!updatedUser) {
-        throw new Error('User not found');
+        throw new Error(MESSAGES.USER_NOT_FOUND);
       }
       return updatedUser;
     } catch (error) {
-      throw new Error('Failed to update user role');
+      throw new Error(MESSAGES.FAILED_UPDATE_USER_ROLE);
     }
   }
 
   async requestRoleChange(userId: string, requestedRole: RoleEnum) {
     if (!Types.ObjectId.isValid(userId)) {
-      throw new Error('Invalid ID format');
+      throw new Error(MESSAGES.INVALID_ID);
     }
     try {
       const user = await User.findById(userId);
       if (!user) {
-        throw new Error('User not found');
+        throw new Error(MESSAGES.USER_NOT_FOUND);
       }
       const newRequest = new RoleRequest({userId, requestedRole});
       await newRequest.save();
-      return {message: `Request for role change to ${requestedRole} has been sent for approval.`};
+      return {message: MSG_FUNC.REQUEST_ROLE_SEND(requestedRole.toString())};
     } catch {
-      throw new Error('Failed to request role change');
+      throw new Error(MESSAGES.FAILED_REQUEST_ROLE);
     }
   }
 }
