@@ -14,7 +14,7 @@ import {useFetchCountries} from '../../services/hooks/useFetchCountries';
 import {Autocomplete, TextField} from '@mui/material';
 import {ICountry} from '../../models/interfaces/iCountry';
 import './cityForm.scss';
-import {ALERT_MESSAGES, LABELS, BUTTON_TEXT} from '../../constants';
+import {ALERT_MESSAGES, LABELS, BUTTON_TEXT, PATH} from '../../constants';
 import {userState} from '../../services/recoilService/userState';
 import {RoleEnum} from '../../models/enums/RoleEnum';
 import {useRecoilValue} from 'recoil';
@@ -44,15 +44,15 @@ export function CityForm({city, mode, onClear}: CityFormProps) {
 
   useEffect(() => {
     if (!user) {
-      navigate('/login');
+      navigate(PATH.LOGIN);
     } else {
       if (!user || user.role === RoleEnum.GUEST) {
         errorAlert(ALERT_MESSAGES.GUEST);
-        navigate('/');
+        navigate(PATH.ROOT);
       }
       if (mode === ModeEnum.EDIT && user!.role !== RoleEnum.ADMIN) {
         errorAlert(ALERT_MESSAGES.NO_ADMIN);
-        navigate('/');
+        navigate(PATH.ROOT);
       }
     }
   }, [user, navigate]);

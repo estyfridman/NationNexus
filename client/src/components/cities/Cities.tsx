@@ -17,7 +17,7 @@ import AddCircleOutlineIcon from '@mui/icons-material/AddCircleOutline';
 import Button from '@mui/material/Button';
 import {initialCity} from '../../utils/initialValues';
 import './cities.scss';
-import {LABELS, BUTTON_TEXT, ALERT_MESSAGES} from './../../constants';
+import {LABELS, BUTTON_TEXT, ALERT_MESSAGES, FIELD} from './../../constants';
 import {userState} from '../../services/recoilService/userState';
 import {RoleEnum} from '../../models/enums/RoleEnum';
 import {useNavigate} from 'react-router-dom';
@@ -81,18 +81,17 @@ export default function CitiesGrid() {
   }
 
   const columns = [
-    {field: 'name', headerName: 'Name', flex: 1, headerClassName: 'custom-header'},
+    {field: FIELD.NAME, headerName: LABELS.NAME},
     {
-      field: 'actions',
-      headerName: 'Actions',
+      field: FIELD.ACTIONS,
+      headerName: FIELD.ACTIONS,
       flex: 2,
-      headerClassName: 'action-header',
       sortable: false,
       renderCell: (params: any) => {
         if (!user || user.role !== RoleEnum.ADMIN) {
           return (
             <div>
-              <span style={{fontSize: '0.9rem', color: 'red'}}>{LABELS.NO_PERMISSION}</span>
+              <span className='error'>{LABELS.NO_PERMISSION}</span>
               <Button variant='contained' size='small' onClick={() => requestPermissionsAlert(navigate, user?._id || '')}>
                 {LABELS.REQUEST_PERMISSION}
               </Button>

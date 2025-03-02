@@ -6,6 +6,12 @@
   color: vars.$secondary-color;
 }
 
+.users-container {
+  width: 96%;
+  margin-left: 2%;
+}
+// style={{width: '96%', marginLeft: '30px'}}
+
 .user-detail-container {
   display: flex;
   flex-wrap: wrap;
@@ -20,4 +26,9 @@
     gap: 1rem;
     align-items: center;
   }
+}
+
+.icon-edit {
+  cursor: pointer;
+  margin-right: 2rem;
 }

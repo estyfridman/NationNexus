@@ -109,3 +109,16 @@ export const PATH = {
   ADMIN_DASHBOARD: '/adminDashboard',
   NF: '*',
 };
+
+export const FUNCS = {
+  EDIT_USER_NAVIGATE: (useID: string) => `/editUser/${useID}`,
+};
+
+export const FIELD = {
+  FIRST_NAME: 'firstName',
+  LAST_NAME: 'lastName',
+  EMAIL: 'email',
+  PHONE: 'phone',
+  ACTIONS: 'actions',
+  NAME: 'name',
+};

@@ -15,7 +15,7 @@ import {RoleEnum} from '../../models/enums/RoleEnum';
 import './adminDashboard.scss';
 import {selectedUserState} from '../../services/recoilService/selectedUserState';
 import RequestsComponent from '../requestsComponent/RequestsComponent';
-import {ALERT_MESSAGES, BUTTON_TEXT, LABELS} from '../../constants';
+import {ALERT_MESSAGES, BUTTON_TEXT, LABELS, PATH, FUNCS, FIELD} from '../../constants';
 import UserCard from '../userCard/UserCard';
 import RoleSelect from '../roleSelect/RoleSelect';
 
@@ -57,28 +57,26 @@ export default function AdminDashboard() {
   const handleEditClick = (user: IUser) => {
     setSelectedUserState(user);
     setNewRole(user.role);
-    navigate(`/editUser/${user._id}`);
+    navigate(FUNCS.EDIT_USER_NAVIGATE(user._id || ''));
   };
 
   const columns = [
-    {field: 'firstName', headerName: 'First Name', flex: 1, headerClassName: 'custom-header'},
-    {field: 'lastName', headerName: 'Last Name', flex: 1, headerClassName: 'custom-header'},
-    {field: 'email', headerName: 'Email', flex: 1, headerClassName: 'custom-header'},
-    {field: 'phone', headerName: 'Phone', flex: 1, headerClassName: 'custom-header'},
+    {field: FIELD.FIRST_NAME, headerName: LABELS.FIRST_NAME},
+    {field: FIELD.LAST_NAME, headerName: LABELS.LAST_NAME},
+    {field: FIELD.EMAIL, headerName: LABELS.EMAIL},
+    {field: FIELD.PHONE, headerName: LABELS.PHONE},
     {
-      field: 'actions',
-      headerName: 'Actions',
-      flex: 1,
-      headerClassName: 'custom-header',
+      field: FIELD.ACTIONS,
+      headerName: FIELD.ACTIONS,
       sortable: false,
       renderCell: (params: any) => (
         <>
           <IconButton
+            className='icon-edit'
             onClick={(e) => {
               e.stopPropagation();
               handleEditClick(params.row);
-            }}
-            style={{marginRight: '8px'}}>
+            }}>
             <EditIcon />
           </IconButton>
           <IconButton onClick={(e) => handleDelete(e, params.row._id)}>
@@ -91,19 +89,21 @@ export default function AdminDashboard() {
 
   useEffect(() => {
     if (!user || user.role !== RoleEnum.ADMIN) {
-      navigate('/');
+      navigate(PATH.ROOT);
     }
   }, [user, navigate]);
 
   if (isLoading) return <Loading />;
   if (isError) return;
 
+  //TODO: למחוק את קונטיינר אם לא מוסיפה לו עיצוב
+
   return (
     <div className='container'>
       <Typography className='admin-dashboard-title' variant='h2'>
         {BUTTON_TEXT.ADMIN}
       </Typography>
-      <div style={{width: '96%', marginLeft: '30px'}}>
+      <div className='users-container'>
         <Typography className='admin-dashboard-title' variant='h4'>
           {BUTTON_TEXT.USERS}
         </Typography>
@@ -115,7 +115,7 @@ export default function AdminDashboard() {
             onRowClick={(params) => setSelectedUser(params.row)}
           />
         )}
-        <Button onClick={() => navigate('/register')} className='links'>
+        <Button onClick={() => navigate(PATH.REGISTER)} className='links'>
           {LABELS.CREATE_USER}
         </Button>
       </div>

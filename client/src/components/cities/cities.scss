@@ -1,3 +1,5 @@
+@use '../../styles/variables' as vars;
+
 .main-container {
   display: flex;
   height: 100vh;
@@ -35,4 +37,9 @@
       border-top: 1px solid #ccc;
     }
   }
+}
+
+.error {
+  font-size: 0.9rem;
+  color: vars.$error-message;
 }
