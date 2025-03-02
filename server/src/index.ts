@@ -13,35 +13,35 @@ import authRoutes from './routes/authRoutes';
 import permissionsRoutes from './routes/permissionsRoutes';
 import {securityMiddlewares} from './middlewares/securityMiddleware';
 import fetchAndSaveCountries from './utils/seed';
-
+import {METHODS, ORIGIN, ALLOWED_HEADERS, PATH, MESSAGES} from './constants';
 const app = express();
 
 app.use(
   cors({
-    origin: '*',
-    methods: ['GET', 'POST', 'PUT', 'PATCH', 'DELETE'],
-    allowedHeaders: ['Content-Type', 'Authorization'],
+    origin: ORIGIN,
+    methods: METHODS,
+    allowedHeaders: ALLOWED_HEADERS,
   })
 );
 app.use(express.json());
 app.use(helmet());
 app.use(limiter);
-app.use('/uploads', (req, res, next) => {
-  res.setHeader('Cross-Origin-Resource-Policy', 'cross-origin');
+app.use(PATH.UPS, (req, res, next) => {
+  res.setHeader(PATH.HEADER_NAME, PATH.HEADER_POLICY);
   next();
 });
-app.use('/uploads', express.static(path.join(__dirname, '..', 'uploads')));
+app.use(PATH.UPS, express.static(path.join(__dirname, PATH.POINTS, PATH.UP)));
 app.use(securityMiddlewares);
 
-dotenv.config({path: path.resolve(__dirname, 'config/.env')});
+dotenv.config({path: path.resolve(__dirname, PATH.CONFIG)});
 const PORT = process.env.PORT || 8080;
 const MONGODB_URI = process.env.MONGO_URL || '';
 
-app.use('/api/auth', authRoutes);
-app.use('/api/countries', countryRoutes);
-app.use('/api/users', userRoutes);
-app.use('/api/cities', cityRoutes);
-app.use('/api/permissions', permissionsRoutes);
+app.use(PATH.AUTH_API, authRoutes);
+app.use(PATH.COUNTRIES_API, countryRoutes);
+app.use(PATH.USERS_API, userRoutes);
+app.use(PATH.CITIES_API, cityRoutes);
+app.use(PATH.PERMISSIONS_API, permissionsRoutes);
 
 connectDB(MONGODB_URI)
   .then(async () => {
@@ -49,9 +49,9 @@ connectDB(MONGODB_URI)
   })
   .then(() => {
     app.listen(PORT, () => {
-      logger.info(`Server running on port ${PORT}`);
+      logger.info(`${MESSAGES.RUN} ${PORT}`);
     });
   })
   .catch((error) => {
-    logger.error('Failed to connect to database:', error);
+    logger.error(MESSAGES.FAILED_CONNECT, error);
   });

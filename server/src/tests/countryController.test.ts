@@ -1,110 +1,66 @@
 import request from 'supertest';
 import express from 'express';
 import mongoose from 'mongoose';
-import { describe, expect, beforeEach, it, jest } from '@jest/globals';
+import {describe, expect, beforeEach, it} from '@jest/globals';
 import countryRouter from '../routes/countryRoute';
 import Country from '../models/mongooseSchemas/countrySchema';
-const mockingoose = require("mockingoose");
+import mockingoose from 'mockingoose';
+import {PATH, TEST, MOCK_COUNTRIES, MOCK_COUNTRY, fakeId, SECOND_MOCK_COUNTRY, INVALID_COUNTRY, MESSAGES} from '../constants';
 
 const app = express();
 app.use(express.json());
-app.use('/countries', countryRouter);
+app.use(PATH.COUNTRIES, countryRouter);
 
-describe('Country API (Mocked)', () => {
+describe(TEST.COUNTRY_DESC_TEST, () => {
   beforeEach(() => {
     mockingoose.resetAll();
   });
 
-  describe('GET /countries', () => {
-    it('should retrieve all countries', async () => {
-      mockingoose(Country).toReturn(
-        [
-          {
-            name: 'South Georgia',
-            flag: 'https://flagcdn.com/w320/gs.png',
-            population: 30,
-            region: 'Antarctic',
-          },
-          {
-            name: 'Grenada',
-            flag: 'https://flagcdn.com/w320/gd.png',
-            population: 112519,
-            region: 'Americas',
-          },
-          {
-            name: 'Switzerland',
-            flag: 'https://flagcdn.com/w320/ch.png',
-            population: 8654622,
-            region: 'Europe',
-          },
-        ],
-        'find'
-      );
+  describe(TEST.GET_COUNTRY_TEST, () => {
+    it(TEST.IT_ALL_COUNTRY, async () => {
+      mockingoose(Country).toReturn(MOCK_COUNTRIES, 'find');
 
-      const res = await request(app).get('/countries');
+      const res = await request(app).get(PATH.COUNTRIES);
 
       expect(res.statusCode).toBe(200);
       expect(res.body).toHaveLength(3);
-      expect(res.body[0].name).toBe('South Georgia');
+      expect(res.body[0].name).toBe(TEST.COUNTRY_NAME_T1);
     });
   });
 
-  describe('GET /countries/:id', () => {
-    it('should retrieve a specific country', async () => {
-      const fakeId = new mongoose.Types.ObjectId().toString();
+  describe(TEST.GET_BY_ID_COUNTRY_TEST, () => {
+    it(TEST.IT_SUCCESS, async () => {
+      mockingoose(Country).toReturn(MOCK_COUNTRY, 'findOne');
 
-      mockingoose(Country).toReturn(
-        {
-          _id: fakeId,
-          name: 'Switzerland',
-          flag: 'https://flagcdn.com/w320/ch.png',
-          population: 8654622,
-          region: 'Europe',
-        },
-        'findOne'
-      );
-
-      const res = await request(app).get(`/countries/${fakeId}`);
+      const res = await request(app).get(`${PATH.COUNTRIES}/${fakeId}`);
       expect(res.statusCode).toBe(200);
-      expect(res.body.name).toBe('Switzerland');
+      expect(res.body.name).toBe(TEST.COUNTRY_NAME_T2);
     });
 
-    it('should return 404 for non-existent country', async () => {
+    it(TEST.IT_FAILURE, async () => {
       const fakeId = new mongoose.Types.ObjectId().toString();
       mockingoose(Country).toReturn(null, 'findOne');
 
-      const res = await request(app).get(`/countries/${fakeId}`);
+      const res = await request(app).get(`${PATH.COUNTRIES}/${fakeId}`);
       expect(res.statusCode).toBe(404);
     });
   });
 
-  describe('POST /countries', () => {
-    it('should create a new country', async () => {
-      const newCountry = {
-        name: 'France',
-        flag: 'https://flagcdn.com/w320/fr.png',
-        population: 67391582,
-        region: 'Europe',
-      };
+  describe(PATH.POST_COUNTRIES, () => {
+    it(TEST.IT_SUCCESS_CREATE_COUNTRY, async () => {
+      const newCountry = SECOND_MOCK_COUNTRY;
 
       mockingoose(Country).toReturn(newCountry, 'save');
 
-      const res = await request(app).post('/countries').send(newCountry);
+      const res = await request(app).post(PATH.COUNTRIES).send(newCountry);
 
       expect(res.statusCode).toBe(201);
       expect(res.body.name).toBe('France');
     });
 
-    it('should handle validation errors', async () => {
-      const invalidCountry = {
-        name: { common: 'South Georgia' },
-        flags: { png: 'https://flagcdn.com/w320/gs.png', svg: 'https://flagcdn.com/gs.svg' },
-      };
-
-      mockingoose(Country).toReturn(new Error('Validation Error'), 'save');
-
-      const res = await request(app).post('/countries').send(invalidCountry);
-
+    it(TEST.IT_VALIDATION_ERR, async () => {
+      mockingoose(Country).toReturn(new Error(MESSAGES.VALIDATION_ERR), 'save');
+      const res = await request(app).post(PATH.COUNTRIES).send(INVALID_COUNTRY);
       expect(res.statusCode).toBe(400);
     });
   });

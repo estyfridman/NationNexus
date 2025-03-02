@@ -1,14 +1,96 @@
-export const ALERT_MESSAGES = {
-  SUCCESS_CREATE_CITY: 'City created successfully!',
-  ERROR_CREATE_CITY: 'Failed to create city.',
-  SUCCESS_UPDATE_CITY: 'City updated successfully!',
-  ERROR_UPDATE_CITY: 'Failed to update city.',
-  SUCCESS_DELETE_CITY: 'City deleted successfully!',
-  ERROR_UPDATE_ROLE: 'Please select a user and role before clicking update.',
-  SUCCESS_DELETE_USER: 'User deleted successfully!',
-  ERROR_DELETE: 'Failed to delete the record. Please try again.',
-  SUCCESS_CREATE_COUNTRY_T: 'Country Added',
-  SUCCESS_CREATE_COUNTRY_B: 'The country was added successfully!',
+import mongoose from 'mongoose';
+
+export const METHODS = ['GET', 'POST', 'PUT', 'PATCH', 'DELETE'];
+export const ORIGIN = '*';
+export const ALLOWED_HEADERS = ['Content-Type', 'Authorization'];
+export const JWT_SECRET = process.env.JWT_SECRET || 'hsjf38fks';
+
+export const TEST = {
+  COUNTRY_DESC_TEST: 'Country API (Mocked)',
+  IT_ALL_COUNTRY: 'should retrieve all countries',
+  GET_COUNTRY_TEST: 'GET /countries',
+  COUNTRY_NAME_T1: 'South Georgia',
+  GET_BY_ID_COUNTRY_TEST: 'GET /countries/:id',
+  IT_SUCCESS: 'should retrieve a specific country',
+  IT_FAILURE: 'should return 404 for a non-existent country',
+  COUNTRY_NAME_T2: 'Switzerland',
+  IT_SUCCESS_CREATE_COUNTRY: 'should create a new country',
+  IT_VALIDATION_ERR: 'should handle validation errors',
+  SECURITY_DSSC: 'Security Middleware',
+  IT_SECURITY_XSS: 'should sanitize XSS content in request body',
+  IT_SECURITY_SANITIZE_QUERY: 'should sanitize query parameters',
+  SCRIPT: '<script>',
+  IMG: '<img>',
+  ONERR: 'onerror',
+};
+
+export const MOCK_COUNTRIES = [
+  {
+    name: 'South Georgia',
+    flag: 'https://flagcdn.com/w320/gs.png',
+    population: 30,
+    region: 'Antarctic',
+  },
+  {
+    name: 'Grenada',
+    flag: 'https://flagcdn.com/w320/gd.png',
+    population: 112519,
+    region: 'Americas',
+  },
+  {
+    name: 'Switzerland',
+    flag: 'https://flagcdn.com/w320/ch.png',
+    population: 8654622,
+    region: 'Europe',
+  },
+];
+
+export const fakeId = new mongoose.Types.ObjectId().toString();
+
+export const MOCK_COUNTRY = {
+  _id: fakeId,
+  name: 'Switzerland',
+  flag: 'https://flagcdn.com/w320/ch.png',
+  population: 8654622,
+  region: 'Europe',
+};
+
+export const SECOND_MOCK_COUNTRY = {
+  name: 'France',
+  flag: 'https://flagcdn.com/w320/fr.png',
+  population: 67391582,
+  region: 'Europe',
+};
+
+export const LEVELS = {
+  INFO: 'info',
+  ERROR: 'error',
+};
+
+export const INVALID_COUNTRY = {
+  name: {common: 'South Georgia'},
+  flags: {png: 'https://flagcdn.com/w320/gs.png', svg: 'https://flagcdn.com/gs.svg'},
+};
+
+export const MOCK_PAYLOAD = {
+  name: '<script>alert("XSS")</script>',
+};
+
+export const MOCK_QUERY = {
+  user: '<img src="x" onerror="alert(1)" />',
+};
+
+export const MESSAGES = {
+  RUN: 'Server running on port',
+  FAILED_CONNECT: 'Failed to connect to database:',
+  RATE_LIMIT: 'Too many requests from this IP.',
+  VALIDATION_ERR: 'Validation Error',
+  NO_TOKEN: 'No token, authorization denied',
+  ERROR_VERIFY: 'Error verifying in',
+  TOKEN_NOT_VALID: 'Token is not valid',
+  NOT_AUTH: 'Not authorized',
+  AUTH_FAIL: 'Authorization failed in',
+  AUTH_FAILED: 'Authorization failed',
   ERROR_CREATE_COUNTRY: 'There was an issue adding the country. Please try again.',
   ERROR_CREATE_COUNTRY_LOG: 'Failed to add country:',
   SUCCESS_UPDATE_COUNTRY_B: 'Country updated successfully!',
@@ -18,10 +100,25 @@ export const ALERT_MESSAGES = {
   NOT_FOUND_TITLE: 'Unable to retrieve data',
   NOT_FOUND_MESSAGE: 'The server is currently unavailable. Please try again later.',
   SUCCESS: 'Success',
-  SUCCESS_CREATE_USER: 'User created successfully!',
-  ERROR_CREATE_USER: 'Failed to create user.',
-  SUCCESS_UPDATE_USER: 'You have successfully updated the user details!',
-  ERROR_UPDATE_USER: 'Failed to update user.',
+};
+
+export const PATH = {
+  UPS: '/uploads',
+  UP: 'uploads',
+  CONFIG: 'config/.env',
+  AUTH_API: '/api/auth',
+  COUNTRIES_API: '/api/countries',
+  USERS_API: '/api/users',
+  CITIES_API: '/api/cities',
+  PERMISSIONS_API: '/api/permissions',
+  HEADER_POLICY: 'cross-origin',
+  HEADER_NAME: 'Cross-Origin-Resource-Policy',
+  POINTS: '..',
+  ERR_LOG: 'logs/error.log',
+  COMB_LOG: 'logs/combined.log',
+  COUNTRIES: '/countries',
+  POST_COUNTRIES: 'POST /countries',
+  TEST: '/test',
 };
 
 export const ERRORS = {
@@ -74,7 +171,9 @@ export const LABELS = {
   PROFILE: 'Profile Image',
 };
 
-export const BUTTON_TEXT = {
+export const TEXT = {
+  STRING: 'string',
+  OBJECT: 'object',
   SAVE: 'Save',
   CANCEL: 'Cancel',
   RESET: 'Reset',
@@ -90,10 +189,4 @@ export const BUTTON_TEXT = {
   CREATE: 'Create',
 };
 
-export const NAVBAR_LINKS = ['/home', '/countries', '/cities'];
-
 export const RR_OPTIONS = ['Pending', 'Approved', 'Rejected'];
-
-export const PATH = {
-  USER_IMG: '/images/Default_User.jpg',
-};
