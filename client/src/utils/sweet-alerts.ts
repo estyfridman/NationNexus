@@ -2,6 +2,7 @@ import Swal from 'sweetalert2';
 import 'sweetalert2/src/sweetalert2.scss';
 import {ResetFormType, NavigateType} from '../models/swalTypes';
 import {requestPermission} from '../services/userService';
+import {PermissionEnum} from '../models/enums/permissionEnum';
 
 export const successAlert = async (title?: string, text?: string) => {
   Swal.fire({
@@ -74,8 +75,10 @@ export const requestPermissionsAlert = async (navigate: NavigateType, userId: st
     icon: 'question',
     input: 'select',
     inputOptions: {
-      USER: 'User',
-      ADMIN: 'Admin',
+      [PermissionEnum.VIEW]: 'View Only',
+      [PermissionEnum.EDIT]: 'Edit',
+      [PermissionEnum.DELETE]: 'Delete',
+      [PermissionEnum.ADD]: 'Add',
     },
     showCancelButton: true,
     confirmButtonText: 'Request',
@@ -83,9 +86,10 @@ export const requestPermissionsAlert = async (navigate: NavigateType, userId: st
   });
 
   if (result.isConfirmed) {
-    const requestedRole = result.value;
+    const requestedPermission = result.value;
     try {
-      await requestPermission(requestedRole, userId);
+      console.log(requestedPermission);
+      await requestPermission(requestedPermission, userId);
       Swal.fire('Success', 'Your request has been sent for approval.', 'success');
       navigate('/');
     } catch (error) {

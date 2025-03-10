@@ -1,54 +1,57 @@
+.data-grid-container {
+  width: 98%;
+  height: 750px;
+  overflow-x: auto;
+  margin: 1%;
 
-  .data-grid-container {
-    width: 98%;
-    height: 750px;
-    overflow-x: auto;
-    margin: 1%;
-  
-    .MuiDataGrid-columnHeader {
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      justify-content: center;
-      text-align: center;
-      position: relative;
-    }
-  
-    .custom-header {
-      font-size: 16px;
-      font-weight: bold;
-      white-space: nowrap;
-      overflow: visible;
-    }
+  .MuiDataGrid-columnHeader {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    position: relative;
+  }
 
+  .custom-header {
+    font-size: 16px;
+    font-weight: bold;
+    white-space: nowrap;
+    overflow: visible;
+  }
+
+  .MuiDataGrid-columnHeader .MuiButtonBase-root.MuiIconButton-root {
+    opacity: 1 !important;
+    pointer-events: all;
+  }
+
+  .MuiDataGrid-cell[data-field='actions'] .MuiButtonBase-root {
+    opacity: 1;
+    pointer-events: all;
+    margin: 0;
+    visibility: visible !important;
+  }
+
+  @media (max-width: 788px) {
     .MuiDataGrid-columnHeader .MuiButtonBase-root.MuiIconButton-root {
-      opacity: 1 !important;
-      pointer-events: all;
+      opacity: 0;
+      pointer-events: none;
     }
 
-    .MuiDataGrid-cell[data-field="actions"] .MuiButtonBase-root {
+    .MuiDataGrid-columnHeaderDraggableContainer {
+      display: none;
+    }
+    .MuiDataGrid-cell[data-field='actions'] .MuiButtonBase-root {
       opacity: 1;
       pointer-events: all;
-      margin: 0;
-      visibility: visible !important;
+      margin: 0%;
+      padding: 0%;
+      visibility: visible;
     }
-  
-    @media (max-width: 788px) {
-      .MuiDataGrid-columnHeader .MuiButtonBase-root.MuiIconButton-root {
-        opacity: 0; 
-        pointer-events: none; 
-      }
+  }
 
-      .MuiDataGrid-columnHeaderDraggableContainer { 
-        display: none;  
-      }
-      .MuiDataGrid-cell[data-field="actions"] .MuiButtonBase-root {
-        opacity: 1; 
-        pointer-events: all; 
-        margin: 0%;
-        padding: 0%;
-        visibility: visible;
-      }
-    }
+  .city-img {
+    width: 24px;
+    height: 24px;
+  }
 }
-  

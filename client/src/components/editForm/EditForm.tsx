@@ -1,24 +1,25 @@
-import { Formik, Form, ErrorMessage, Field } from 'formik';
+import {Formik, Form, ErrorMessage, Field} from 'formik';
 import IconButton from '@mui/material/Button';
-import { countrySchema } from '../../models/schemas/countrySchema';
+import {countrySchema} from '../../models/schemas/countrySchema';
 import './editForm.scss';
-import { useMutation } from '@tanstack/react-query';
-import { cancelAlert, successAlert, errorAlert } from '../../utils/sweet-alerts';
-import { useNavigate } from 'react-router-dom';
-import { useUpdateCountry } from '../../services/hooks/useUpdateCountry';
-import { useParams } from 'react-router-dom';
-import { useRecoilValue } from 'recoil';
-import { selectedCountryState } from '../../services/recoilService/selectedCountry';
+import {useMutation} from '@tanstack/react-query';
+import {cancelAlert, successAlert, errorAlert} from '../../utils/sweet-alerts';
+import {useNavigate} from 'react-router-dom';
+import {useUpdateCountry} from '../../services/hooks/useCountry';
+import {useParams} from 'react-router-dom';
+import {useRecoilValue} from 'recoil';
+import {selectedCountryState} from '../../services/recoilService/selectedCountry';
 import SaveIcon from '@mui/icons-material/Save';
 import CancelIcon from '@mui/icons-material/Cancel';
+import {FIELD, LABELS} from '../../constants';
 
 const cancelEdit = () => {
   return Promise.resolve('Edit canceled');
 };
 
 export default function EditForm() {
-  const { id } = useParams();
-  const mutation = useMutation({ mutationFn: cancelEdit });
+  const {id} = useParams();
+  const mutation = useMutation({mutationFn: cancelEdit});
   const navigate = useNavigate();
   const selectedCountry = useRecoilValue(selectedCountryState);
 
@@ -45,52 +46,43 @@ export default function EditForm() {
 
   return (
     <>
-      <h1>Edit Country</h1>
-      <Formik
-        initialValues={selectedCountry}
-        validationSchema={countrySchema}
-        onSubmit={handleSubmit}
-      >
-        {({ values, initialValues, dirty, isValid }) => {
+      <h1>{LABELS.EDIT_COUNTRY}</h1>
+      <Formik initialValues={selectedCountry} validationSchema={countrySchema} onSubmit={handleSubmit}>
+        {({values, initialValues, dirty, isValid}) => {
           const hasChanged = JSON.stringify(values) !== JSON.stringify(initialValues);
           return (
             <Form>
-              <div className="field-container">
-                <label htmlFor="name"> Name</label>
-                <Field name="name" type="text" id="name" />
-                <ErrorMessage name="title" component="span" className="error" />
+              <div className='field-container'>
+                <label htmlFor={FIELD.NAME}>{LABELS.NAME}</label>
+                <Field name={FIELD.NAME} type='text' id={FIELD.NAME} />
+                <ErrorMessage name={FIELD.NAME} component='span' className='error' />
               </div>
 
-              <div className="field-container">
-                <label htmlFor="flag">Flag URL</label>
-                <Field name="flag" type="text" id="flag" />
-                <ErrorMessage name="flag" component="span" className="error" />
+              <div className='field-container'>
+                <label htmlFor={FIELD.FLAG}>{LABELS.FLAG_URL}</label>
+                <Field name={FIELD.FLAG} type='text' id={FIELD.FLAG} />
+                <ErrorMessage name={FIELD.FLAG} component='span' className='error' />
               </div>
 
-              <div className="field-container">
-                <label htmlFor="region">Region</label>
-                <Field name="region" type="text" id="region" />
-                <ErrorMessage name="region" component="span" className="error" />
+              <div className='field-container'>
+                <label htmlFor={FIELD.REGION}>{LABELS.REGION}</label>
+                <Field name={FIELD.REGION} type='text' id={FIELD.REGION} />
+                <ErrorMessage name={FIELD.REGION} component='span' className='error' />
               </div>
 
-              <div className="field-container">
-                <label htmlFor="population">Population</label>
-                <Field name="population" type="number" id="population" />
-                <ErrorMessage name="population" component="span" className="error" />
+              <div className='field-container'>
+                <label htmlFor={FIELD.POPULATION}>{LABELS.POPULATION}</label>
+                <Field name={FIELD.POPULATION} type='number' id={FIELD.POPULATION} />
+                <ErrorMessage name={FIELD.POPULATION} component='span' className='error' />
               </div>
-              <IconButton
-                className="edit-button"
-                type="submit"
-                disabled={!dirty || !isValid || !hasChanged}
-              >
+              <IconButton className='edit-button' type='submit' disabled={!dirty || !isValid || !hasChanged}>
                 <SaveIcon />
               </IconButton>
               <IconButton
-                className="edit-button"
-                type="button"
+                className='edit-button'
+                type='button'
                 disabled={!dirty || !hasChanged}
-                onClick={() => cancelAlert(mutation.reset, navigate)}
-              >
+                onClick={() => cancelAlert(mutation.reset, navigate)}>
                 <CancelIcon />
               </IconButton>
             </Form>

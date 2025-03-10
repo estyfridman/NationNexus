@@ -244,3 +244,36 @@
 2025-02-27T08:56:30.106Z [[32MINFO[39M]: Server running on port 8000
 2025-02-27T11:27:41.423Z [[32MINFO[39M]: Server running on port 8000
 2025-02-27T11:49:05.703Z [[32MINFO[39M]: Server running on port 8000
+2025-03-03T08:57:21.100Z [[32MINFO[39M]: Server running on port 8000
+2025-03-03T09:20:47.822Z [[31MERROR[39M]: Error verifying in Mon Mar 03 2025 11:20:47 GMT+0200 (Israel Standard Time)
+2025-03-03T09:20:48.834Z [[31MERROR[39M]: Error verifying in Mon Mar 03 2025 11:20:48 GMT+0200 (Israel Standard Time)
+2025-03-03T09:20:50.847Z [[31MERROR[39M]: Error verifying in Mon Mar 03 2025 11:20:50 GMT+0200 (Israel Standard Time)
+2025-03-03T09:20:54.864Z [[31MERROR[39M]: Error verifying in Mon Mar 03 2025 11:20:54 GMT+0200 (Israel Standard Time)
+2025-03-03T09:38:11.842Z [[32MINFO[39M]: Server running on port 8000
+2025-03-03T09:52:30.692Z [[32MINFO[39M]: Server running on port 8000
+2025-03-03T09:53:19.352Z [[32MINFO[39M]: Server running on port 8000
+2025-03-03T09:55:35.386Z [[32MINFO[39M]: Server running on port 8000
+2025-03-03T11:35:26.215Z [[32MINFO[39M]: Server running on port 8000
+2025-03-03T11:35:31.574Z [[32MINFO[39M]: Server running on port 8000
+2025-03-03T11:38:22.917Z [[32MINFO[39M]: Server running on port 8000
+2025-03-03T11:48:26.400Z [[32MINFO[39M]: Server running on port 8000
+2025-03-03T11:49:00.440Z [[32MINFO[39M]: Server running on port 8000
+2025-03-03T11:49:47.485Z [[32MINFO[39M]: Server running on port 8000
+2025-03-03T11:52:01.626Z [[32MINFO[39M]: Server running on port 8000
+2025-03-03T12:01:01.682Z [[32MINFO[39M]: Server running on port 8000
+2025-03-03T12:01:32.992Z [[32MINFO[39M]: Server running on port 8000
+2025-03-03T12:22:10.796Z [[32MINFO[39M]: Server running on port 8000
+2025-03-03T12:22:43.430Z [[32MINFO[39M]: Server running on port 8000
+2025-03-03T12:26:52.115Z [[32MINFO[39M]: Server running on port 8000
+2025-03-03T12:48:03.659Z [[32MINFO[39M]: Server running on port 8000
+2025-03-03T13:00:18.655Z [[32MINFO[39M]: Server running on port 8000
+2025-03-03T13:00:52.637Z [[32MINFO[39M]: Server running on port 8000
+2025-03-03T13:05:05.310Z [[32MINFO[39M]: Server running on port 8000
+2025-03-03T13:11:02.258Z [[32MINFO[39M]: Server running on port 8000
+2025-03-03T13:18:52.650Z [[32MINFO[39M]: Server running on port 8000
+2025-03-05T06:56:30.412Z [[32MINFO[39M]: Server running on port 8000
+2025-03-05T09:38:39.121Z [[32MINFO[39M]: Server running on port 8000
+2025-03-05T12:54:57.152Z [[32MINFO[39M]: Server running on port 8000
+2025-03-05T12:59:07.023Z [[32MINFO[39M]: Server running on port 8000
+2025-03-05T13:00:00.356Z [[32MINFO[39M]: Server running on port 8000
+2025-03-05T13:12:08.057Z [[31MERROR[39M]: MongoDB connection error: Error: querySrv ECONNREFUSED _mongodb._tcp.friedmannetflixcluster.4pkqo2v.mongodb.net

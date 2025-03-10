@@ -2,86 +2,97 @@ import {client} from '../api/client';
 import IUser from '../models/interfaces/iUser';
 import logger from '../utils/logger';
 import {getAuthHeaders} from '../utils/getAuthorization';
-import {RoleEnum} from '../models/enums/RoleEnum';
+import {PermissionEnum} from '../models/enums/permissionEnum';
+import {FUNCS, PATH, REGISTER_HEADER} from '../constants';
 
 export const getAllUsers = async () => {
   try {
-    const response = await client.get<IUser[]>('/users', {headers: getAuthHeaders()});
+    const response = await client.get<IUser[]>(PATH.USER_ROUTE, {headers: getAuthHeaders()});
     return response.data;
   } catch (error) {
-    logger.error(`Error in getAllUsers: ${error}`);
+    logger.error(FUNCS.ERR_GET_USERS((error as Error).message));
     throw error;
   }
 };
 
 export const getUserById = async (id: string) => {
   try {
-    const response = await client.get<IUser>(`/users/${id}`, {headers: getAuthHeaders()});
+    const response = await client.get<IUser>(`${PATH.USER_ROUTE}${id}`, {headers: getAuthHeaders()});
     return response.data;
   } catch (error) {
-    logger.error(`Error in getUserById: ${error}`);
+    logger.error(FUNCS.ERR_GET_USER((error as Error).message));
     throw error;
   }
 };
 
 export const registerUser = async (formData: FormData) => {
   try {
-    const response = await client.post('/users/register', formData, {
-      headers: {'Content-Type': 'multipart/form-data'},
+    const response = await client.post(PATH.USER_REGISTER, formData, {
+      headers: REGISTER_HEADER,
     });
     return response.data;
   } catch (error) {
-    logger.error(`Error registering user: ${error}`);
+    logger.error(FUNCS.ERR_REGISTER((error as Error).message));
     throw error;
   }
 };
 
 export const loginUser = async (credentials: {username: string; password: string}) => {
   try {
-    const response = await client.post('/auth/login', credentials);
+    const response = await client.post(PATH.AUTH_LOGIN, credentials);
     return response.data;
   } catch (error) {
-    logger.error(`Error logging in: ${error}`);
+    logger.error(FUNCS.ERR_LOGIN((error as Error).message));
     throw error;
   }
 };
 
 export const updateUser = async ({id, formData}: {id: string; formData: FormData}) => {
   try {
-    const response = await client.patch(`/users/${id}`, formData, {headers: getAuthHeaders()});
+    const response = await client.patch(`${PATH.USER_ROUTE}${id}`, formData, {headers: getAuthHeaders()});
     return response.data;
   } catch (error) {
-    logger.error(`Error updating user: ${error}`);
+    logger.error(FUNCS.ERR_UPDATE_USER((error as Error).message));
     throw error;
   }
 };
 
-export const requestPermission = async (role: RoleEnum, userId: string) => {
+export const updatePermissionUser = async ({id, permission, action}: {id: string; permission: PermissionEnum; action: 'ADD' | 'REMOVE'}) => {
   try {
-    const response = await client.post('/permissions/request-permission', {role, userId}, {headers: getAuthHeaders()});
+    const response = await client.patch(`${PATH.UPDATE_PERMISSION}${id}`, {permission, action}, {headers: getAuthHeaders()});
     return response.data;
   } catch (error) {
-    logger.error(`Error requesting permission: ${error}`);
+    logger.error(FUNCS.ERR_UPDATE_PERMISSION((error as Error).message));
     throw error;
   }
 };
 
-export const grantPermission = async ({userId, role}: {userId: string; role: RoleEnum}) => {
+export const requestPermission = async (permission: PermissionEnum, userId: string) => {
   try {
-    const response = await client.patch(`/users/changeUserRole/${userId}`, {role}, {headers: getAuthHeaders()});
+    const response = await client.post(PATH.REQUEST_PERMISSION, {permission, userId}, {headers: getAuthHeaders()});
+    return response.data;
+  } catch (error) {
+    logger.error(FUNCS.ERR_REQUEST_PERMISSION((error as Error).message));
+    throw error;
+  }
+};
+
+export const grantPermission = async ({userId, permission}: {userId: string; permission: PermissionEnum}) => {
+  try {
+    const response = await client.patch(`${PATH.GRANT_PERMISSION}${userId}`, {permission}, {headers: getAuthHeaders()});
     return {userId, updatedUser: response.data.user};
   } catch (error) {
-    logger.error(`Error granting permission: ${error}`);
+    logger.error(FUNCS.ERR_GRANT_PERMISSION((error as Error).message, userId));
     throw error;
   }
 };
 
 export async function deleteUser(id: string): Promise<any> {
   try {
-    const response = await client.delete(`/users/${id}`, {headers: getAuthHeaders()});
+    const response = await client.delete(`${PATH.USER_ROUTE}${id}`, {headers: getAuthHeaders()});
     return response.data;
   } catch (error) {
-    logger.error(`Error deleting user: ${error}`);
+    logger.error(FUNCS.ERR_DELETE_USER((error as Error).message));
     throw error;
   }
 }

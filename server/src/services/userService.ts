@@ -3,8 +3,8 @@ import User from '../models/mongooseSchemas/userSchema';
 import {Types} from 'mongoose';
 import {IUser} from '../models/interfaces/iUser';
 import jwt from 'jsonwebtoken';
-import {RoleEnum} from '../models/enums/roleEnum';
-import RoleRequest from '../models/mongooseSchemas/requestSchema';
+import {PermissionEnum} from '../models/enums/permissionEnum';
+import PermissionRequest from '../models/mongooseSchemas/requestSchema';
 import {MESSAGES, JWT_SECRET, MSG_FUNC} from '../constants';
 
 class UserService {
@@ -96,8 +96,38 @@ class UserService {
       throw new Error(MESSAGES.FAILED_DELETE_USER);
     }
   }
+  async changeUserPermissions(id: string, permission: PermissionEnum, action: 'ADD' | 'REMOVE') {
+    if (!Types.ObjectId.isValid(id)) {
+      throw new Error(MESSAGES.INVALID_ID);
+    }
 
-  async changeUserRole(id: string, role: string) {
+    const validPermissions = Object.values(PermissionEnum);
+    if (!validPermissions.includes(permission)) {
+      throw new Error(MESSAGES.INVALID_PERMISSION);
+    }
+
+    try {
+      const user = await User.findById(id);
+      if (!user) {
+        throw new Error(MESSAGES.USER_NOT_FOUND);
+      }
+      let updatedPermissions = user.permissions || [];
+      if (action === 'ADD' && !updatedPermissions.includes(permission)) {
+        updatedPermissions.push(permission);
+      } else if (action === 'REMOVE') {
+        updatedPermissions = updatedPermissions.filter((perm) => perm !== permission);
+      }
+      console.log(updatedPermissions);
+
+      const updatedUser = await User.findByIdAndUpdate(id, {permissions: updatedPermissions}, {new: true, runValidators: true});
+
+      return updatedUser;
+    } catch (error) {
+      throw new Error(MESSAGES.FAILED_UPDATE_USER_PERMISSIONS);
+    }
+  }
+
+  async changeUserPR(id: string, role: string) {
     if (!Types.ObjectId.isValid(id)) {
       throw new Error(MESSAGES.INVALID_ID);
     }
@@ -112,7 +142,7 @@ class UserService {
     }
   }
 
-  async requestRoleChange(userId: string, requestedRole: RoleEnum) {
+  async requestPermissionChange(requestedPermission: PermissionEnum, userId: string) {
     if (!Types.ObjectId.isValid(userId)) {
       throw new Error(MESSAGES.INVALID_ID);
     }
@@ -121,9 +151,9 @@ class UserService {
       if (!user) {
         throw new Error(MESSAGES.USER_NOT_FOUND);
       }
-      const newRequest = new RoleRequest({userId, requestedRole});
+      const newRequest = new PermissionRequest({userId, requested: requestedPermission});
       await newRequest.save();
-      return {message: MSG_FUNC.REQUEST_ROLE_SEND(requestedRole.toString())};
+      return {message: MSG_FUNC.REQUEST_ROLE_SEND(requestedPermission.toString())};
     } catch {
       throw new Error(MESSAGES.FAILED_REQUEST_ROLE);
     }

@@ -4,18 +4,18 @@ import {ICountry} from '../../models/interfaces/iCountry';
 import './grid.scss';
 import {useNavigate} from 'react-router-dom';
 import IconButton from '@mui/material/Button';
-import {useFetchCountries} from '../../services/hooks/useFetchCountries';
+import {useFetchCountries} from '../../services/hooks/useCountry';
 import Loading from '../loading/Loading';
 import NotFound from '../notFound/NotFound';
 import {DataGrid} from '@mui/x-data-grid';
 import {useCallback, useEffect, useState} from 'react';
 import EditIcon from '@mui/icons-material/Edit';
 import DeleteIcon from '@mui/icons-material/Delete';
-import {useDeleteCountry} from '../../services/hooks/useDeleteCountry ';
+import {useDeleteCountry} from '../../services/hooks/useCountry';
 import {deleteAlert, errorDeleteAlert, successAlert} from '../../utils/sweet-alerts';
 import {userState} from '../../services/recoilService/userState';
 import {RoleEnum} from '../../models/enums/RoleEnum';
-import {LABELS, BUTTON_TEXT, ALERT_MESSAGES} from './../../constants';
+import {LABELS, BUTTON_TEXT, ALERT_MESSAGES, FIELD, PATH, FUNCS} from './../../constants';
 import {requestPermissionsAlert} from '../../utils/sweet-alerts';
 import Button from '@mui/material/Button';
 
@@ -39,29 +39,29 @@ export default function Grid() {
   }, [isError, retryCount, refetch]);
 
   const columns = [
-    {field: 'name', headerName: 'Name', flex: 1, headerClassName: 'custom-header'},
+    {field: FIELD.NAME, headerName: LABELS.NAME, flex: 1, headerClassName: 'custom-header'},
     {
-      field: 'flag',
-      headerName: 'Flag',
+      field: FIELD.FLAG,
+      headerName: LABELS.FLAG_URL,
       flex: 1,
       headerClassName: 'custom-header',
       renderCell: (params: any) => <img src={`${params.value}`} alt={params.row.name} style={{width: '50px', height: '30px'}} />,
     },
-    {field: 'region', headerName: 'Region', flex: 1, headerClassName: 'custom-header'},
-    {field: 'population', headerName: 'Population', flex: 1, headerClassName: 'custom-header'},
+    {field: FIELD.REGION, headerName: LABELS.REGION, flex: 1, headerClassName: 'custom-header'},
+    {field: FIELD.POPULATION, headerName: LABELS.POPULATION, flex: 1, headerClassName: 'custom-header'},
     {
-      field: 'cityIds',
-      headerName: 'Cities',
+      field: FIELD.CITYIDS,
+      headerName: LABELS.CITIES,
       flex: 2,
       headerClassName: 'custom-header',
       renderCell: (params: any) => {
         const cities = params.row.cityIds.map((city: {name: string}) => city.name).join(', ');
-        return cities || 'No cities';
+        return cities || BUTTON_TEXT.NO_CITIES;
       },
     },
     {
-      field: 'actions',
-      headerName: 'Actions',
+      field: FIELD.ACTIONS,
+      headerName: BUTTON_TEXT.ACTIONS,
       flex: 2,
       headerClassName: 'action-header',
       sortable: false,
@@ -72,9 +72,9 @@ export default function Grid() {
               <IconButton
                 onClick={(e) => {
                   e.stopPropagation();
-                  navigate(`/cities/${params.row._id}`);
+                  navigate(FUNCS.CITIES_NAV(params.row._id));
                 }}>
-                <img src='/images/gemini-cities.jpg' alt='Cities Icon' style={{width: '24px', height: '24px'}} />
+                <img src={PATH.CITIES_ICON} alt={BUTTON_TEXT.CITIES_ICON_ALT} className='city-img' />
               </IconButton>
               <Button variant='contained' size='small' onClick={() => requestPermissionsAlert(navigate, user?._id || '')}>
                 {LABELS.REQUEST_PERMISSION}
@@ -101,9 +101,9 @@ export default function Grid() {
             <IconButton
               onClick={(e) => {
                 e.stopPropagation();
-                navigate(`/cities/${params.row._id}`);
+                navigate(FUNCS.CITIES_NAV(params.row._id));
               }}>
-              <img src='/images/gemini-cities.jpg' alt='Cities Icon' style={{width: '24px', height: '24px'}} />
+              <img src={PATH.CITIES_ICON} alt={BUTTON_TEXT.CITIES_ICON_ALT} className='city-img' />
             </IconButton>
           </>
         );

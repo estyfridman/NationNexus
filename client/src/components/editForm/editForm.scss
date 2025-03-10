@@ -1,4 +1,3 @@
-
 @use '../../styles/variables' as vars;
 
 .field-container {
@@ -9,29 +8,29 @@
   label {
     font-size: 16px;
     font-weight: 500;
-    color: #2d3748;
+    color: vars.$primary-color;
     margin-bottom: 5px;
   }
 
   input {
     padding: 0.5rem 0.75rem;
-    border: 1px solid #cbd5e0;
+    border: 1px solid vars.$secondary-bg;
     border-radius: 4px;
     font-size: 14px;
-    color: #1a202c;
-    box-shadow: inset 0 1px 2px rgba(0, 0, 0, 0.075);
+    color: vars.$third-color;
+    box-shadow: inset 0 1px 2px vars.$light-shadow;
     transition: border-color 0.2s ease, box-shadow 0.2s ease;
 
     &:focus {
-      border-color: #3182ce;
-      box-shadow: 0 0 0 3px rgba(66, 153, 225, 0.5);
+      border-color: vars.$third-color;
+      box-shadow: 0 0 0 3px vars.$blue-shadow;
       outline: none;
     }
   }
 
   .error {
     font-size: 12px;
-    color: #e53e3e;
+    color: vars.$error-message;
     margin-top: 5px;
   }
 }
@@ -47,31 +46,23 @@ button[type='submit'],
   transition: background-color 0.3s ease, transform 0.2s ease;
 
   &.MuiButton-containedPrimary {
-    background-color: #3182ce;
-    color: #ffffff;
+    background-color: vars.$primary-bg;
+    color: vars.$base-color;
 
     &:hover {
-      background-color: #2b6cb0;
+      background-color: vars.$secondary-bg;
       transform: scale(1.05);
     }
   }
 }
-
-// button[type='button'] {
-//   background-color: #e53e3e;
-
-//   &:hover {
-//     background-color: #c53030;
-//   }
-// }
 
 form {
   max-width: 500px;
   margin: 0 auto;
   padding: 20px;
   border-radius: 8px;
-  background-color: #ffffff;
-  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  background-color: vars.$base-color;
+  box-shadow: 0 4px 6px vars.$blue-shadow;
 }
 
 @media (max-width: 600px) {

@@ -22,6 +22,13 @@ export const ALERT_MESSAGES = {
   ERROR_CREATE_USER: 'Failed to create user.',
   SUCCESS_UPDATE_USER: 'You have successfully updated the user details!',
   ERROR_UPDATE_USER: 'Failed to update user.',
+  MIN_LEN: ' must be at least 2 characters long',
+  MAX_LEN: ' must not exceed 40 characters',
+  MIN_LEN_NAME: 'Name must be at least 2 characters long',
+  MAX_LEN_NAME: 'Name must not exceed 40 characters',
+  REQUIRED_NAME: 'Name is required',
+  REQUIRED: 'is required',
+  USER_NOT_EXIST: 'You are not a registered user, please register.',
 };
 
 export const ERRORS = {
@@ -37,6 +44,7 @@ export const ERRORS = {
   GET_COUNTRY_NF_ERR: 'Country not found',
   UPDATE_CITY_ERR: 'Failed to update city',
   DELETE_CITY_ERR: 'Failed to delete city',
+  USER_LOGOUT: 'User successfully logged out',
 };
 
 export const LABELS = {
@@ -72,6 +80,7 @@ export const LABELS = {
   CREATE_USER: 'Create New User',
   PASSWORD: 'Password',
   PROFILE: 'Profile Image',
+  CITIES: 'Cities',
 };
 
 export const BUTTON_TEXT = {
@@ -88,6 +97,9 @@ export const BUTTON_TEXT = {
   ADD: 'Add',
   UPDATE: 'Update',
   CREATE: 'Create',
+  NO_CITIES: 'No cities',
+  ACTIONS: 'Actions',
+  CITIES_ICON_ALT: 'Cities Icon',
 };
 
 export const NAVBAR_LINKS = ['/home', '/countries', '/cities'];
@@ -108,10 +120,35 @@ export const PATH = {
   EDIT_USER: '/editUser/:id',
   ADMIN_DASHBOARD: '/adminDashboard',
   NF: '*',
+  CITIES_ICON: '/images/gemini-cities.jpg',
+  USER_REGISTER: '/users/register',
+  USER_ROUTE: '/users/',
+  GRANT_PERMISSION: '/users/changeUserPR/',
+  AUTH_LOGIN: '/auth/login',
+  UPDATE_PERMISSION: '/users/change-permission/',
+  REQUEST_PERMISSION: '/permissions/request-permission',
+  PERMISSIONS: '/permissions',
 };
 
 export const FUNCS = {
   EDIT_USER_NAVIGATE: (useID: string) => `/editUser/${useID}`,
+  ERR_UPDATE_USER: (message: string) => `Error: ${message} - Update User - in ${new Date().toLocaleString()}`,
+  ERR_DELETE_USER: (message: string) => `Error: ${message} - Delete User - in ${new Date().toLocaleString()}`,
+  ERR_GET_USERS: (message: string) => `Error: ${message} - Error in getAllUsers - in ${new Date().toLocaleString()}`,
+  ERR_GET_USER: (message: string) => `Error: ${message} - getUserById - in ${new Date().toLocaleString()}`,
+  ERR_GRANT_PERMISSION: (message: string, userId: string) => `Error: ${message} - GrantPermission - ${userId} - in ${new Date().toLocaleString()}`,
+  ERR_LOGOUT: (message: string) => `Logout failed: ${message}`,
+  ERR_FETCH_USER: (message: string) => `Error fetching user: ${message}`,
+  ERR_CREATE_USER: (message: string) => `Error creating user: ${message} in ${new Date().toLocaleString()}`,
+  ERR_LOGIN: (message: string) => `Error: ${message} - Login User - in ${new Date().toLocaleString()}`,
+  ERR_UPDATE_STATUS: (message: string) => `Error updating status: ${message}`,
+  ERR_PERMISSION: (message: string) => `Error Grant Permission: ${message}`,
+  CITIES_NAV: (cityId: string) => `/cities/${cityId}`,
+  ERR_REGISTER: (message: string) => `Error registering user: ${message}`,
+  ERR_REQUEST_PERMISSION: (message: string) => `Error requesting permission: ${message}`,
+  ERR_UPDATE_PERMISSION: (message: string) => `Error updating user permission: ${message}`,
+  ERR_GET_ALL_REQUEST_PERMISSIONS: (message: string) => `Error in getAllRoleRequests: ${message}`,
+  ERR_UPDATE_REQUEST: (message: string) => `Error updating request status: ${message}`,
 };
 
 export const FIELD = {
@@ -121,4 +158,12 @@ export const FIELD = {
   PHONE: 'phone',
   ACTIONS: 'actions',
   NAME: 'name',
+  FLAG: 'flag',
+  REGION: 'region',
+  POPULATION: 'population',
+  CITYIDS: 'cityIds',
+  USERNAME: 'username',
+  PASSWORD: 'password',
 };
+
+export const REGISTER_HEADER = {'Content-Type': 'multipart/form-data'};

@@ -5,7 +5,7 @@ import Loading from '../loading/Loading';
 import {DataGrid} from '@mui/x-data-grid';
 import EditIcon from '@mui/icons-material/Edit';
 import DeleteIcon from '@mui/icons-material/Delete';
-import {useDeleteUser, useGetUsers, useGrantPermission} from '../../services/hooks/userHooks';
+import {useDeleteUser, useGetUsers, useGrantPermission, useUpdateUser} from '../../services/hooks/useUsers';
 import {deleteAlert, errorDeleteAlert, successAlert, errorAlert} from '../../utils/sweet-alerts';
 import {useRecoilValue, useSetRecoilState} from 'recoil';
 import {userState} from '../../services/recoilService/userState';
@@ -18,14 +18,18 @@ import RequestsComponent from '../requestsComponent/RequestsComponent';
 import {ALERT_MESSAGES, BUTTON_TEXT, LABELS, PATH, FUNCS, FIELD} from '../../constants';
 import UserCard from '../userCard/UserCard';
 import RoleSelect from '../roleSelect/RoleSelect';
+import {PermissionEnum} from '../../models/enums/permissionEnum';
+import PermissionManager from '../permissionManager/PermissionManager';
 
 export default function AdminDashboard() {
   const [selectedUser, setSelectedUser] = useState<IUser | null>(initialUser);
   const [newRole, setNewRole] = useState<RoleEnum | null>(null);
   const setSelectedUserState = useSetRecoilState(selectedUserState);
+  const [gridKey, setGridKey] = useState<number>(0);
 
   const {data: users, isLoading, isError} = useGetUsers();
   const {mutate: grantPermission} = useGrantPermission();
+  const {mutate: updateUserMutate} = useUpdateUser();
   const deleteUserMutation = useDeleteUser();
   const {user} = useRecoilValue(userState);
 
@@ -36,15 +40,26 @@ export default function AdminDashboard() {
       errorAlert(ALERT_MESSAGES.ERROR_UPDATE_ROLE);
       return;
     }
-    grantPermission({userId, role: newRole});
+    const formData = new FormData();
+    formData.append('role', newRole);
+    updateUserMutate({id: userId, formData});
     setNewRole(null);
   };
 
+  const handlePermissionChange = (userId: string, newRole: RoleEnum | null) => {
+    if (!userId || !newRole || userId === '') {
+      errorAlert(ALERT_MESSAGES.ERROR_UPDATE_ROLE);
+      return;
+    }
+    grantPermission({userId, permission: PermissionEnum.ADD}); //TODO: לשנות לבחירה של המנהל איזה הרשאה להוסיף
+    setNewRole(null);
+  };
   const handleDelete = (event: React.MouseEvent, userId: string) => {
     event.stopPropagation();
     deleteAlert(() => {
       deleteUserMutation.mutate(userId, {
         onSuccess: () => {
+          setGridKey((prevKey) => prevKey + 1);
           successAlert(ALERT_MESSAGES.SUCCESS_DELETE_USER);
         },
         onError: () => {
@@ -103,12 +118,15 @@ export default function AdminDashboard() {
       <Typography className='admin-dashboard-title' variant='h2'>
         {BUTTON_TEXT.ADMIN}
       </Typography>
+
+      <PermissionManager />
       <div className='users-container'>
         <Typography className='admin-dashboard-title' variant='h4'>
           {BUTTON_TEXT.USERS}
         </Typography>
         {users && (
           <DataGrid
+            key={gridKey}
             rows={users}
             columns={columns}
             getRowId={(row) => row._id ?? crypto.randomUUID()}

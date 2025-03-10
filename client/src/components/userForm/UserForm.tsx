@@ -15,9 +15,10 @@ import {userState} from '../../services/recoilService/userState';
 import {useEffect, useState} from 'react';
 import {selectedUserState} from '../../services/recoilService/selectedUserState';
 import IUser from '../../models/interfaces/iUser';
-import {ALERT_MESSAGES, BUTTON_TEXT, LABELS} from '../../constants';
+import {ALERT_MESSAGES, BUTTON_TEXT, FIELD, LABELS} from '../../constants';
 
 export default function UserForm() {
+  const [newPassword, setNewPassword] = useState<string>('');
   const {id} = useParams();
   const navigate = useNavigate();
   const currentUser = useRecoilValue(userState);
@@ -29,7 +30,7 @@ export default function UserForm() {
   const isEditMode = !!id;
   const userToEdit = isEditMode ? selectedUser || currentUser.user : initialUser;
   const [hasPermission, setHasPermission] = useState(true);
-
+  console.log(newPassword);
   useEffect(() => {
     if (currentUser.user?.role === RoleEnum.GUEST) {
       setHasPermission(false);
@@ -85,7 +86,7 @@ export default function UserForm() {
 
   return (
     <>
-      <h2>{isEditMode ? LABELS.EDIT_USER : LABELS.CREATE_USER}</h2>
+      <h2 className='title'>{isEditMode ? LABELS.EDIT_USER : LABELS.CREATE_USER}</h2>
 
       <Formik initialValues={initialValues} validationSchema={userSchema} onSubmit={handleSubmit}>
         {({values, initialValues, dirty, isValid, handleSubmit, setFieldValue}) => {
@@ -94,39 +95,47 @@ export default function UserForm() {
             <Form className='edit-form' onSubmit={handleSubmit}>
               <div className='field-container'>
                 <label htmlFor='firstName'>{LABELS.FIRST_NAME}</label>
-                <Field type='text' id='firstName' name='firstName' className='form-control' />
+                <Field type='text' id='firstName' name='firstName' />
                 <ErrorMessage name='firstName' component='div' className='error' />
               </div>
 
               <div className='field-container'>
                 <label htmlFor='lastName'>{LABELS.LAST_NAME}</label>
-                <Field type='text' id='lastName' name='lastName' className='form-control' />
+                <Field type='text' id='lastName' name='lastName' />
                 <ErrorMessage name='lastName' component='div' className='error' />
               </div>
 
               <div className='field-container'>
                 <label htmlFor='username'>{LABELS.USER_NAME}</label>
-                <Field type='text' id='username' name='username' className='form-control' />
+                <Field type='text' id='username' name='username' />
                 <ErrorMessage name='username' component='div' className='error' />
               </div>
 
               <div className='field-container'>
                 <label htmlFor='email'>{LABELS.EMAIL}</label>
-                <Field type='email' id='email' name='email' className='form-control' />
+                <Field type='email' id='email' name='email' />
                 <ErrorMessage name='email' component='div' className='error' />
               </div>
 
               <div className='field-container'>
                 <label htmlFor='phone'>{LABELS.PHONE}</label>
-                <Field type='tel' id='phone' name='phone' className='form-control' />
+                <Field type='tel' id='phone' name='phone' />
                 <ErrorMessage name='phone' component='div' className='error' />
               </div>
 
-              <div className='field-container'>
-                <label htmlFor='password'>{LABELS.PASSWORD}</label>
-                <Field type='password' id='password' name='password' className='form-control' />
-                <ErrorMessage name='password' component='div' className='error' />
-              </div>
+              {isEditMode ? (
+                <div className='field-container'>
+                  <label htmlFor={FIELD.PASSWORD}>{LABELS.PASSWORD}</label>
+                  <input type='password' value={newPassword} onChange={(e) => setNewPassword(e.target.value)} />
+                  <ErrorMessage name={FIELD.PASSWORD} component='div' className='error' />
+                </div>
+              ) : (
+                <div className='field-container'>
+                  <label htmlFor={FIELD.PASSWORD}>{LABELS.PASSWORD}</label>
+                  <Field type='password' id={FIELD.PASSWORD} name={FIELD.PASSWORD} />
+                  <ErrorMessage name={FIELD.PASSWORD} component='div' className='error' />
+                </div>
+              )}
 
               <div className='field-container'>
                 <label htmlFor='profileImage'>{LABELS.PROFILE}</label>

@@ -1,4 +1,5 @@
-import {RoleEnum} from '../enums/RoleEnum';
+import {PermissionEnum} from '../enums/permissionEnum';
+import {RoleRequestStatusEnum} from '../enums/RoleRequestStatusEnum';
 
 export default interface IRoleRequest {
   _id?: string;
@@ -6,7 +7,7 @@ export default interface IRoleRequest {
     _id: string;
     username: string;
   };
-  requestedRole: RoleEnum;
-  status: 'PENDING' | 'APPROVED' | 'REJECTED';
+  requestedPermission: PermissionEnum;
+  status: RoleRequestStatusEnum;
   createdAt?: Date;
 }

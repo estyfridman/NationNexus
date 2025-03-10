@@ -1,6 +1,6 @@
 import mongoose, {Schema} from 'mongoose';
 import ICountry from '../interfaces/iCountry';
-import {VALID_REGIONS} from '../regionEnum';
+import {VALID_REGIONS} from '../enums/regionEnum';
 
 const CountrySchema = new mongoose.Schema({
   name: {

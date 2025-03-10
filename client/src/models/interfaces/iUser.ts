@@ -1,4 +1,5 @@
-import { RoleEnum } from '../../../../shared/enums';
+import {PermissionEnum} from '../enums/permissionEnum';
+import {RoleEnum} from '../enums/RoleEnum';
 
 export default interface IUser {
   _id?: string;
@@ -10,6 +11,7 @@ export default interface IUser {
   password?: string;
   profileImage?: string | File | null;
   role: RoleEnum;
+  permissions?: PermissionEnum[];
   createdAt: Date;
 }
 
@@ -23,4 +25,6 @@ export interface IUserFormData {
   phone: string;
   password?: string;
   profileImage?: File;
+  role: RoleEnum;
+  permissions?: PermissionEnum;
 }

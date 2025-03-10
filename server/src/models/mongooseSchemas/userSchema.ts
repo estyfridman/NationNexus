@@ -1,6 +1,7 @@
-import mongoose, {Document} from 'mongoose';
+import mongoose from 'mongoose';
 import {IUser} from '../interfaces/iUser';
 import {RoleEnum} from '../enums/roleEnum';
+import {PermissionEnum} from '../enums/permissionEnum';
 
 const UserSchema = new mongoose.Schema<IUser>({
   firstName: {
@@ -22,7 +23,8 @@ const UserSchema = new mongoose.Schema<IUser>({
   },
   password: {type: String, required: true, unique: true},
   profileImage: String,
-  role: {type: String, enum: Object.values(RoleEnum), default: RoleEnum.GUEST},
+  role: {type: String, enum: Object.values(RoleEnum), default: RoleEnum.USER},
+  permissions: {type: [String], enum: Object.values(PermissionEnum), default: [PermissionEnum.VIEW], required: false},
   createdAt: {type: Date, default: Date.now},
 });
 

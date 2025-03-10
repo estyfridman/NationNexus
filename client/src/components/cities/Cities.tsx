@@ -22,7 +22,7 @@ import {userState} from '../../services/recoilService/userState';
 import {RoleEnum} from '../../models/enums/RoleEnum';
 import {useNavigate} from 'react-router-dom';
 import {requestPermissionsAlert} from '../../utils/sweet-alerts';
-import {useFetchCountries} from '../../services/hooks/useFetchCountries';
+import {useFetchCountries} from '../../services/hooks/useCountry';
 
 export default function CitiesGrid() {
   const {countryId} = useParams();
@@ -132,12 +132,7 @@ export default function CitiesGrid() {
             )}
           </div>
           <div className='form-container'>
-            <Button
-              onClick={() => setMode(ModeEnum.CREATE)}
-              startIcon={<AddCircleOutlineIcon />}
-              size='large'
-              variant='contained'
-              style={{width: '100%'}}>
+            <Button onClick={() => setMode(ModeEnum.CREATE)} startIcon={<AddCircleOutlineIcon />} size='large' variant='contained'>
               {LABELS.ADD_CITY}
             </Button>
 

@@ -5,12 +5,12 @@ import {MenuItem, Select, FormControl, InputLabel, Button, Typography} from '@mu
 import Loading from '../loading/Loading';
 import NotFound from '../notFound/NotFound';
 import IRoleRequest from '../../models/interfaces/iRoleRequests';
-import {useRequests} from '../../services/hooks/useRequests';
 import {useRecoilValue} from 'recoil';
 import {userState} from '../../services/recoilService/userState';
-import {useUpdateStatusMutation} from '../../services/hooks/usePermission';
+import {useUpdateStatusMutation, useRequests} from '../../services/hooks/usePermission';
 import {LABELS, RR_OPTIONS} from '../../constants';
 import './requestsComponent.scss';
+import {RoleRequestStatusEnum} from '../../models/enums/RoleRequestStatusEnum';
 
 const RequestsComponent = () => {
   const {data: requests, isLoading, error} = useRequests();
@@ -18,7 +18,7 @@ const RequestsComponent = () => {
   const updateStatusMutation = useUpdateStatusMutation();
   const [showPendingOnly, setShowPendingOnly] = useState(true);
 
-  const filteredRequests = showPendingOnly ? requests?.filter((req) => req.status === 'PENDING') : requests;
+  const filteredRequests = showPendingOnly ? requests?.filter((req) => req.status === RoleRequestStatusEnum.PENDING) : requests;
 
   const processedRequests = filteredRequests?.map((req) => ({
     ...req,
@@ -27,7 +27,7 @@ const RequestsComponent = () => {
 
   const renderStatusCell = (params: GridRenderCellParams) => {
     if (user?.role !== RoleEnum.ADMIN) return params.value;
-    const isPending = params.row.status === 'PENDING';
+    const isPending = params.row.status === RoleRequestStatusEnum.PENDING;
     return (
       <FormControl disabled={!isPending}>
         <InputLabel id={`status-label-${params.row.id}`}></InputLabel>
@@ -36,15 +36,15 @@ const RequestsComponent = () => {
           id={`status-select-${params.row.id}`}
           value={params.value}
           onChange={(e) => {
-            const newStatus = e.target.value as string;
+            const newStatus = e.target.value as RoleRequestStatusEnum;
             const requestId = params.row._id;
             const userId = params.row.userId;
-            const requestedRole = params.row.requestedRole;
+            const requestedPermission = params.row.requestedPermission;
             updateStatusMutation.mutate({
               requestId,
               status: newStatus,
               userId,
-              role: requestedRole,
+              permission: requestedPermission,
             });
           }}>
           {RR_OPTIONS.map((option) => (
@@ -63,8 +63,8 @@ const RequestsComponent = () => {
       headerName: 'User Name',
     },
     {
-      field: 'requestedRole',
-      headerName: 'Requested Role',
+      field: 'requestedPermission',
+      headerName: 'requested Permission',
       width: 150,
     },
     {

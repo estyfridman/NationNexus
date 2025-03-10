@@ -82,6 +82,8 @@ export const MOCK_QUERY = {
 };
 
 export const MESSAGES = {
+  INVALID_PERMISSION: 'Invalid permission',
+  FAILED_UPDATE_USER_PERMISSIONS: 'Update user permissions failed',
   RUN: 'Server running on port',
   FAILED_CONNECT: 'Failed to connect to database:',
   RATE_LIMIT: 'Too many requests from this IP.',
