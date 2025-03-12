@@ -3,6 +3,9 @@ import {getAllCountries, createCountry, deleteCountry, updateCountry} from '../c
 import {ICountry, ICountryUpdate} from '../../models/interfaces/iCountry';
 import {errorAlert} from '../../utils/sweet-alerts';
 import logger from '../../utils/logger';
+import ICity from '../../models/interfaces/iCity';
+import {updateCity, deleteCity, createCity} from '../citiesService';
+import {ALERT_MESSAGES, FUNCS} from '../../constants';
 
 export const useFetchCountries = (): QueryObserverResult<ICountry[], any> => {
   return useQuery<ICountry[], any>({
@@ -72,6 +75,76 @@ export const useDeleteCountry = () => {
     onError: (err: Error, id: string, context) => {
       errorAlert(`${err} - ${id} - ${context}`);
       logger.error(`Error delete country: ${err.message} in ${new Date().toLocaleString()}`);
+    },
+  });
+};
+
+// City Mutate:
+
+export const useCreateCity = () => {
+  const queryClient = useQueryClient();
+
+  return useMutation({
+    mutationFn: ({city_name, countryId}: {city_name: string; countryId: string}) => createCity(city_name, countryId),
+
+    onSuccess: ({city, countryId}) => {
+      queryClient.setQueryData<ICountry[]>(['countries'], (oldCountries) => {
+        return oldCountries?.map((country) => (country._id === countryId ? {...country, cityIds: [...(country.cityIds || []), city]} : country));
+      });
+    },
+
+    onError: (error) => {
+      errorAlert(error?.message || ALERT_MESSAGES.ERROR_CREATE_CITY);
+      logger.error(FUNCS.ERR_CREATE_CITY(error.message));
+    },
+  });
+};
+
+export const useUpdateCity = () => {
+  const queryClient = useQueryClient();
+
+  return useMutation({
+    mutationFn: updateCity,
+    onSuccess: ({updatedData}: {updatedData: ICity}) => {
+      queryClient.setQueryData<ICountry[] | undefined>(['countries'], (oldCountries) =>
+        oldCountries?.map((country) => ({
+          ...country,
+          cityIds: country.cityIds!.map((city) => (city._id === updatedData._id ? updatedData : city)),
+        }))
+      );
+    },
+    onError: (error) => {
+      errorAlert(error?.message || ALERT_MESSAGES.ERROR_UPDATE_CITY);
+      logger.error(FUNCS.ERR_UPDATE_CITY(error.message));
+    },
+  });
+};
+
+export const useDeleteCity = () => {
+  const queryClient = useQueryClient();
+
+  return useMutation({
+    mutationFn: deleteCity,
+    onSuccess: (data: {cityId: string; countryId: string}) => {
+      const {cityId, countryId} = data;
+
+      queryClient.setQueryData<ICountry[]>(['countries'], (oldCountries) => {
+        if (!oldCountries) return [];
+
+        return oldCountries.map((country) => {
+          if (country._id === countryId) {
+            return {
+              ...country,
+              cityIds: country.cityIds?.filter((city) => city._id !== cityId),
+            };
+          }
+          return country;
+        });
+      });
+    },
+    onError: (err: Error, variables: {cityId: string; countryId: string}) => {
+      errorAlert(`${err.message}`);
+      logger.error(FUNCS.ERR_DELETE_CITY(err.message));
     },
   });
 };

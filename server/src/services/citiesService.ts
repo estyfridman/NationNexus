@@ -2,7 +2,7 @@ import City from '../models/mongooseSchemas/citySchema';
 import {Types} from 'mongoose';
 import ICity from '../models/interfaces/iCity';
 import {ERRORS} from '../constants';
-
+import CountryService from './countryService';
 class CitiesService {
   async getAllCities() {
     try {
@@ -42,15 +42,19 @@ class CitiesService {
     }
   }
 
-  async createCity(cityData: ICity) {
+  async createCity(city_name: string, countryId: string) {
     try {
-      const existCity = await City.findOne({name: cityData.name});
+      const existCity = await City.findOne({name: city_name});
       if (existCity) {
         throw new Error(ERRORS.CITY_EXISTS_ERR);
       }
-      const newCity = new City(cityData);
+      const newCity = new City({name: city_name});
       await newCity.validate();
-      return await newCity.save();
+      const savedCity = await newCity.save();
+
+      await CountryService.updateCityInCountry(countryId, savedCity._id);
+
+      return savedCity;
     } catch (error) {
       throw new Error(`${ERRORS.CREATE_CITY_ERR} ${(error as Error).message}`);
     }

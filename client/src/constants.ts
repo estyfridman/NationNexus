@@ -29,6 +29,7 @@ export const ALERT_MESSAGES = {
   REQUIRED_NAME: 'Name is required',
   REQUIRED: 'is required',
   USER_NOT_EXIST: 'You are not a registered user, please register.',
+  CITY_NOT_FOUND: '',
 };
 
 export const ERRORS = {
@@ -45,6 +46,7 @@ export const ERRORS = {
   UPDATE_CITY_ERR: 'Failed to update city',
   DELETE_CITY_ERR: 'Failed to delete city',
   USER_LOGOUT: 'User successfully logged out',
+  INVALID_ID: 'Missing or invalid city or country ID',
 };
 
 export const LABELS = {
@@ -149,6 +151,16 @@ export const FUNCS = {
   ERR_UPDATE_PERMISSION: (message: string) => `Error updating user permission: ${message}`,
   ERR_GET_ALL_REQUEST_PERMISSIONS: (message: string) => `Error in getAllRoleRequests: ${message}`,
   ERR_UPDATE_REQUEST: (message: string) => `Error updating request status: ${message}`,
+  ERR_GET_COUNTRY: (message: string, id: string) => `Error fetching country by ID: ${message} - ${id}`,
+  ERR_UPDATE_COUNTRY: (message: string, id: string) => `Error updating the Country: ${message} - ${id}`,
+  ERR_CREATE_COUNTRY: (message: string) => `Error creating Country: ${message}`,
+  ERR_DELETE_COUNTRY: (message: string) => `Error deleting Country: ${message}`,
+  ERR_DELETE_CITY: (message: string) => `Error deleting city: ${message} in ${new Date().toLocaleString()}`,
+  ERR_UPDATE_CITY: (message: string) => `Error updating city: ${message} in ${new Date().toLocaleString()}`,
+  ERR_CREATE_CITY: (message: string) => `Error creating city: ${message} in ${new Date().toLocaleString()}`,
+  CITIES_COUNTRY_ID: (id: string) => `/cities/${id}`,
+  CITIES_ID_PATH: (id: string) => `/cities/by-country/${id}`,
+  COUNTRY_ID: (id: string) => `/countries/${id}`,
 };
 
 export const FIELD = {

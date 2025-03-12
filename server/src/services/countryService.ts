@@ -1,8 +1,9 @@
 import ICountry from '../models/interfaces/iCountry';
 import Country from '../models/mongooseSchemas/countrySchema';
-import {Types} from 'mongoose';
+import mongoose, {Types} from 'mongoose';
 import City from '../models/mongooseSchemas/citySchema';
 import {MESSAGES, MSG_FUNC} from '../constants';
+import {validateObjectId} from '../utils/validateObjectId';
 
 class CountryService {
   async getAllCountries() {
@@ -14,9 +15,8 @@ class CountryService {
   }
 
   async getCountryById(id: string) {
-    if (!Types.ObjectId.isValid(id)) {
-      throw new Error(MESSAGES.INVALID_ID);
-    }
+    validateObjectId(id);
+
     try {
       const country = await Country.findById(id).populate('cityIds', 'name');
       if (!country) {
@@ -55,9 +55,7 @@ class CountryService {
   }
 
   async updateCountry(id: string, updateData: Partial<ICountry>) {
-    if (!Types.ObjectId.isValid(id)) {
-      throw new Error(MESSAGES.INVALID_ID);
-    }
+    validateObjectId(id);
     try {
       const country = await Country.findByIdAndUpdate(id, updateData, {new: true});
       if (!country) {
@@ -69,6 +67,22 @@ class CountryService {
     }
   }
 
+  async updateCityInCountry(countryId: string, cityId: mongoose.Types.ObjectId) {
+    validateObjectId(countryId);
+    try {
+      const country = await Country.findById(countryId);
+      if (!country) {
+        throw new Error(MESSAGES.COUNTRY_NOT_FOUND_B);
+      }
+
+      const updatedCityIds = [...country.cityIds, cityId];
+
+      await this.updateCountry(countryId, {cityIds: updatedCityIds});
+      return country;
+    } catch {
+      throw new Error(MESSAGES.UPDATE_COUNTRY_FAILED);
+    }
+  }
   async deleteCountry(id: string) {
     if (!Types.ObjectId.isValid(id)) {
       throw new Error(MESSAGES.INVALID_ID);

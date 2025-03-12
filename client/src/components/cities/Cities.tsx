@@ -5,7 +5,7 @@ import IconButton from '@mui/material/Button';
 import {useParams} from 'react-router-dom';
 import ICity from '../../models/interfaces/iCity';
 import {deleteAlert, successAlert, errorDeleteAlert} from '../../utils/sweet-alerts';
-import {useDeleteCity} from '../../services/hooks/cityMutations/useDeleteCity';
+import {useDeleteCity} from '../../services/hooks/useCountry';
 import Loading from '../loading/Loading';
 import NotFound from '../notFound/NotFound';
 import {DataGrid} from '@mui/x-data-grid';
@@ -17,7 +17,7 @@ import AddCircleOutlineIcon from '@mui/icons-material/AddCircleOutline';
 import Button from '@mui/material/Button';
 import {initialCity} from '../../utils/initialValues';
 import './cities.scss';
-import {LABELS, BUTTON_TEXT, ALERT_MESSAGES, FIELD} from './../../constants';
+import {LABELS, BUTTON_TEXT, ALERT_MESSAGES, FIELD, ERRORS} from './../../constants';
 import {userState} from '../../services/recoilService/userState';
 import {RoleEnum} from '../../models/enums/RoleEnum';
 import {useNavigate} from 'react-router-dom';
@@ -26,17 +26,28 @@ import {useFetchCountries} from '../../services/hooks/useCountry';
 
 export default function CitiesGrid() {
   const {countryId} = useParams();
-  const [gridKey, setGridKey] = useState<number>(0);
   const [retryCount, setRetryCount] = useState(0);
   const [selectedCity, setSelectedCity] = useRecoilState<ICity | null>(selectedCityState);
   const [mode, setMode] = useState<ModeEnum>(ModeEnum.NONE);
   const {user} = useRecoilValue(userState);
   const navigate = useNavigate();
   const {data, isLoading, isError, refetch} = useFetchCountries();
+  const [cities, setCities] = useState<ICity[]>([]);
 
   const deleteCityMutation = useDeleteCity();
-  const cities: (ICity | undefined)[] =
-    data?.flatMap((country) => (countryId ? (country._id === countryId ? country.cityIds || [] : []) : country.cityIds)) || [];
+  useEffect(() => {
+    if (!data) {
+      setCities([]);
+      return;
+    }
+
+    if (countryId) {
+      const country = data.find((country) => country._id === countryId);
+      setCities(country?.cityIds || []);
+    } else {
+      setCities(data.flatMap((country) => country.cityIds || []));
+    }
+  }, [data, countryId]);
 
   useEffect(() => {
     if (isError && retryCount < 3) {
@@ -50,17 +61,29 @@ export default function CitiesGrid() {
 
   function handleDelete(e: React.MouseEvent<HTMLButtonElement, MouseEvent>, id: string) {
     e.stopPropagation();
+
+    if (!id || typeof id !== 'string' || !countryId || typeof countryId !== 'string') {
+      errorDeleteAlert(ERRORS.INVALID_ID);
+      return;
+    }
+
     deleteAlert(() => {
-      deleteCityMutation.mutate(id, {
-        onSuccess: () => {
-          setGridKey((prevKey) => prevKey + 1);
-          successAlert(BUTTON_TEXT.SAVE, ALERT_MESSAGES.SUCCESS_DELETE_CITY);
-          setSelectedCity(null);
-        },
-        onError: () => {
-          errorDeleteAlert(ALERT_MESSAGES.ERROR_DELETE);
-        },
-      });
+      deleteCityMutation.mutate(
+        {cityId: id, countryId},
+        {
+          onSuccess: () => {
+            setCities((prevCities) => prevCities.filter((city) => city._id !== id));
+            successAlert(BUTTON_TEXT.SAVE, ALERT_MESSAGES.SUCCESS_DELETE_CITY);
+            if (selectedCity?._id === id) {
+              setSelectedCity(null);
+            }
+          },
+
+          onError: () => {
+            errorDeleteAlert(ALERT_MESSAGES.ERROR_DELETE);
+          },
+        }
+      );
     });
   }
 
@@ -120,25 +143,33 @@ export default function CitiesGrid() {
       ) : isError && retryCount >= 3 ? (
         <NotFound title={ALERT_MESSAGES.NOT_FOUND_TITLE} message={ALERT_MESSAGES.NOT_FOUND_MESSAGE} />
       ) : (
-        <div className='main-container'>
-          <div className='data-grid-container'>
-            {cities && (
-              <DataGrid
-                key={gridKey}
-                rows={cities?.map((city) => ({...city, id: city!._id})) || []}
-                columns={columns}
-                onRowClick={(params) => handleCitySelect(params.row)}
-              />
-            )}
-          </div>
-          <div className='form-container'>
-            <Button onClick={() => setMode(ModeEnum.CREATE)} startIcon={<AddCircleOutlineIcon />} size='large' variant='contained'>
-              {LABELS.ADD_CITY}
-            </Button>
+        <div>
+          <h1>{countryId ? data?.find((country) => country._id === countryId)?.name : LABELS.CITIES}</h1>
+          <div className='main-container'>
+            <div className='data-grid-container'>
+              {cities && (
+                <DataGrid
+                  rows={cities?.map((city) => ({...city, id: city!._id})) || []}
+                  columns={columns}
+                  onRowClick={(params) => handleCitySelect(params.row)}
+                />
+              )}
+            </div>
+            <div className='form-container'>
+              <Button onClick={() => setMode(ModeEnum.CREATE)} startIcon={<AddCircleOutlineIcon />} size='large' variant='contained'>
+                {LABELS.ADD_CITY}
+              </Button>
 
-            {(mode === ModeEnum.CREATE || mode === ModeEnum.EDIT) && (
-              <CityForm city={mode === ModeEnum.EDIT ? selectedCity : initialCity} mode={mode} onClear={() => handleClear} />
-            )}
+              {(mode === ModeEnum.CREATE || mode === ModeEnum.EDIT) && (
+                <CityForm
+                  city={mode === ModeEnum.EDIT ? selectedCity : initialCity}
+                  mode={mode}
+                  countryId={countryId}
+                  onClear={handleClear}
+                  setCities={setCities}
+                />
+              )}
+            </div>
           </div>
         </div>
       )}

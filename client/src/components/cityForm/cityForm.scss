@@ -1,12 +1,5 @@
 @use '../../styles/variables' as vars;
 
-.data-grid-container {
-  width: 98%;
-  height: 750px;
-  overflow-x: auto;
-  margin: 1%;
-}
-
 .field-container {
   display: flex;
   flex-direction: column;
@@ -53,4 +46,15 @@ button {
     background-color: vars.$secondary-color;
     transform: scale(1.05);
   }
+}
+
+.icons-container {
+  display: grid;
+  margin-top: 20px;
+}
+
+.city-form {
+  margin-top: 3rem;
+  border: none;
+  padding: 2%;
 }

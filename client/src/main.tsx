@@ -16,6 +16,7 @@ import AdminDashboard from './components/adminDashboard/AdminDashboard.tsx';
 import CitiesGrid from './components/cities/Cities.tsx';
 import './styles/main.scss';
 import {PATH} from './constants.ts';
+import ProtectedRoute from './components/protectedRoute/ProtectedRoute.tsx';
 
 const queryClient = new QueryClient();
 
@@ -66,7 +67,8 @@ const router = createBrowserRouter([
       },
       {
         path: PATH.ADMIN_DASHBOARD,
-        element: <AdminDashboard />,
+        element: <ProtectedRoute />,
+        children: [{path: '', element: <AdminDashboard />}],
       },
     ],
   },

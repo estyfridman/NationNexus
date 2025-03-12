@@ -30,7 +30,6 @@ export default function UserForm() {
   const isEditMode = !!id;
   const userToEdit = isEditMode ? selectedUser || currentUser.user : initialUser;
   const [hasPermission, setHasPermission] = useState(true);
-  console.log(newPassword);
   useEffect(() => {
     if (currentUser.user?.role === RoleEnum.GUEST) {
       setHasPermission(false);

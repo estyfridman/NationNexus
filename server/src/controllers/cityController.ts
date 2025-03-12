@@ -33,7 +33,8 @@ export const getCitiesByCountryId = async (req: Request, res: Response): Promise
 
 export const createCity = async (req: Request, res: Response): Promise<void> => {
   try {
-    const newCity = await cityService.createCity(req.body);
+    const {city_name, countryId} = req.body;
+    const newCity = await cityService.createCity(city_name, countryId);
     res.status(201).json(newCity);
   } catch (error: unknown) {
     res.status(500).json({error: error instanceof Error ? error.message : MESSAGES.UNKNOWN_ERROR});

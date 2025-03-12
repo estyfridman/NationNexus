@@ -117,8 +117,6 @@ class UserService {
       } else if (action === 'REMOVE') {
         updatedPermissions = updatedPermissions.filter((perm) => perm !== permission);
       }
-      console.log(updatedPermissions);
-
       const updatedUser = await User.findByIdAndUpdate(id, {permissions: updatedPermissions}, {new: true, runValidators: true});
 
       return updatedUser;
