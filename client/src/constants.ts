@@ -179,3 +179,12 @@ export const FIELD = {
 };
 
 export const REGISTER_HEADER = {'Content-Type': 'multipart/form-data'};
+
+export const VALID = {
+  MIN_LEN_NAME: 'Name must be at least 2 characters long',
+  MAX_LEN_NAME: 'Name must not exceed 40 characters',
+  REQUIRED_NAME: 'Name is required',
+  REQUIRED: 'is required',
+  COUNTRY_REQUIRED: 'Please select a country',
+  COUNTRY_INVALID: 'Invalid country ID',
+};

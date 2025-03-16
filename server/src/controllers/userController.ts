@@ -20,6 +20,7 @@ export const getUserById = async (req: Request, res: Response): Promise<void> =>
     const user = await UserService.getUserById(id);
     if (!user) {
       res.status(404).json({error: MESSAGES.USER_NOT_FOUND});
+      return;
     }
     res.json(user);
   } catch (error) {
@@ -98,9 +99,9 @@ export const deleteUser = async (req: Request, res: Response): Promise<void> => 
 export const changeUserPR = async (req: Request, res: Response) => {
   try {
     const {id} = req.params;
-    const {role} = req.body;
+    const {permission} = req.body;
 
-    const updatedUser = await UserService.changeUserPR(id, role);
+    const updatedUser = await UserService.changeUserPR(id, permission);
     res.status(200).json({message: MESSAGES.SUCCESS_UPDATE_ROLE, user: updatedUser});
   } catch (error) {
     res.status(500).json({error: MESSAGES.ERR_UPDATE_ROLE});
@@ -112,6 +113,7 @@ export const requestPRChange = async (req: Request, res: Response) => {
     const {permission, userId} = req.body;
     if (!Object.values(PermissionEnum).includes(permission)) {
       res.status(400).json({error: 'Invalid permission type'});
+      return;
     }
     //permission as PermissionEnum
     const result = await UserService.requestPermissionChange(permission as PermissionEnum, userId);

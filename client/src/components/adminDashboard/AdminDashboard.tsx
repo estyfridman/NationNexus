@@ -111,10 +111,8 @@ export default function AdminDashboard() {
   if (isLoading) return <Loading />;
   if (isError) return;
 
-  //TODO: למחוק את קונטיינר אם לא מוסיפה לו עיצוב
-
   return (
-    <div className='container'>
+    <div>
       <Typography className='admin-dashboard-title' variant='h2'>
         {BUTTON_TEXT.ADMIN}
       </Typography>

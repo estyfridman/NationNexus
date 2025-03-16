@@ -8,6 +8,7 @@ import {userState} from '../../services/recoilService/userState';
 import {useLogoutMutation} from '../../services/hooks/userMutations/useLogoutMutation';
 import {requestPermissionsAlert} from '../../utils/sweet-alerts';
 import {NAVBAR_LINKS, PATH, LABELS, BUTTON_TEXT} from '../../constants';
+import {RoleEnum} from '../../models/enums/RoleEnum';
 
 export default function Navbar() {
   const selectedCountry = useRecoilValue(selectedCountryState);
@@ -57,7 +58,7 @@ export default function Navbar() {
           );
         })}
 
-        {userData && userData?.user?.role === 'admin' && (
+        {userData && userData?.user?.role === RoleEnum.ADMIN && (
           <Link underline='none' color='inherit' onClick={() => handleLinkClick('/adminDashboard')} className='links'>
             {BUTTON_TEXT.ADMIN}
           </Link>

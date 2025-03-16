@@ -10,7 +10,7 @@ export default function PermissionManager() {
   const updateUserPermissionsMutation = useUpdatePermissionUser();
 
   const [selectedUser, setSelectedUser] = useState<IUser | null>(null);
-  const [selectedPermission, setSelectedPermission] = useState<PermissionEnum | ''>('');
+  const [selectedPermission, setSelectedPermission] = useState<PermissionEnum>(PermissionEnum.VIEW);
   const [action, setAction] = useState<'ADD' | 'REMOVE'>('ADD');
 
   if (isLoading) return <Loading />;

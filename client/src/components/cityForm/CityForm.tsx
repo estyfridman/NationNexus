@@ -1,6 +1,6 @@
 import {useState, useEffect} from 'react';
 import ICity from '../../models/interfaces/iCity';
-import {initialCity} from '../../utils/initialValues';
+import {initialCity, initialCity2} from '../../utils/initialValues';
 import {ModeEnum} from '../../models/enums/modeEnum';
 import {errorAlert, successAlert} from '../../utils/sweet-alerts';
 import {useCreateCity, useUpdateCity} from '../../services/hooks/useCountry';
@@ -13,7 +13,7 @@ import {useFetchCountries} from '../../services/hooks/useCountry';
 import {Autocomplete, TextField} from '@mui/material';
 import {ICountry} from '../../models/interfaces/iCountry';
 import './cityForm.scss';
-import {ALERT_MESSAGES, LABELS, BUTTON_TEXT} from '../../constants';
+import {ALERT_MESSAGES, LABELS, BUTTON_TEXT, ERRORS} from '../../constants';
 import {userState} from '../../services/recoilService/userState';
 import {useRecoilValue} from 'recoil';
 import {useNavigate} from 'react-router-dom';
@@ -25,6 +25,11 @@ interface CityFormProps {
   countryId: string | undefined;
   onClear: () => void;
   setCities: React.Dispatch<React.SetStateAction<ICity[]>>;
+}
+
+interface ICityFormValues {
+  name: string;
+  countryId: string;
 }
 
 export function CityForm({city, mode, countryId, onClear, setCities}: CityFormProps) {
@@ -55,18 +60,23 @@ export function CityForm({city, mode, countryId, onClear, setCities}: CityFormPr
   //   }
   // }, [user, navigate]);
 
-  const handleSubmit = (values: ICity, {resetForm}: FormikHelpers<ICity>) => {
+  const handleSubmit = (values: ICityFormValues, {resetForm}: FormikHelpers<ICityFormValues>) => {
+    const selectedCountryId = countryId || values.countryId;
+
+    if (!selectedCountryId) {
+      errorAlert(ERRORS.GET_COUNTRY_NF_ERR);
+      return;
+    }
+
     if (mode === ModeEnum.CREATE) {
       createCityMutation.mutate(
-        {city_name: values.name, countryId: countryId || ''},
+        {city_name: values.name, countryId: selectedCountryId},
         {
           onSuccess: () => {
             successAlert(BUTTON_TEXT.SAVE, ALERT_MESSAGES.SUCCESS_CREATE_CITY);
             resetForm();
             onClear();
-            setCities((prevCities) => [...prevCities, values]);
-            // להחליף או לא?
-            //setCities((prevCities) => (city ? [...prevCities, city] : prevCities));
+            setCities((prevCities) => (city ? [...prevCities, city] : prevCities));
           },
           onError: (error: any) => {
             errorAlert(error?.message || ALERT_MESSAGES.ERROR_CREATE_CITY);
@@ -76,6 +86,7 @@ export function CityForm({city, mode, countryId, onClear, setCities}: CityFormPr
       );
     } else {
       updateCityMutation.mutate(
+        // להוסיף גם פה COUNTRY ID?
         {updatedData: values},
         {
           onSuccess: ({updatedData}) => {
@@ -94,7 +105,7 @@ export function CityForm({city, mode, countryId, onClear, setCities}: CityFormPr
   };
 
   return (
-    <Formik<ICity> initialValues={initialFormValues} validationSchema={citySchema} onSubmit={handleSubmit} enableReinitialize>
+    <Formik initialValues={initialCity2} validationSchema={citySchema} onSubmit={handleSubmit} enableReinitialize>
       {({values, initialValues, dirty, isValid, isSubmitting, setFieldValue, resetForm}) => (
         <Form className='city-form'>
           <div className='field-container'>
@@ -102,7 +113,7 @@ export function CityForm({city, mode, countryId, onClear, setCities}: CityFormPr
             <Field type='text' name='name' id='name' />
             <ErrorMessage name='name' component='div' className='error' />
           </div>
-          {mode === ModeEnum.CREATE ? (
+          {countryId ? (
             <h6>{countryId ? countries?.find((country) => country._id === countryId)?.name : ' '}</h6>
           ) : (
             <div className='field-container'>
@@ -116,7 +127,7 @@ export function CityForm({city, mode, countryId, onClear, setCities}: CityFormPr
                   options={countries}
                   getOptionLabel={(option: ICountry) => option.name}
                   getOptionKey={(option: ICountry) => option._id || Math.random()}
-                  value={countries.find((country) => country._id === values._id) || null}
+                  value={countries.find((country) => country._id === values.countryId) || null}
                   onChange={(event, newValue) => {
                     setFieldValue('countryId', newValue?._id || '');
                   }}
@@ -130,7 +141,7 @@ export function CityForm({city, mode, countryId, onClear, setCities}: CityFormPr
           )}
 
           <div className='icons-container'>
-            <IconButton type='button' onClick={() => resetForm(initialValues as Partial<FormikState<ICity>>)}>
+            <IconButton type='button' onClick={() => resetForm({values: initialValues})}>
               <RestartAltIcon />
             </IconButton>
 

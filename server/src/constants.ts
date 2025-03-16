@@ -103,7 +103,7 @@ export const MESSAGES = {
   ERROR_RESET_PASS: 'Password reset error',
   UNKNOWN_ERROR: 'An unknown error occurred',
   SUCCESS_DELETE_CITY: 'City deleted successfully',
-  APPROVED_ERR_MSG: 'Missing userId or role for APPROVED status.',
+  APPROVED_ERR_MSG: 'Missing userId or permission for APPROVED status.',
   ERR_REQ_ROLE: 'Error requesting role change',
   SUCCESS_UPDATE_ROLE: 'User role updated successfully!',
   ERR_UPDATE_ROLE: 'Error updating user role',

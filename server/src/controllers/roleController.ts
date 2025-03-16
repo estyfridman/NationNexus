@@ -20,8 +20,12 @@ export const updateRoleRequestsController = async (req: Request, res: Response):
   try {
     const updateRoleRequest = await patchRoleRequests(id, status);
     if (status === RoleRequestStatusEnum.APPROVED) {
+      console.log('updateRoleRequestsController');
+      console.log(userId);
+      console.log(requested);
       if (userId && requested) {
-        await UserService.changeUserPR(userId, requested);
+        const result = await UserService.changeUserPR(userId, requested);
+        console.log(result);
       } else {
         res.status(400).json({error: MESSAGES.APPROVED_ERR_MSG});
         return;

@@ -30,3 +30,8 @@ export const initialCity = {
   name: '',
   countryId: '',
 };
+
+export const initialCity2 = {
+  name: '',
+  countryId: '',
+};

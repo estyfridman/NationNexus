@@ -7,6 +7,7 @@ import {loginSchema} from '../../models/schemas/loginSchema';
 import {initialLogin} from '../../utils/initialValues';
 import {errorAlert} from '../../utils/sweet-alerts';
 import {ALERT_MESSAGES, BUTTON_TEXT, FIELD, PATH} from '../../constants';
+import './login.scss';
 
 export default function Login() {
   const navigate = useNavigate();
@@ -28,7 +29,7 @@ export default function Login() {
   });
 
   return (
-    <Container component='main' maxWidth='xs'>
+    <Container component='main' maxWidth='xs' className='login-container'>
       <Typography variant='h5'>{BUTTON_TEXT.LOGIN}</Typography>
       <form onSubmit={formik.handleSubmit}>
         <TextField
@@ -59,7 +60,7 @@ export default function Login() {
           error={formik.touched.password && Boolean(formik.errors.password)}
           helperText={formik.touched.password && formik.errors.password}
         />
-        <Button color='primary' variant='contained' fullWidth type='submit'>
+        <Button color='primary' variant='contained' fullWidth type='submit' className='login-submit'>
           {BUTTON_TEXT.LOGIN}
         </Button>
       </form>

@@ -75,7 +75,7 @@ export const requestPermissionsAlert = async (navigate: NavigateType, userId: st
     icon: 'question',
     input: 'select',
     inputOptions: {
-      [PermissionEnum.VIEW]: 'View Only',
+      [PermissionEnum.VIEW]: 'View',
       [PermissionEnum.EDIT]: 'Edit',
       [PermissionEnum.DELETE]: 'Delete',
       [PermissionEnum.ADD]: 'Add',
@@ -86,9 +86,9 @@ export const requestPermissionsAlert = async (navigate: NavigateType, userId: st
   });
 
   if (result.isConfirmed) {
-    const requestedPermission = result.value;
+    const requestedPermission = result.value as PermissionEnum;
+    console.log(requestedPermission);
     try {
-      console.log(requestedPermission);
       await requestPermission(requestedPermission, userId);
       Swal.fire('Success', 'Your request has been sent for approval.', 'success');
       navigate('/');

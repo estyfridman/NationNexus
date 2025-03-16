@@ -39,7 +39,7 @@ const RequestsComponent = () => {
             const newStatus = e.target.value as RoleRequestStatusEnum;
             const requestId = params.row._id;
             const userId = params.row.userId;
-            const requestedPermission = params.row.requestedPermission;
+            const requestedPermission = params.row.requested;
             updateStatusMutation.mutate({
               requestId,
               status: newStatus,
@@ -63,7 +63,7 @@ const RequestsComponent = () => {
       headerName: 'User Name',
     },
     {
-      field: 'requestedPermission',
+      field: 'requested',
       headerName: 'requested Permission',
       width: 150,
     },

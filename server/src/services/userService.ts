@@ -101,36 +101,33 @@ class UserService {
       throw new Error(MESSAGES.INVALID_ID);
     }
 
-    const validPermissions = Object.values(PermissionEnum);
-    if (!validPermissions.includes(permission)) {
+    if (!Object.values(PermissionEnum).includes(permission)) {
       throw new Error(MESSAGES.INVALID_PERMISSION);
     }
 
     try {
-      const user = await User.findById(id);
-      if (!user) {
+      const updateQuery = action === 'ADD' ? {$addToSet: {permissions: permission}} : {$pull: {permissions: permission}};
+
+      const updatedUser = await User.findByIdAndUpdate(id, updateQuery, {new: true, runValidators: true});
+
+      if (!updatedUser) {
         throw new Error(MESSAGES.USER_NOT_FOUND);
       }
-      let updatedPermissions = user.permissions || [];
-      if (action === 'ADD' && !updatedPermissions.includes(permission)) {
-        updatedPermissions.push(permission);
-      } else if (action === 'REMOVE') {
-        updatedPermissions = updatedPermissions.filter((perm) => perm !== permission);
-      }
-      const updatedUser = await User.findByIdAndUpdate(id, {permissions: updatedPermissions}, {new: true, runValidators: true});
-
       return updatedUser;
     } catch (error) {
       throw new Error(MESSAGES.FAILED_UPDATE_USER_PERMISSIONS);
     }
   }
 
-  async changeUserPR(id: string, role: string) {
+  async changeUserPR(id: string, permission: PermissionEnum) {
     if (!Types.ObjectId.isValid(id)) {
       throw new Error(MESSAGES.INVALID_ID);
     }
     try {
-      const updatedUser = await User.findByIdAndUpdate(id, {role: role.toLowerCase()}, {new: true, runValidators: true});
+      console.log(id);
+      const updatedUser = await User.findByIdAndUpdate(id, {$addToSet: {permissions: permission}}, {new: true, runValidators: true});
+      console.log(updatedUser);
+
       if (!updatedUser) {
         throw new Error(MESSAGES.USER_NOT_FOUND);
       }
@@ -151,6 +148,8 @@ class UserService {
       }
       const newRequest = new PermissionRequest({userId, requested: requestedPermission});
       await newRequest.save();
+      console.log('Saving request:', newRequest);
+
       return {message: MSG_FUNC.REQUEST_ROLE_SEND(requestedPermission.toString())};
     } catch {
       throw new Error(MESSAGES.FAILED_REQUEST_ROLE);
