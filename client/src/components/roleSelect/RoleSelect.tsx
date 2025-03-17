@@ -1,5 +1,5 @@
 import {RoleEnum} from '../../models/enums/RoleEnum';
-import {LABELS} from '../../constants';
+import {LABELS} from '../../constants/constants';
 import {Button, Card, CardActions, CardContent, FormControl, InputLabel, MenuItem, Select, Typography} from '@mui/material';
 import IUser from '../../models/interfaces/iUser';
 import './roleSelect.scss';

@@ -1,13 +1,13 @@
 import {PermissionEnum} from '../enums/permissionEnum';
 import {RoleRequestStatusEnum} from '../enums/RoleRequestStatusEnum';
 
-export default interface IRoleRequest {
+export interface IPermissionRequest {
   _id?: string;
   userId: {
     _id: string;
     username: string;
   };
-  requestedPermission: PermissionEnum;
+  requested: PermissionEnum;
   status: RoleRequestStatusEnum;
-  createdAt?: Date;
+  createdAt: Date;
 }

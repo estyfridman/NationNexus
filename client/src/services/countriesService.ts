@@ -2,7 +2,7 @@ import {client} from '../api/client';
 import {ICountry, ICountryUpdate} from '../models/interfaces/iCountry';
 import logger from '../utils/logger';
 import {getAuthHeaders} from '../utils/getAuthorization';
-import {PATH, ERRORS, FUNCS} from '../constants';
+import {PATH, ERRORS, FUNCS} from '../constants/constants';
 
 export async function getAllCountries(): Promise<ICountry[]> {
   try {

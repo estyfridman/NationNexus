@@ -17,7 +17,7 @@ import AddCircleOutlineIcon from '@mui/icons-material/AddCircleOutline';
 import Button from '@mui/material/Button';
 import {initialCity} from '../../utils/initialValues';
 import './cities.scss';
-import {LABELS, BUTTON_TEXT, ALERT_MESSAGES, FIELD, ERRORS} from './../../constants';
+import {LABELS, BUTTON_TEXT, ALERT_MESSAGES, FIELD, ERRORS} from '../../constants/constants';
 import {userState} from '../../services/recoilService/userState';
 import {RoleEnum} from '../../models/enums/RoleEnum';
 import {useNavigate} from 'react-router-dom';

@@ -4,13 +4,13 @@ import {RoleEnum} from '../../models/enums/RoleEnum';
 import {MenuItem, Select, FormControl, InputLabel, Button, Typography} from '@mui/material';
 import Loading from '../loading/Loading';
 import NotFound from '../notFound/NotFound';
-import IRoleRequest from '../../models/interfaces/iRoleRequests';
 import {useRecoilValue} from 'recoil';
 import {userState} from '../../services/recoilService/userState';
 import {useUpdateStatusMutation, useRequests} from '../../services/hooks/usePermission';
-import {LABELS, RR_OPTIONS} from '../../constants';
+import {LABELS, RR_OPTIONS} from '../../constants/constants';
 import './requestsComponent.scss';
 import {RoleRequestStatusEnum} from '../../models/enums/RoleRequestStatusEnum';
+import {IPermissionRequest} from '../../models/interfaces/iPermissionRequest';
 
 const RequestsComponent = () => {
   const {data: requests, isLoading, error} = useRequests();
@@ -77,7 +77,7 @@ const RequestsComponent = () => {
       field: 'createdAt',
       headerName: 'Created At',
       width: 200,
-      valueGetter: (params: IRoleRequest) => new Date(params.createdAt || new Date()).toLocaleString(),
+      valueGetter: (params: IPermissionRequest) => new Date(params.createdAt || new Date()).toLocaleString(),
     },
   ];
 

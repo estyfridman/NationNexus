@@ -13,7 +13,7 @@ import {useFetchCountries} from '../../services/hooks/useCountry';
 import {Autocomplete, TextField} from '@mui/material';
 import {ICountry} from '../../models/interfaces/iCountry';
 import './cityForm.scss';
-import {ALERT_MESSAGES, LABELS, BUTTON_TEXT, ERRORS} from '../../constants';
+import {ALERT_MESSAGES, LABELS, BUTTON_TEXT, ERRORS} from '../../constants/constants';
 import {userState} from '../../services/recoilService/userState';
 import {useRecoilValue} from 'recoil';
 import {useNavigate} from 'react-router-dom';

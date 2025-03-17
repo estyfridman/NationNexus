@@ -1,4 +1,6 @@
 import mongoose from 'mongoose';
+import {RoleEnum} from './models/enums/roleEnum';
+import {PermissionEnum} from './models/enums/permissionEnum';
 
 export const METHODS = ['GET', 'POST', 'PUT', 'PATCH', 'DELETE'];
 export const ORIGIN = '*';
@@ -80,6 +82,130 @@ export const MOCK_PAYLOAD = {
 export const MOCK_QUERY = {
   user: '<img src="x" onerror="alert(1)" />',
 };
+
+export const MOCK_USER = {
+  _id: '507f1f77bcf86cd799439011',
+  firstName: 'Alice',
+  lastName: 'Bob',
+  username: 'alice123',
+  email: 'alice@mail.com',
+  password: 'passwordAlice',
+  role: RoleEnum.ADMIN,
+  permissions: [PermissionEnum.EDIT, PermissionEnum.DELETE, PermissionEnum.ADD],
+  createdAt: new Date(),
+  phone: '111-111-1111',
+};
+
+export const MOCK_USER_WITHOUT_PASSWORD = {
+  _id: '507f1f77bcf86cd799439011',
+  firstName: 'Alice',
+  lastName: 'Bob',
+  username: 'alice123',
+  email: 'alice@mail.com',
+  role: RoleEnum.ADMIN,
+  permissions: [PermissionEnum.EDIT, PermissionEnum.DELETE, PermissionEnum.ADD],
+  createdAt: new Date(),
+  phone: '111-111-1111',
+};
+export const MOCK_USERS = [
+  {
+    _id: '507f1f77bcf86cd799439011',
+    firstName: 'Alice',
+    lastName: 'Bob',
+    username: 'alice123',
+    email: 'alice@mail.com',
+    password: 'passwordAlice',
+    role: RoleEnum.ADMIN,
+    permissions: [PermissionEnum.EDIT, PermissionEnum.DELETE, PermissionEnum.ADD],
+    createdAt: new Date(),
+    phone: '111-111-1111',
+  },
+  {
+    _id: '5f8d0f5b9c5a5a0d9c9b9b9b',
+    firstName: 'Bob',
+    lastName: 'Bob',
+    username: 'bob_the_user',
+    email: 'bob@mail.com',
+    password: 'passwordBob',
+    role: RoleEnum.USER,
+    permissions: [PermissionEnum.VIEW],
+    createdAt: new Date(),
+    phone: '222-222-2222',
+  },
+  {
+    _id: '60a5e8a39c5a5a0d9c9b9b9b',
+    firstName: 'Charlie',
+    lastName: 'Charlie',
+    username: 'charlie_dev',
+    email: 'charlie@mail.com',
+    password: 'passwordCharlie',
+    role: RoleEnum.GUEST,
+    permissions: [],
+    createdAt: new Date(),
+    phone: '333-333-3333',
+  },
+];
+
+export const MOCK_USERS_WOPASS = [
+  {
+    _id: '507f1f77bcf86cd799439011',
+    firstName: 'Alice',
+    lastName: 'Bob',
+    username: 'alice123',
+    email: 'alice@mail.com',
+    role: RoleEnum.ADMIN,
+    permissions: [PermissionEnum.EDIT, PermissionEnum.DELETE, PermissionEnum.ADD],
+    createdAt: new Date(),
+    phone: '111-111-1111',
+  },
+  {
+    _id: '5f8d0f5b9c5a5a0d9c9b9b9b',
+    firstName: 'Bob',
+    lastName: 'Bob',
+    username: 'bob_the_user',
+    email: 'bob@mail.com',
+    role: RoleEnum.USER,
+    permissions: [PermissionEnum.VIEW],
+    createdAt: new Date(),
+    phone: '222-222-2222',
+  },
+  {
+    _id: '60a5e8a39c5a5a0d9c9b9b9b',
+    firstName: 'Charlie',
+    lastName: 'Charlie',
+    username: 'charlie_dev',
+    email: 'charlie@mail.com',
+    role: RoleEnum.GUEST,
+    permissions: [],
+    createdAt: new Date(),
+    phone: '333-333-3333',
+  },
+];
+
+export const MOCK_USERS_AFTER_DELETE = [
+  {
+    _id: '5f8d0f5b9c5a5a0d9c9b9b9b',
+    firstName: 'Bob',
+    lastName: 'Bob',
+    username: 'bob_the_user',
+    email: 'bob@mail.com',
+    role: RoleEnum.USER,
+    permissions: [PermissionEnum.VIEW],
+    createdAt: new Date(),
+    phone: '222-222-2222',
+  },
+  {
+    _id: '60a5e8a39c5a5a0d9c9b9b9b',
+    firstName: 'Charlie',
+    lastName: 'Charlie',
+    username: 'charlie_dev',
+    email: 'charlie@mail.com',
+    role: RoleEnum.GUEST,
+    permissions: [],
+    createdAt: new Date(),
+    phone: '333-333-3333',
+  },
+];
 
 export const MESSAGES = {
   INVALID_PERMISSION: 'Invalid permission',

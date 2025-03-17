@@ -11,7 +11,7 @@ import {useRecoilValue} from 'recoil';
 import {selectedCountryState} from '../../services/recoilService/selectedCountry';
 import SaveIcon from '@mui/icons-material/Save';
 import CancelIcon from '@mui/icons-material/Cancel';
-import {FIELD, LABELS} from '../../constants';
+import {FIELD, LABELS} from '../../constants/constants';
 
 const cancelEdit = () => {
   return Promise.resolve('Edit canceled');

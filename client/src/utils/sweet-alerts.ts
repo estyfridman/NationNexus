@@ -87,13 +87,24 @@ export const requestPermissionsAlert = async (navigate: NavigateType, userId: st
 
   if (result.isConfirmed) {
     const requestedPermission = result.value as PermissionEnum;
-    console.log(requestedPermission);
     try {
       await requestPermission(requestedPermission, userId);
-      Swal.fire('Success', 'Your request has been sent for approval.', 'success');
+      Swal.fire({
+        title: 'Success',
+        text: 'Your request has been sent for approval.',
+        icon: 'success',
+        timer: 2000,
+        timerProgressBar: true,
+      });
       navigate('/');
     } catch (error) {
-      Swal.fire('Error', 'Failed to send request. Please try again later.', 'error');
+      Swal.fire({
+        title: 'Error',
+        text: 'Failed to send request. Please try again later.',
+        icon: 'error',
+        timer: 2000,
+        timerProgressBar: true,
+      });
     }
   }
 };

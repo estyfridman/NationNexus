@@ -5,7 +5,7 @@ import './userForm.scss';
 import {useNavigate, useParams} from 'react-router-dom';
 import SaveIcon from '@mui/icons-material/Save';
 import CancelIcon from '@mui/icons-material/Cancel';
-import {useCreateUser, useUpdateUser} from '../../services/hooks/userHooks';
+import {useCreateUser, useUpdateUser} from '../../services/hooks/useUsers';
 import {successAlert, errorAlert} from '../../utils/sweet-alerts';
 import {RoleEnum} from '../../models/enums/RoleEnum';
 import {userSchema} from '../../models/schemas/userSchema';
@@ -15,7 +15,7 @@ import {userState} from '../../services/recoilService/userState';
 import {useEffect, useState} from 'react';
 import {selectedUserState} from '../../services/recoilService/selectedUserState';
 import IUser from '../../models/interfaces/iUser';
-import {ALERT_MESSAGES, BUTTON_TEXT, FIELD, LABELS} from '../../constants';
+import {ALERT_MESSAGES, BUTTON_TEXT, FIELD, LABELS} from '../../constants/constants';
 
 export default function UserForm() {
   const [newPassword, setNewPassword] = useState<string>('');

@@ -6,7 +6,7 @@ import {useLoginMutation} from '../../services/hooks/userMutations/useLoginMutat
 import {loginSchema} from '../../models/schemas/loginSchema';
 import {initialLogin} from '../../utils/initialValues';
 import {errorAlert} from '../../utils/sweet-alerts';
-import {ALERT_MESSAGES, BUTTON_TEXT, FIELD, PATH} from '../../constants';
+import {ALERT_MESSAGES, BUTTON_TEXT, FIELD, PATH} from '../../constants/constants';
 import './login.scss';
 
 export default function Login() {

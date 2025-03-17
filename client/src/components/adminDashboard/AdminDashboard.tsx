@@ -5,7 +5,7 @@ import Loading from '../loading/Loading';
 import {DataGrid} from '@mui/x-data-grid';
 import EditIcon from '@mui/icons-material/Edit';
 import DeleteIcon from '@mui/icons-material/Delete';
-import {useDeleteUser, useGetUsers, useGrantPermission, useUpdateUser} from '../../services/hooks/useUsers';
+import {useDeleteUser, useGetUsers, useUpdateUser} from '../../services/hooks/useUsers';
 import {deleteAlert, errorDeleteAlert, successAlert, errorAlert} from '../../utils/sweet-alerts';
 import {useRecoilValue, useSetRecoilState} from 'recoil';
 import {userState} from '../../services/recoilService/userState';
@@ -15,10 +15,9 @@ import {RoleEnum} from '../../models/enums/RoleEnum';
 import './adminDashboard.scss';
 import {selectedUserState} from '../../services/recoilService/selectedUserState';
 import RequestsComponent from '../requestsComponent/RequestsComponent';
-import {ALERT_MESSAGES, BUTTON_TEXT, LABELS, PATH, FUNCS, FIELD} from '../../constants';
+import {ALERT_MESSAGES, BUTTON_TEXT, LABELS, PATH, FUNCS, FIELD} from '../../constants/constants';
 import UserCard from '../userCard/UserCard';
 import RoleSelect from '../roleSelect/RoleSelect';
-import {PermissionEnum} from '../../models/enums/permissionEnum';
 import PermissionManager from '../permissionManager/PermissionManager';
 
 export default function AdminDashboard() {
@@ -28,7 +27,6 @@ export default function AdminDashboard() {
   const [gridKey, setGridKey] = useState<number>(0);
 
   const {data: users, isLoading, isError} = useGetUsers();
-  const {mutate: grantPermission} = useGrantPermission();
   const {mutate: updateUserMutate} = useUpdateUser();
   const deleteUserMutation = useDeleteUser();
   const {user} = useRecoilValue(userState);
@@ -46,14 +44,6 @@ export default function AdminDashboard() {
     setNewRole(null);
   };
 
-  const handlePermissionChange = (userId: string, newRole: RoleEnum | null) => {
-    if (!userId || !newRole || userId === '') {
-      errorAlert(ALERT_MESSAGES.ERROR_UPDATE_ROLE);
-      return;
-    }
-    grantPermission({userId, permission: PermissionEnum.ADD}); //TODO: לשנות לבחירה של המנהל איזה הרשאה להוסיף
-    setNewRole(null);
-  };
   const handleDelete = (event: React.MouseEvent, userId: string) => {
     event.stopPropagation();
     deleteAlert(() => {

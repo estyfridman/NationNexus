@@ -2,7 +2,7 @@ import {client} from '../api/client';
 import ICity, {ICityUpdate} from '../models/interfaces/iCity';
 import {handleApiError} from '../utils/error-handler';
 import {getAuthHeaders} from '../utils/getAuthorization';
-import {PATH, FUNCS} from '../constants';
+import {PATH, FUNCS} from '../constants/constants';
 
 export async function getAllCities(): Promise<ICity[]> {
   try {

@@ -6,7 +6,7 @@ import {useRecoilValue, useSetRecoilState} from 'recoil';
 import {userState} from '../recoilService/userState';
 import {RoleEnum} from '../../models/enums/RoleEnum';
 import {errorAlert} from '../../utils/sweet-alerts';
-import {FUNCS} from '../../constants';
+import {FUNCS} from '../../constants/constants';
 
 export const useCurrentUser = (id: string | undefined, isEditMode: boolean) => {
   return useQuery<IUser | undefined>({

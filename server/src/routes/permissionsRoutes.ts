@@ -8,6 +8,7 @@ const router = express.Router();
 
 router.get('/', verifyToken, authorize(['admin']), getAllRoleRequestsController);
 router.post('/request-permission', verifyToken, requestPRChange);
-router.patch('/:id', verifyToken, authorize(['admin']), changeUserPR);
+router.patch('/:id', verifyToken, authorize(['admin']), updateRoleRequestsController);
+router.get('/:id', verifyToken, authorize(['admin']), updateRoleRequestsController);
 
 export default router;

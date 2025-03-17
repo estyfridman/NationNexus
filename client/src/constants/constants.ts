@@ -83,6 +83,7 @@ export const LABELS = {
   PASSWORD: 'Password',
   PROFILE: 'Profile Image',
   CITIES: 'Cities',
+  MANAGE_USERS: 'Manage User Permissions',
 };
 
 export const BUTTON_TEXT = {
@@ -176,6 +177,12 @@ export const FIELD = {
   CITYIDS: 'cityIds',
   USERNAME: 'username',
   PASSWORD: 'password',
+  USER: 'user',
+  PERMISSION: 'permission',
+  ACTION: 'action',
+  ADD: 'Add Permission',
+  REMOVE: 'Remove Permission',
+  GRANT: 'Grant Permission',
 };
 
 export const REGISTER_HEADER = {'Content-Type': 'multipart/form-data'};

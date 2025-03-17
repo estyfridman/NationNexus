@@ -5,7 +5,7 @@ import {errorAlert} from '../../utils/sweet-alerts';
 import logger from '../../utils/logger';
 import ICity from '../../models/interfaces/iCity';
 import {updateCity, deleteCity, createCity} from '../citiesService';
-import {ALERT_MESSAGES, FUNCS} from '../../constants';
+import {ALERT_MESSAGES, FUNCS} from '../../constants/constants';
 
 export const useFetchCountries = (): QueryObserverResult<ICountry[], any> => {
   return useQuery<ICountry[], any>({

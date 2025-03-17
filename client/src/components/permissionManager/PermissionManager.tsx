@@ -4,6 +4,7 @@ import {useGetUsers, useUpdatePermissionUser} from '../../services/hooks/useUser
 import {PermissionEnum} from '../../models/enums/permissionEnum';
 import Loading from '../loading/Loading';
 import IUser from '../../models/interfaces/iUser';
+import {FIELD, LABELS} from '../../constants/constants';
 
 export default function PermissionManager() {
   const {data: users, isLoading} = useGetUsers();
@@ -20,21 +21,20 @@ export default function PermissionManager() {
     console.log(selectedPermission);
     if (!selectedUser || !selectedPermission) return;
 
-    const results = updateUserPermissionsMutation.mutate({
+    updateUserPermissionsMutation.mutate({
       id: selectedUser._id || '',
       permission: selectedPermission,
       action,
     });
-    console.log(results);
   };
 
   return (
     <Card className='permission-card'>
       <CardContent>
-        <Typography variant='h6'>Manage User Permissions</Typography>
+        <Typography variant='h6'>{LABELS.MANAGE_USERS}</Typography>
 
         <FormControl fullWidth margin='normal'>
-          <InputLabel>User</InputLabel>
+          <InputLabel>{FIELD.USER}</InputLabel>
           <Select
             value={selectedUser?._id || ''}
             onChange={(e) => {
@@ -51,10 +51,10 @@ export default function PermissionManager() {
 
         {selectedUser && (
           <FormControl fullWidth margin='normal'>
-            <InputLabel>Permission</InputLabel>
+            <InputLabel>{FIELD.PERMISSION}</InputLabel>
             <Select value={selectedPermission} onChange={(e) => setSelectedPermission(e.target.value as PermissionEnum)}>
               {Object.values(PermissionEnum)
-                .filter((perm) => !selectedUser?.permissions?.includes(perm))
+                // .filter((perm) => !selectedUser?.permissions?.includes(perm)) Add the filter only if synchronized with the add or remove option
                 .map((perm) => (
                   <MenuItem key={perm} value={perm}>
                     {perm}
@@ -65,16 +65,16 @@ export default function PermissionManager() {
         )}
 
         <FormControl fullWidth margin='normal'>
-          <InputLabel>Action</InputLabel>
+          <InputLabel>{FIELD.ACTION}</InputLabel>
           <Select value={action} onChange={(e) => setAction(e.target.value as 'ADD' | 'REMOVE')}>
-            <MenuItem value='ADD'>Add Permission</MenuItem>
-            <MenuItem value='REMOVE'>Remove Permission</MenuItem>
+            <MenuItem value='ADD'>{FIELD.ADD}</MenuItem>
+            <MenuItem value='REMOVE'>{FIELD.REMOVE}</MenuItem>
           </Select>
         </FormControl>
       </CardContent>
       <CardActions>
         <Button color='primary' onClick={handleUpdatePermission}>
-          Grant Permission
+          {FIELD.GRANT}
         </Button>
       </CardActions>
     </Card>

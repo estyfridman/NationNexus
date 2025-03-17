@@ -3,7 +3,7 @@ import IUser from '../models/interfaces/iUser';
 import logger from '../utils/logger';
 import {getAuthHeaders} from '../utils/getAuthorization';
 import {PermissionEnum} from '../models/enums/permissionEnum';
-import {FUNCS, PATH, REGISTER_HEADER} from '../constants';
+import {FUNCS, PATH, REGISTER_HEADER} from '../constants/constants';
 
 export const getAllUsers = async () => {
   try {

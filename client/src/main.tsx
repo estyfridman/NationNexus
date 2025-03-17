@@ -15,7 +15,7 @@ import UserForm from './components/userForm/UserForm.tsx';
 import AdminDashboard from './components/adminDashboard/AdminDashboard.tsx';
 import CitiesGrid from './components/cities/Cities.tsx';
 import './styles/main.scss';
-import {PATH} from './constants.ts';
+import {PATH} from './constants/constants.ts';
 import ProtectedRoute from './components/protectedRoute/ProtectedRoute.tsx';
 
 const queryClient = new QueryClient();

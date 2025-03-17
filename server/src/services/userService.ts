@@ -10,7 +10,7 @@ import {MESSAGES, JWT_SECRET, MSG_FUNC} from '../constants';
 class UserService {
   async getUsers() {
     try {
-      return await User.find().select('-password');
+      return await User.find({}, '-password');
     } catch {
       throw new Error(MESSAGES.FAILED_GET_USERS);
     }
@@ -124,7 +124,9 @@ class UserService {
       throw new Error(MESSAGES.INVALID_ID);
     }
     try {
+      console.log('changeUserPR');
       console.log(id);
+      console.log(permission);
       const updatedUser = await User.findByIdAndUpdate(id, {$addToSet: {permissions: permission}}, {new: true, runValidators: true});
       console.log(updatedUser);
 

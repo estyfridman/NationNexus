@@ -1,10 +1,10 @@
+import {PermissionEnum} from '../enums/permissionEnum';
+import {RoleRequestStatusEnum} from '../enums/RoleRequestStatusEnum';
+
 export interface IPermissionRequest {
   id?: string;
   userId: string;
-  currentRole: string;
-  requestedRole: string;
-  status: 'pending' | 'approved' | 'rejected';
+  requested: PermissionEnum;
+  status: RoleRequestStatusEnum;
   createdAt: Date;
-  userEmail: string;
-  userName: string;
 }

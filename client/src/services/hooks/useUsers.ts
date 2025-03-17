@@ -1,10 +1,13 @@
 import {useMutation, useQuery, useQueryClient} from '@tanstack/react-query';
-import {getAllUsers, deleteUser, updateUser, grantPermission, updatePermissionUser} from '../userService';
+import {getAllUsers, deleteUser, updateUser, grantPermission, updatePermissionUser, registerUser, loginUser} from '../userService';
 import IUser, {IUserUpdate} from '../../models/interfaces/iUser';
 import {errorAlert} from '../../utils/sweet-alerts';
 import logger from '../../utils/logger';
 import {getUserById} from '../userService';
-import {FUNCS} from '../../constants';
+import {FUNCS} from '../../constants/constants';
+import {useRecoilValue, useSetRecoilState} from 'recoil';
+import {userState} from '../recoilService/userState';
+import {RoleEnum} from '../../models/enums/RoleEnum';
 
 export const useGetUsers = () => {
   return useQuery<IUser[]>({
@@ -18,7 +21,7 @@ export const useGetUserById = (id: string) => {
   const queryClient = useQueryClient();
 
   return useQuery<IUser, Error>({
-    queryKey: ['user', id],
+    queryKey: ['user'],
     queryFn: async () => {
       const cachedUsers = queryClient.getQueryData<IUser[]>(['Users']);
       const userFromCache = cachedUsers?.find((user) => user._id === id);
@@ -28,10 +31,10 @@ export const useGetUserById = (id: string) => {
       }
 
       const userFromApi = await getUserById(id);
-      queryClient.setQueryData(['user', id], userFromApi);
+      queryClient.setQueryData(['user'], userFromApi);
       return userFromApi;
     },
-    staleTime: 5 * 60 * 1000,
+    staleTime: 50 * 60 * 1000,
   });
 };
 
@@ -97,6 +100,49 @@ export const useGrantPermission = () => {
     onError: (error, {userId}, context) => {
       errorAlert(`${error} - ${userId} - ${context}`);
       logger.error(FUNCS.ERR_GRANT_PERMISSION(error.message, userId));
+    },
+  });
+};
+
+export const useCreateUser = () => {
+  const queryClient = useQueryClient();
+  const setUserState = useSetRecoilState(userState);
+  const currentUser = useRecoilValue(userState);
+
+  return useMutation({
+    mutationFn: registerUser,
+    onSuccess: (data) => {
+      queryClient.setQueryData(['Users'], (oldUsers: any) => {
+        return oldUsers ? [...oldUsers, data.user] : [data.user];
+      });
+
+      if (!(currentUser && currentUser?.user?.role === RoleEnum.ADMIN)) {
+        setUserState({
+          user: data.user,
+          token: data.token,
+        });
+        localStorage.setItem('token', data.token);
+        localStorage.setItem('user', JSON.stringify(data.user)); //check and delete
+      }
+    },
+    onError: (error, newUser, context) => {
+      errorAlert(`${error} - ${newUser} - ${context}`);
+      logger.error(`Error: ${error.message} - Create User - in ${new Date().toLocaleString()}`);
+    },
+  });
+};
+
+export const useLoginUser = () => {
+  const queryClient = useQueryClient();
+
+  return useMutation({
+    mutationFn: loginUser,
+    onSuccess: (user: IUser) => {
+      queryClient.setQueryData(['User'], user);
+    },
+    onError: (error, credentials, context) => {
+      errorAlert(`${error} - ${credentials.username} - ${context}`);
+      logger.error(`Error: ${error.message} - Login User - in ${new Date().toLocaleString()}`);
     },
   });
 };

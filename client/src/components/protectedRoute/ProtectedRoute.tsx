@@ -1,7 +1,7 @@
 import {Navigate, Outlet} from 'react-router-dom';
 import {useQueryClient} from '@tanstack/react-query';
 import IUser from '../../models/interfaces/iUser';
-import {PATH} from '../../constants';
+import {PATH} from '../../constants/constants';
 import {RoleEnum} from '../../models/enums/RoleEnum';
 
 const ProtectedRoute = () => {

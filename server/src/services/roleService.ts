@@ -1,10 +1,11 @@
 import {MESSAGES, MSG_FUNC} from '../constants';
-import RoleRequest from '../models/mongooseSchemas/requestSchema';
+import PermissionRequest from '../models/mongooseSchemas/requestSchema';
 import {Types} from 'mongoose';
+import {RoleRequestStatusEnum} from '../models/enums/RoleRequestStatusEnum';
 
 export async function getAllRoleRequests() {
   try {
-    return await RoleRequest.find().populate({
+    return await PermissionRequest.find().populate({
       path: 'userId',
       select: 'username',
     });
@@ -18,7 +19,7 @@ export async function deleteRoleRequests(id: string) {
     throw new Error(MESSAGES.INVALID_ID);
   }
   try {
-    const deleteRequest = await RoleRequest.findByIdAndDelete(id);
+    const deleteRequest = await PermissionRequest.findByIdAndDelete(id);
     if (!deleteRequest) {
       throw new Error(MESSAGES.PERMISSION_NOT_FOUND);
     }
@@ -28,12 +29,12 @@ export async function deleteRoleRequests(id: string) {
   }
 }
 
-export async function patchRoleRequests(id: string, status: string) {
+export async function patchRoleRequests(id: string, status: RoleRequestStatusEnum) {
   if (!Types.ObjectId.isValid(id)) {
     throw new Error(MESSAGES.INVALID_ID);
   }
   try {
-    const updateRequest = await RoleRequest.findByIdAndUpdate(id, {status}, {new: true});
+    const updateRequest = await PermissionRequest.findByIdAndUpdate(id, {status}, {new: true});
     if (!updateRequest) {
       throw new Error(MESSAGES.PERMISSION_NOT_FOUND);
     }

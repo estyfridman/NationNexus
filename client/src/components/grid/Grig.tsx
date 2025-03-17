@@ -15,7 +15,7 @@ import {useDeleteCountry} from '../../services/hooks/useCountry';
 import {deleteAlert, errorDeleteAlert, successAlert} from '../../utils/sweet-alerts';
 import {userState} from '../../services/recoilService/userState';
 import {RoleEnum} from '../../models/enums/RoleEnum';
-import {LABELS, BUTTON_TEXT, ALERT_MESSAGES, FIELD, PATH, FUNCS} from './../../constants';
+import {LABELS, BUTTON_TEXT, ALERT_MESSAGES, FIELD, PATH, FUNCS} from '../../constants/constants';
 import {requestPermissionsAlert} from '../../utils/sweet-alerts';
 import Button from '@mui/material/Button';
 
