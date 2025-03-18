@@ -19,7 +19,7 @@ import {selectedCountryState} from '../../services/recoilService/selectedCountry
 import {useNavigate} from 'react-router-dom';
 import './navbar.scss';
 import {userState} from '../../services/recoilService/userState';
-import {useLogoutMutation} from '../../services/hooks/userMutations/useLogoutMutation';
+import {useLogoutMutation} from '../../services/hooks/useCurrentUser';
 import {requestPermissionsAlert} from '../../utils/sweet-alerts';
 import {NAVBAR_LINKS, PATH, LABELS, BUTTON_TEXT} from '../../constants/constants';
 import {RoleEnum} from '../../models/enums/RoleEnum';

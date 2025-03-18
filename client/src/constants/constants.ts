@@ -84,6 +84,7 @@ export const LABELS = {
   PROFILE: 'Profile Image',
   CITIES: 'Cities',
   MANAGE_USERS: 'Manage User Permissions',
+  ERR_FETCH_REQUESTS: 'There was a problem loading permissions. Please try again later.',
 };
 
 export const BUTTON_TEXT = {

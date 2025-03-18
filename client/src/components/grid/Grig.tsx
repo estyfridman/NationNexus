@@ -15,9 +15,11 @@ import {useDeleteCountry} from '../../services/hooks/useCountry';
 import {deleteAlert, errorDeleteAlert, successAlert} from '../../utils/sweet-alerts';
 import {userState} from '../../services/recoilService/userState';
 import {RoleEnum} from '../../models/enums/RoleEnum';
-import {LABELS, BUTTON_TEXT, ALERT_MESSAGES, FIELD, PATH, FUNCS} from '../../constants/constants';
+import {LABELS, BUTTON_TEXT, FIELD, PATH, FUNCS} from '../../constants/constants';
 import {requestPermissionsAlert} from '../../utils/sweet-alerts';
 import Button from '@mui/material/Button';
+import AddCircleOutlineIcon from '@mui/icons-material/AddCircleOutline';
+import {ADD_BUTTON} from '../../constants/sxConstants';
 
 export default function Grid() {
   const [gridKey, setGridKey] = useState<number>(0);
@@ -146,6 +148,11 @@ export default function Grid() {
       ) : (
         <>
           <div className='data-grid-container'>
+            <Button variant='contained' color='primary' onClick={() => navigate('/create')} sx={ADD_BUTTON}>
+              <AddCircleOutlineIcon />
+              {LABELS.ADD_COUNTRY}
+            </Button>
+
             {data && (
               <DataGrid
                 key={gridKey}
@@ -156,7 +163,6 @@ export default function Grid() {
               />
             )}
           </div>
-          <IconButton onClick={() => navigate('/create')}>+</IconButton>
         </>
       )}
     </>

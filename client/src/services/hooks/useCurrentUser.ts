@@ -1,16 +1,17 @@
-import {useMutation, useQuery, useQueryClient} from '@tanstack/react-query';
+import {useQuery} from '@tanstack/react-query';
 import IUser from '../../models/interfaces/iUser';
-import {getUserById, registerUser, loginUser} from '../../services/userService';
+import {getUserById, loginUser} from '../../services/userService';
 import logger from '../../utils/logger';
-import {useRecoilValue, useSetRecoilState} from 'recoil';
+import {FUNCS, ERRORS} from '../../constants/constants';
+import {useMutation, useQueryClient} from '@tanstack/react-query';
+import {} from '../../services/userService';
+import {useSetRecoilState} from 'recoil';
 import {userState} from '../recoilService/userState';
-import {RoleEnum} from '../../models/enums/RoleEnum';
-import {errorAlert} from '../../utils/sweet-alerts';
-import {FUNCS} from '../../constants/constants';
+import {useEffect} from 'react';
 
 export const useCurrentUser = (id: string | undefined, isEditMode: boolean) => {
   return useQuery<IUser | undefined>({
-    queryKey: ['user', id],
+    queryKey: ['user'],
     queryFn: async () => {
       if (!id) return undefined;
 
@@ -27,45 +28,54 @@ export const useCurrentUser = (id: string | undefined, isEditMode: boolean) => {
   });
 };
 
-export const useCreateUser = () => {
-  const queryClient = useQueryClient();
+export const useLoginMutation = () => {
   const setUserState = useSetRecoilState(userState);
-  const currentUser = useRecoilValue(userState);
-
-  return useMutation({
-    mutationFn: registerUser,
-    onSuccess: (data) => {
-      queryClient.setQueryData(['Users'], (oldUsers: any) => {
-        return oldUsers ? [...oldUsers, data.user] : [data.user];
-      });
-
-      if (!(currentUser && currentUser?.user?.role === RoleEnum.ADMIN)) {
-        setUserState({
-          user: data.user,
-          token: data.token,
-        });
-        localStorage.setItem('token', data.token);
-        localStorage.setItem('user', JSON.stringify(data.user)); //check and delete
-      }
-    },
-    onError: (error, newUser, context) => {
-      errorAlert(`${error} - ${newUser} - ${context}`);
-      logger.error(FUNCS.ERR_CREATE_USER(error.message));
-    },
-  });
-};
-
-export const useLoginUser = () => {
   const queryClient = useQueryClient();
 
   return useMutation({
     mutationFn: loginUser,
-    onSuccess: (user: IUser) => {
-      queryClient.setQueryData(['User'], user);
+    onSuccess: (data) => {
+      setUserState({
+        user: data.user,
+        token: data.token,
+      });
+      localStorage.setItem('token', data.token);
+      localStorage.setItem('user', JSON.stringify(data.user));
+
+      queryClient.setQueryData(['user'], data.user);
     },
-    onError: (error, credentials, context) => {
-      errorAlert(`${error} - ${credentials.username} - ${context}`);
-      logger.error(FUNCS.ERR_LOGIN(error.message));
+    onError: (error) => {
+      logger.error(`Login failed ${error.message}`);
+    },
+  });
+};
+
+const logoutUser = async () => {
+  return new Promise<void>((resolve) => {
+    localStorage.removeItem('token');
+    localStorage.removeItem('user');
+    resolve();
+  });
+};
+
+export const useLogoutMutation = () => {
+  const setUserState = useSetRecoilState(userState);
+  const queryClient = useQueryClient();
+
+  return useMutation({
+    mutationFn: logoutUser,
+    onSuccess: () => {
+      queryClient.invalidateQueries({queryKey: ['user']});
+      queryClient.removeQueries({queryKey: ['user']});
+      setUserState({
+        user: null,
+        token: null,
+      });
+
+      logger.info(ERRORS.USER_LOGOUT);
+    },
+    onError: (error) => {
+      logger.error(FUNCS.ERR_LOGOUT(error.message));
     },
   });
 };

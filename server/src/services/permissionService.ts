@@ -3,7 +3,7 @@ import PermissionRequest from '../models/mongooseSchemas/requestSchema';
 import {Types} from 'mongoose';
 import {RoleRequestStatusEnum} from '../models/enums/RoleRequestStatusEnum';
 
-export async function getAllRoleRequests() {
+export async function getAllPermissionRequests() {
   try {
     return await PermissionRequest.find().populate({
       path: 'userId',
@@ -14,7 +14,7 @@ export async function getAllRoleRequests() {
   }
 }
 
-export async function deleteRoleRequests(id: string) {
+export async function deletePermissionRequests(id: string) {
   if (!Types.ObjectId.isValid(id)) {
     throw new Error(MESSAGES.INVALID_ID);
   }
@@ -29,7 +29,7 @@ export async function deleteRoleRequests(id: string) {
   }
 }
 
-export async function patchRoleRequests(id: string, status: RoleRequestStatusEnum) {
+export async function patchPermissionRequests(id: string, status: RoleRequestStatusEnum) {
   if (!Types.ObjectId.isValid(id)) {
     throw new Error(MESSAGES.INVALID_ID);
   }

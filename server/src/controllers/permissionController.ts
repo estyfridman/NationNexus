@@ -1,47 +1,43 @@
 import {Request, Response} from 'express';
-import {getAllRoleRequests, deleteRoleRequests, patchRoleRequests} from '../services/roleService';
+import {getAllPermissionRequests, deletePermissionRequests, patchPermissionRequests} from '../services/permissionService';
 import UserService from '../services/userService';
 import {MESSAGES, TEXT} from '../constants';
 import {RoleRequestStatusEnum} from '../models/enums/RoleRequestStatusEnum';
 
-export const getAllRoleRequestsController = async (req: Request, res: Response): Promise<void> => {
+export const getAllPermissionRequestsController = async (req: Request, res: Response): Promise<void> => {
   try {
-    const RoleRequests = await getAllRoleRequests();
-    res.json(RoleRequests);
+    const PermissionRequests = await getAllPermissionRequests();
+    res.json(PermissionRequests);
   } catch (error) {
     error instanceof Error ? res.status(400).json({error: error.message}) : res.status(500).json({error: MESSAGES.UNKNOWN_ERROR});
   }
 };
 
-export const updateRoleRequestsController = async (req: Request, res: Response): Promise<void> => {
+export const updatePermissionRequestsController = async (req: Request, res: Response): Promise<void> => {
   const {id} = req.params;
   const {status, userId, permission} = req.body;
 
   try {
-    const updateRoleRequest = await patchRoleRequests(id, status);
+    const updatePermissionRequest = await patchPermissionRequests(id, status);
     if (status === RoleRequestStatusEnum.APPROVED) {
-      console.log('updateRoleRequestsController');
-      console.log(userId);
-      console.log(permission);
       if (userId && permission) {
-        const result = await UserService.changeUserPR(userId._id, permission);
-        console.log(result);
+        await UserService.changeUserPR(userId._id, permission);
       } else {
         res.status(400).json({error: MESSAGES.APPROVED_ERR_MSG});
         return;
       }
     }
-    res.json(updateRoleRequest);
+    res.json(updatePermissionRequest);
   } catch (error) {
     error instanceof Error ? res.status(400).json({error: error.message}) : res.status(500).json({error: MESSAGES.UNKNOWN_ERROR});
   }
 };
 
-export const deleteRoleRequestsController = async (req: Request, res: Response): Promise<void> => {
-  const roleRequestId = req.params.id;
+export const deletePermissionRequestsController = async (req: Request, res: Response): Promise<void> => {
+  const PermissionRequestId = req.params.id;
   try {
-    const deleteRoleRequest = await deleteRoleRequests(roleRequestId);
-    res.json(deleteRoleRequest);
+    const deletePermissionRequest = await deletePermissionRequests(PermissionRequestId);
+    res.json(deletePermissionRequest);
   } catch (error) {
     error instanceof Error ? res.status(400).json({error: error.message}) : res.status(500).json({error: MESSAGES.UNKNOWN_ERROR});
   }

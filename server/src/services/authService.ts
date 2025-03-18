@@ -19,7 +19,7 @@ class AuthService {
       throw new Error(MESSAGES.INVALID_CREDENTIALS);
     }
 
-    const token = jwt.sign({userId: user._id, role: user.role}, JWT_SECRET, {expiresIn: '10d'});
+    const token = jwt.sign({userId: user._id, permissions: user.permissions}, JWT_SECRET, {expiresIn: '10d'});
 
     return {token, user};
   }

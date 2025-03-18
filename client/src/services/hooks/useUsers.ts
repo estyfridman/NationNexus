@@ -13,7 +13,7 @@ export const useGetUsers = () => {
   return useQuery<IUser[]>({
     queryKey: ['Users'],
     queryFn: getAllUsers,
-    staleTime: 1000000,
+    // staleTime: 1000000,
   });
 };
 
@@ -34,7 +34,7 @@ export const useGetUserById = (id: string) => {
       queryClient.setQueryData(['user'], userFromApi);
       return userFromApi;
     },
-    staleTime: 50 * 60 * 1000,
+    // staleTime: 50 * 60 * 1000,
   });
 };
 
@@ -115,6 +115,7 @@ export const useCreateUser = () => {
       queryClient.setQueryData(['Users'], (oldUsers: any) => {
         return oldUsers ? [...oldUsers, data.user] : [data.user];
       });
+      queryClient.setQueryData(['User'], data.user);
 
       if (!(currentUser && currentUser?.user?.role === RoleEnum.ADMIN)) {
         setUserState({
@@ -128,21 +129,6 @@ export const useCreateUser = () => {
     onError: (error, newUser, context) => {
       errorAlert(`${error} - ${newUser} - ${context}`);
       logger.error(`Error: ${error.message} - Create User - in ${new Date().toLocaleString()}`);
-    },
-  });
-};
-
-export const useLoginUser = () => {
-  const queryClient = useQueryClient();
-
-  return useMutation({
-    mutationFn: loginUser,
-    onSuccess: (user: IUser) => {
-      queryClient.setQueryData(['User'], user);
-    },
-    onError: (error, credentials, context) => {
-      errorAlert(`${error} - ${credentials.username} - ${context}`);
-      logger.error(`Error: ${error.message} - Login User - in ${new Date().toLocaleString()}`);
     },
   });
 };

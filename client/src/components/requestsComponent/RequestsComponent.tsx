@@ -3,7 +3,6 @@ import {DataGrid, GridColDef, GridRenderCellParams} from '@mui/x-data-grid';
 import {RoleEnum} from '../../models/enums/RoleEnum';
 import {MenuItem, Select, FormControl, InputLabel, Button, Typography} from '@mui/material';
 import Loading from '../loading/Loading';
-import NotFound from '../notFound/NotFound';
 import {useRecoilValue} from 'recoil';
 import {userState} from '../../services/recoilService/userState';
 import {useUpdateStatusMutation, useRequests} from '../../services/hooks/usePermission';
@@ -83,7 +82,7 @@ const RequestsComponent = () => {
 
   if (isLoading) return <Loading />;
 
-  if (error) return <NotFound />;
+  if (error) return <div>{LABELS.ERR_FETCH_REQUESTS}</div>;
 
   return (
     <div className='container'>

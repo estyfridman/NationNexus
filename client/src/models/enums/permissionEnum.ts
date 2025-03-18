@@ -3,4 +3,5 @@ export enum PermissionEnum {
   EDIT = 'EDIT',
   DELETE = 'DELETE',
   ADD = 'ADD',
+  ADMIN = 'ADMIN',
 }

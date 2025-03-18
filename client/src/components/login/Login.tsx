@@ -2,7 +2,7 @@ import {useFormik} from 'formik';
 import {TextField, Button, Container, Typography} from '@mui/material';
 import {useNavigate} from 'react-router-dom';
 import logger from '../../utils/logger';
-import {useLoginMutation} from '../../services/hooks/userMutations/useLoginMutation';
+import {useLoginMutation} from '../../services/hooks/useCurrentUser';
 import {loginSchema} from '../../models/schemas/loginSchema';
 import {initialLogin} from '../../utils/initialValues';
 import {errorAlert} from '../../utils/sweet-alerts';

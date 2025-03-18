@@ -2,6 +2,7 @@ import {Request, Response, NextFunction} from 'express';
 import jwt from 'jsonwebtoken';
 import logger from '../utils/logger';
 import {JWT_SECRET, MESSAGES} from '../constants';
+import {PermissionEnum} from '../models/enums/permissionEnum';
 
 export const verifyToken = (req: Request, res: Response, next: NextFunction): void => {
   const token = req.header('Authorization')?.replace('Bearer ', '');
@@ -12,10 +13,10 @@ export const verifyToken = (req: Request, res: Response, next: NextFunction): vo
   }
 
   try {
-    const decoded = jwt.verify(token, JWT_SECRET) as {userId: string; role: string};
+    const decoded = jwt.verify(token, JWT_SECRET) as {userId: string; permissions: PermissionEnum[]};
     req.user = {
       _id: decoded.userId as string,
-      role: decoded.role as string,
+      permissions: Array.isArray(decoded.permissions) ? decoded.permissions : [],
     };
     next();
   } catch (err) {
@@ -24,13 +25,24 @@ export const verifyToken = (req: Request, res: Response, next: NextFunction): vo
   }
 };
 
-export const authorize = (roles: string[]) => {
+export const authorize = (requiredPermissions: PermissionEnum[]) => {
   return (req: Request, res: Response, next: NextFunction) => {
+    console.log();
     try {
-      if (!req.user || !roles.includes(req.user.role as string)) {
+      const userPermissions: PermissionEnum[] = req.user?.permissions || [];
+
+      if (!req.user) {
         res.status(403).json({message: MESSAGES.NOT_AUTH});
         return;
       }
+
+      const hasPermission = requiredPermissions.some((permission) => userPermissions.includes(permission));
+
+      if (!hasPermission) {
+        res.status(403).json({message: MESSAGES.NOT_AUTH});
+        return;
+      }
+
       next();
     } catch (error) {
       logger.error(` ${MESSAGES.AUTH_FAIL} ${new Date()}`);

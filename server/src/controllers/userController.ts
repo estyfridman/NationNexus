@@ -76,7 +76,7 @@ export const updateUser = async (req: Request, res: Response): Promise<void> => 
 };
 
 export const deleteUser = async (req: Request, res: Response): Promise<void> => {
-  if (req.user?.role !== RoleEnum.ADMIN && req.user?._id !== req.params.id) {
+  if (req.user?.permissions?.includes(PermissionEnum.ADMIN) && req.user?._id !== req.params.id) {
     res.status(403).json({message: MESSAGES.NOT_AUTH});
     return;
   }

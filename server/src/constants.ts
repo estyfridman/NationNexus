@@ -1,6 +1,7 @@
 import mongoose from 'mongoose';
 import {RoleEnum} from './models/enums/roleEnum';
 import {PermissionEnum} from './models/enums/permissionEnum';
+import {RoleRequestStatusEnum} from './models/enums/RoleRequestStatusEnum';
 
 export const METHODS = ['GET', 'POST', 'PUT', 'PATCH', 'DELETE'];
 export const ORIGIN = '*';
@@ -411,3 +412,11 @@ export const APP_CONFIG = {
 };
 
 export const FILESIZE = 5 * 1024 * 1024;
+
+export const PR = {
+  _id: '507f1f77bcf86cd799439011',
+  userId: {username: 'testuser'},
+  requested: PermissionEnum.DELETE,
+  status: RoleRequestStatusEnum.PENDING,
+  createdAt: new Date(),
+};
