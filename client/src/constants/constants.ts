@@ -163,6 +163,7 @@ export const FUNCS = {
   CITIES_COUNTRY_ID: (id: string) => `/cities/${id}`,
   CITIES_ID_PATH: (id: string) => `/cities/by-country/${id}`,
   COUNTRY_ID: (id: string) => `/countries/${id}`,
+  EDIT_USER: (id: string | undefined) => `/editUser/${id}`,
 };
 
 export const FIELD = {
@@ -195,4 +196,5 @@ export const VALID = {
   REQUIRED: 'is required',
   COUNTRY_REQUIRED: 'Please select a country',
   COUNTRY_INVALID: 'Invalid country ID',
+  CITY_INVALID: 'Invalid city ID',
 };

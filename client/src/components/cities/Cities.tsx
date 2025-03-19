@@ -19,10 +19,9 @@ import {initialCity} from '../../utils/initialValues';
 import './cities.scss';
 import {LABELS, BUTTON_TEXT, ALERT_MESSAGES, FIELD, ERRORS} from '../../constants/constants';
 import {userState} from '../../services/recoilService/userState';
-import {RoleEnum} from '../../models/enums/RoleEnum';
 import {useNavigate} from 'react-router-dom';
-import {requestPermissionsAlert} from '../../utils/sweet-alerts';
 import {useFetchCountries} from '../../services/hooks/useCountry';
+import {PermissionEnum} from '../../models/enums/permissionEnum';
 
 export default function CitiesGrid() {
   const {countryId} = useParams();
@@ -98,6 +97,7 @@ export default function CitiesGrid() {
     refetch();
     setMode(ModeEnum.NONE);
   }
+
   function handleCitySelect(city: ICity) {
     setSelectedCity(city);
     setMode(ModeEnum.NONE);
@@ -108,28 +108,23 @@ export default function CitiesGrid() {
     {
       field: FIELD.ACTIONS,
       headerName: FIELD.ACTIONS,
-      flex: 2,
       sortable: false,
       renderCell: (params: any) => {
-        if (!user || user.role !== RoleEnum.ADMIN) {
-          return (
-            <div>
-              <span className='error'>{LABELS.NO_PERMISSION}</span>
-              <Button variant='contained' size='small' onClick={() => requestPermissionsAlert(navigate, user?._id || '')}>
-                {LABELS.REQUEST_PERMISSION}
-              </Button>
-            </div>
-          );
-        }
+        if (!user) return null;
+        const {permissions} = user;
 
         return (
           <>
-            <IconButton onClick={(e) => handleEdit(e, params.row)}>
-              <EditIcon />
-            </IconButton>
-            <IconButton onClick={(e) => handleDelete(e, params.row._id)}>
-              <DeleteIcon />
-            </IconButton>
+            {permissions && permissions.includes(PermissionEnum.EDIT) && (
+              <IconButton onClick={(e) => handleEdit(e, params.row)}>
+                <EditIcon />
+              </IconButton>
+            )}
+            {permissions && permissions.includes(PermissionEnum.DELETE) && (
+              <IconButton onClick={(e) => handleDelete(e, params.row._id)}>
+                <DeleteIcon />
+              </IconButton>
+            )}
           </>
         );
       },
@@ -156,18 +151,18 @@ export default function CitiesGrid() {
               )}
             </div>
             <div className='form-container'>
-              <Button onClick={() => setMode(ModeEnum.CREATE)} startIcon={<AddCircleOutlineIcon />} size='large' variant='contained'>
-                {LABELS.ADD_CITY}
-              </Button>
+              {user?.permissions?.includes(PermissionEnum.ADD) && (
+                <Button onClick={() => setMode(ModeEnum.CREATE)} startIcon={<AddCircleOutlineIcon />} size='large' variant='contained'>
+                  {LABELS.ADD_CITY}
+                </Button>
+              )}
 
-              {(mode === ModeEnum.CREATE || mode === ModeEnum.EDIT) && (
-                <CityForm
-                  city={mode === ModeEnum.EDIT ? selectedCity : initialCity}
-                  mode={mode}
-                  countryId={countryId}
-                  onClear={handleClear}
-                  setCities={setCities}
-                />
+              {mode === ModeEnum.CREATE && user?.permissions?.includes(PermissionEnum.ADD) && (
+                <CityForm city={initialCity} mode={mode} countryId={countryId} onClear={handleClear} setCities={setCities} />
+              )}
+
+              {mode === ModeEnum.EDIT && user?.permissions?.includes(PermissionEnum.EDIT) && (
+                <CityForm city={selectedCity} mode={mode} countryId={countryId} onClear={handleClear} setCities={setCities} />
               )}
             </div>
           </div>

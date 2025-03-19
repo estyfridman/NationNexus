@@ -1,10 +1,9 @@
-import {useState, useEffect} from 'react';
+import {useEffect} from 'react';
 import ICity from '../../models/interfaces/iCity';
-import {initialCity, initialCity2} from '../../utils/initialValues';
 import {ModeEnum} from '../../models/enums/modeEnum';
 import {errorAlert, successAlert} from '../../utils/sweet-alerts';
 import {useCreateCity, useUpdateCity} from '../../services/hooks/useCountry';
-import {Formik, Form, ErrorMessage, Field, FormikState, FormikHelpers} from 'formik';
+import {Formik, Form, ErrorMessage, Field, FormikHelpers} from 'formik';
 import {citySchema} from '../../models/schemas/citySchema';
 import IconButton from '@mui/material/IconButton';
 import SaveIcon from '@mui/icons-material/Save';
@@ -13,11 +12,12 @@ import {useFetchCountries} from '../../services/hooks/useCountry';
 import {Autocomplete, TextField} from '@mui/material';
 import {ICountry} from '../../models/interfaces/iCountry';
 import './cityForm.scss';
-import {ALERT_MESSAGES, LABELS, BUTTON_TEXT, ERRORS} from '../../constants/constants';
+import {ALERT_MESSAGES, LABELS, BUTTON_TEXT, ERRORS, PATH} from '../../constants/constants';
 import {userState} from '../../services/recoilService/userState';
 import {useRecoilValue} from 'recoil';
 import {useNavigate} from 'react-router-dom';
 import RestartAltIcon from '@mui/icons-material/RestartAlt';
+import {PermissionEnum} from '../../models/enums/permissionEnum';
 
 interface CityFormProps {
   city: ICity | null;
@@ -30,10 +30,10 @@ interface CityFormProps {
 interface ICityFormValues {
   name: string;
   countryId: string;
+  cityId?: string;
 }
 
 export function CityForm({city, mode, countryId, onClear, setCities}: CityFormProps) {
-  const [initialFormValues, setInitialFormValues] = useState<ICity>(initialCity);
   const createCityMutation = useCreateCity();
   const updateCityMutation = useUpdateCity();
   const {data: countries, isLoading, isError} = useFetchCountries();
@@ -41,24 +41,16 @@ export function CityForm({city, mode, countryId, onClear, setCities}: CityFormPr
   const navigate = useNavigate();
 
   useEffect(() => {
-    if (city) {
-      setInitialFormValues(city);
-    } else {
-      setInitialFormValues(initialCity);
+    if (!user) {
+      navigate(PATH.LOGIN);
     }
-  }, [city, mode]);
+  }, [user, navigate]);
 
-  // useEffect(() => {
-  //   if (!user) {
-  //     navigate(PATH.LOGIN);
-  //   } else if (mode === ModeEnum.EDIT && user?.permissions?.includes(PermissionEnum.EDIT)) {
-  //     errorAlert(ALERT_MESSAGES.NO_ADMIN);
-  //     navigate(PATH.ROOT);
-  //   } else {
-  //     errorAlert(ALERT_MESSAGES.GUEST);
-  //     navigate(PATH.ROOT);
-  //   }
-  // }, [user, navigate]);
+  const initialValues: ICityFormValues = {
+    name: city?.name || '',
+    countryId: countryId || '',
+    ...(mode === ModeEnum.EDIT && city ? {_id: city._id} : {}),
+  };
 
   const handleSubmit = (values: ICityFormValues, {resetForm}: FormikHelpers<ICityFormValues>) => {
     const selectedCountryId = countryId || values.countryId;
@@ -68,7 +60,7 @@ export function CityForm({city, mode, countryId, onClear, setCities}: CityFormPr
       return;
     }
 
-    if (mode === ModeEnum.CREATE) {
+    if (mode === ModeEnum.CREATE && user?.permissions?.includes(PermissionEnum.ADD)) {
       createCityMutation.mutate(
         {city_name: values.name, countryId: selectedCountryId},
         {
@@ -105,7 +97,7 @@ export function CityForm({city, mode, countryId, onClear, setCities}: CityFormPr
   };
 
   return (
-    <Formik initialValues={initialCity2} validationSchema={citySchema} onSubmit={handleSubmit} enableReinitialize>
+    <Formik initialValues={initialValues} validationSchema={citySchema} onSubmit={handleSubmit} enableReinitialize>
       {({values, initialValues, dirty, isValid, isSubmitting, setFieldValue, resetForm}) => (
         <Form className='city-form'>
           <div className='field-container'>
@@ -114,7 +106,7 @@ export function CityForm({city, mode, countryId, onClear, setCities}: CityFormPr
             <ErrorMessage name='name' component='div' className='error' />
           </div>
           {countryId ? (
-            <h6>{countryId ? countries?.find((country) => country._id === countryId)?.name : ' '}</h6>
+            <h5>Country Name: {countryId ? countries?.find((country) => country._id === countryId)?.name : ' '}</h5>
           ) : (
             <div className='field-container'>
               <label htmlFor='countryId'>{LABELS.COUNTRY}</label>

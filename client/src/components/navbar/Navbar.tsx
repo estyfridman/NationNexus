@@ -21,7 +21,7 @@ import './navbar.scss';
 import {userState} from '../../services/recoilService/userState';
 import {useLogoutMutation} from '../../services/hooks/useCurrentUser';
 import {requestPermissionsAlert} from '../../utils/sweet-alerts';
-import {NAVBAR_LINKS, PATH, LABELS, BUTTON_TEXT} from '../../constants/constants';
+import {NAVBAR_LINKS, PATH, LABELS, BUTTON_TEXT, FUNCS} from '../../constants/constants';
 import {RoleEnum} from '../../models/enums/RoleEnum';
 import {linksBoxXs, appBarXs, menuXs, mdlSectionXs, toolbarXs} from '../../constants/sxConstants';
 import MenuIcon from '@mui/icons-material/Menu';
@@ -103,7 +103,7 @@ export default function Navbar() {
             <MenuItem onClick={handleLogout} className='links'>
               {BUTTON_TEXT.LOGOUT}
             </MenuItem>
-            <MenuItem onClick={() => handleLinkClick(`/editUser/${userData.user?._id}`)} className='links'>
+            <MenuItem onClick={() => handleLinkClick(FUNCS.EDIT_USER(userData.user?._id))} className='links'>
               {BUTTON_TEXT.PROFILE}
             </MenuItem>
             <MenuItem onClick={() => requestPermissionsAlert(navigate, userData.user?._id || '')} className='links'>
@@ -112,10 +112,10 @@ export default function Navbar() {
           </>
         ) : (
           <>
-            <MenuItem onClick={() => handleLinkClick('/login')} className='links'>
+            <MenuItem onClick={() => handleLinkClick(PATH.LOGIN)} className='links'>
               {BUTTON_TEXT.LOGIN}
             </MenuItem>
-            <MenuItem onClick={() => handleLinkClick('/register')} className='links'>
+            <MenuItem onClick={() => handleLinkClick(PATH.REGISTER)} className='links'>
               {BUTTON_TEXT.REGISTER}
             </MenuItem>
           </>

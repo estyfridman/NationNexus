@@ -20,6 +20,7 @@ import {requestPermissionsAlert} from '../../utils/sweet-alerts';
 import Button from '@mui/material/Button';
 import AddCircleOutlineIcon from '@mui/icons-material/AddCircleOutline';
 import {ADD_BUTTON} from '../../constants/sxConstants';
+import {PermissionEnum} from '../../models/enums/permissionEnum';
 
 export default function Grid() {
   const [gridKey, setGridKey] = useState<number>(0);
@@ -68,38 +69,11 @@ export default function Grid() {
       headerClassName: 'action-header',
       sortable: false,
       renderCell: (params: any) => {
-        if (!user || user.role !== RoleEnum.ADMIN) {
-          return (
-            <>
-              <IconButton
-                onClick={(e) => {
-                  e.stopPropagation();
-                  navigate(FUNCS.CITIES_NAV(params.row._id));
-                }}>
-                <img src={PATH.CITIES_ICON} alt={BUTTON_TEXT.CITIES_ICON_ALT} className='city-img' />
-              </IconButton>
-              <Button variant='contained' size='small' onClick={() => requestPermissionsAlert(navigate, user?._id || '')}>
-                {LABELS.REQUEST_PERMISSION}
-              </Button>
-            </>
-          );
-        }
+        if (!user) return null;
+        const {permissions} = user;
 
         return (
           <>
-            <IconButton
-              onClick={(e) => {
-                e.stopPropagation();
-                handleEdit(params.row);
-              }}>
-              <EditIcon />
-            </IconButton>
-            <IconButton
-              onClick={(e) => {
-                handleDelete(e, params.row._id);
-              }}>
-              <DeleteIcon />
-            </IconButton>
             <IconButton
               onClick={(e) => {
                 e.stopPropagation();
@@ -107,6 +81,25 @@ export default function Grid() {
               }}>
               <img src={PATH.CITIES_ICON} alt={BUTTON_TEXT.CITIES_ICON_ALT} className='city-img' />
             </IconButton>
+
+            {permissions && permissions.includes(PermissionEnum.EDIT) && (
+              <IconButton
+                onClick={(e) => {
+                  e.stopPropagation();
+                  handleEdit(params.row);
+                }}>
+                <EditIcon />
+              </IconButton>
+            )}
+
+            {permissions && permissions.includes(PermissionEnum.DELETE) && (
+              <IconButton
+                onClick={(e) => {
+                  handleDelete(e, params.row._id);
+                }}>
+                <DeleteIcon />
+              </IconButton>
+            )}
           </>
         );
       },
@@ -148,10 +141,12 @@ export default function Grid() {
       ) : (
         <>
           <div className='data-grid-container'>
-            <Button variant='contained' color='primary' onClick={() => navigate('/create')} sx={ADD_BUTTON}>
-              <AddCircleOutlineIcon />
-              {LABELS.ADD_COUNTRY}
-            </Button>
+            {user && user.permissions && user.permissions.includes(PermissionEnum.ADD) && (
+              <Button variant='contained' color='primary' onClick={() => navigate('/create')} sx={ADD_BUTTON}>
+                <AddCircleOutlineIcon />
+                {LABELS.ADD_COUNTRY}
+              </Button>
+            )}
 
             {data && (
               <DataGrid

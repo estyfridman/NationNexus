@@ -6,4 +6,7 @@ export const citySchema = Yup.object().shape({
   countryId: Yup.string()
     .required(VALID.COUNTRY_REQUIRED)
     .matches(/^[0-9a-fA-F]{24}$/, VALID.COUNTRY_INVALID),
+  _id: Yup.string()
+    .matches(/^[0-9a-fA-F]{24}$/, VALID.CITY_INVALID)
+    .notRequired(),
 });
