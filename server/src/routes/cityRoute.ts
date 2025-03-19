@@ -8,8 +8,10 @@ const router = Router();
 router.get('/', getAllCities);
 router.get('/:id', getCityById);
 router.get('/by-country/:countryId', getCitiesByCountryId); // for many to many relations
-router.post('/', verifyToken, authorize([PermissionEnum.ADD, PermissionEnum.ADMIN]), createCity);
-router.patch('/:id', verifyToken, authorize([PermissionEnum.EDIT, PermissionEnum.ADMIN]), updateCity);
-router.delete('/:id', verifyToken, authorize([PermissionEnum.DELETE, PermissionEnum.ADMIN]), deleteCity);
+
+router.use(verifyToken);
+router.post('/', authorize([PermissionEnum.ADD, PermissionEnum.ADMIN]), createCity);
+router.patch('/:id', authorize([PermissionEnum.EDIT, PermissionEnum.ADMIN]), updateCity);
+router.delete('/:id', authorize([PermissionEnum.DELETE, PermissionEnum.ADMIN]), deleteCity);
 
 export default router;

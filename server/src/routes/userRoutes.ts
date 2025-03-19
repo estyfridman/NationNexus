@@ -6,12 +6,14 @@ import {PermissionEnum} from '../models/enums/permissionEnum';
 
 const router = express.Router();
 
-router.get('/', verifyToken, authorize([PermissionEnum.ADMIN]), getAllUsers);
-router.get('/:id', verifyToken, authorize([PermissionEnum.ADMIN]), getUserById);
 router.post('/register', upload.single('profileImage'), registerUser);
-router.patch('/:id', verifyToken, authorize([PermissionEnum.ADMIN]), updateUser);
-router.patch('/changeUserPR/:id', verifyToken, authorize([PermissionEnum.ADMIN]), changeUserPR);
-router.patch('/change-permission/:id', verifyToken, authorize([PermissionEnum.ADMIN]), changeUserPR);
-router.delete('/:id', verifyToken, authorize([PermissionEnum.ADMIN]), deleteUser);
+
+router.use(verifyToken);
+router.get('/', authorize([PermissionEnum.ADMIN]), getAllUsers);
+router.get('/:id', authorize([PermissionEnum.ADMIN]), getUserById);
+router.patch('/:id', authorize([PermissionEnum.ADMIN]), updateUser);
+router.patch('/changeUserPR/:id', authorize([PermissionEnum.ADMIN]), changeUserPR);
+router.patch('/change-permission/:id', authorize([PermissionEnum.ADMIN]), changeUserPR);
+router.delete('/:id', authorize([PermissionEnum.ADMIN]), deleteUser);
 
 export default router;
