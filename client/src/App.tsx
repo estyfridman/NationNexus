@@ -1,18 +1,17 @@
-
-import './App.css'
+import './App.css';
+import {APP_DIV_STYLE, H1_DIV_STYLE, P_DIV_STYLE} from '../src/constants/sxConstants';
+import {LABELS} from '../src/constants/constants';
 
 function App() {
-
   return (
     <>
- <div style={{ textAlign: "center", padding: "2rem" }}>
-      <h1 style={{ fontSize: "3rem", marginBottom: "1rem" }}>Welcome!</h1>
-      <p style={{ fontSize: "1.2rem", lineHeight: "1.6" }}>
-        Discover a world of possibilities at your fingertips. <br />
-        Start exploring and learning with ease today.
-      </p>
-    </div>    </>
-  )
+      <div style={APP_DIV_STYLE}>
+        <h1 style={H1_DIV_STYLE}>{LABELS.WELCOME}</h1>
+        <p style={P_DIV_STYLE}>{LABELS.APP_TEXT1} </p>
+        <p style={P_DIV_STYLE}>{LABELS.APP_TEXT2}</p>
+      </div>
+    </>
+  );
 }
 
-export default App
+export default App;

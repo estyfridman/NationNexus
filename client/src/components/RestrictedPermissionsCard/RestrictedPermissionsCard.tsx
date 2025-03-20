@@ -1,44 +1,38 @@
-import { Card, CardContent, Typography, Box, Button, CardActions } from '@mui/material';
+import {Card, CardContent, Typography, Box, Button, CardActions} from '@mui/material';
 import WarningAmberIcon from '@mui/icons-material/WarningAmber';
+import {JUSTIFY_CENTER, MB2, PERMISSION_BOX, PERMISSION_CARD, WARNING_BOX, WARNING_ICON} from '../../constants/sxConstants';
+import {LABELS} from '../../constants/constants';
+import {requestPermissionsAlert} from '../../utils/sweet-alerts';
+import {useNavigate} from 'react-router-dom';
+import {userState} from '../../services/recoilService/userState';
+import {useRecoilValue} from 'recoil';
 
 function RestrictedPermissionsCard() {
+  const navigate = useNavigate();
+  const currentUser = useRecoilValue(userState);
+
   return (
-    <Box
-      sx={{
-        display: 'flex',
-        justifyContent: 'center',
-        alignItems: 'center',
-        height: '50vh',
-      }}
-    >
-      <Card
-        sx={{
-          maxWidth: 400,
-          textAlign: 'center',
-          p: 2,
-        }}
-      >
-        <Box sx={{ display: 'flex', justifyContent: 'center', mb: 2 }}>
-          <WarningAmberIcon color="warning" sx={{ fontSize: 60 }} />
+    <Box sx={PERMISSION_BOX}>
+      <Card sx={PERMISSION_CARD}>
+        <Box sx={WARNING_BOX}>
+          <WarningAmberIcon color='warning' sx={WARNING_ICON} />
         </Box>
         <CardContent>
-          <Typography variant="h6" color="text.secondary" gutterBottom>
-            Restricted Permissions
+          <Typography variant='h6' color='text.secondary' gutterBottom>
+            {LABELS.REST_PERMISSION}
           </Typography>
-          <Typography variant="body1" sx={{ mb: 2 }}>
-            You don't have permission to edit users. Please contact your administrator for
-            appropriate permissions
+          <Typography variant='body1' sx={MB2}>
+            {LABELS.BODY_REST_PERMISSION}
           </Typography>
         </CardContent>
-        <CardActions sx={{ justifyContent: 'center' }}>
+        <CardActions sx={JUSTIFY_CENTER}>
           <Button
-            variant="outlined"
-            color="warning"
+            variant='outlined'
+            color='warning'
             onClick={() => {
-              /* ניתן להוסיף פעולה כגון פנייה למנהל */
-            }}
-          >
-            Contact a manager
+              requestPermissionsAlert(navigate, currentUser.user?._id || '');
+            }}>
+            {LABELS.CONTACT_MANAGE}
           </Button>
         </CardActions>
       </Card>

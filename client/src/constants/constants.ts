@@ -85,6 +85,12 @@ export const LABELS = {
   CITIES: 'Cities',
   MANAGE_USERS: 'Manage User Permissions',
   ERR_FETCH_REQUESTS: 'There was a problem loading permissions. Please try again later.',
+  REST_PERMISSION: 'Restricted Permissions',
+  BODY_REST_PERMISSION: "You don't have permission to edit users. Please contact your administrator for appropriate permissions",
+  CONTACT_MANAGE: 'Contact a manager',
+  WELCOME: 'Welcome!',
+  APP_TEXT1: 'Discover a world of possibilities at your fingertips.',
+  APP_TEXT2: 'Start exploring and learning with ease today.',
 };
 
 export const BUTTON_TEXT = {
@@ -163,7 +169,6 @@ export const FUNCS = {
   CITIES_COUNTRY_ID: (id: string) => `/cities/${id}`,
   CITIES_ID_PATH: (id: string) => `/cities/by-country/${id}`,
   COUNTRY_ID: (id: string) => `/countries/${id}`,
-  EDIT_USER: (id: string | undefined) => `/editUser/${id}`,
 };
 
 export const FIELD = {

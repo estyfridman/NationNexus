@@ -16,6 +16,7 @@ import {useEffect, useState} from 'react';
 import {selectedUserState} from '../../services/recoilService/selectedUserState';
 import IUser from '../../models/interfaces/iUser';
 import {ALERT_MESSAGES, BUTTON_TEXT, FIELD, LABELS} from '../../constants/constants';
+import {PermissionEnum} from '../../models/enums/permissionEnum';
 
 export default function UserForm() {
   const [newPassword, setNewPassword] = useState<string>('');
@@ -30,9 +31,20 @@ export default function UserForm() {
   const isEditMode = !!id;
   const userToEdit = isEditMode ? selectedUser || currentUser.user : initialUser;
   const [hasPermission, setHasPermission] = useState(true);
+
   useEffect(() => {
-    if (currentUser.user?.role === RoleEnum.GUEST) {
-      setHasPermission(false);
+    if (currentUser.user?.role === RoleEnum.ADMIN) {
+      return;
+    }
+    if (isEditMode) {
+      if (!currentUser.user?.permissions?.includes(PermissionEnum.EDIT)) {
+        setHasPermission(false);
+      }
+    } else {
+      // create user
+      if (!currentUser.user?.permissions?.includes(PermissionEnum.ADD)) {
+        setHasPermission(false);
+      }
     }
   }, [id, currentUser, selectedUser]);
 
@@ -45,6 +57,8 @@ export default function UserForm() {
     Object.entries(values).forEach(([key, value]) => {
       if (key === 'profileImage' && value instanceof File) {
         formData.append(key, value);
+      } else if (typeof value === 'object' && value !== null) {
+        formData.append(key, JSON.stringify(value));
       } else {
         formData.append(key, value as string);
       }
@@ -91,7 +105,7 @@ export default function UserForm() {
         {({values, initialValues, dirty, isValid, handleSubmit, setFieldValue}) => {
           const hasChanged = JSON.stringify(values) !== JSON.stringify(initialValues);
           return (
-            <Form className='edit-form' onSubmit={handleSubmit}>
+            <Form className='edit-form' onSubmit={handleSubmit} encType='multipart/form-data'>
               <div className='field-container'>
                 <label htmlFor='firstName'>{LABELS.FIRST_NAME}</label>
                 <Field type='text' id='firstName' name='firstName' />
@@ -143,7 +157,12 @@ export default function UserForm() {
                   id='profileImage'
                   accept='image/*'
                   className='form-control'
-                  onChange={(e: any) => setFieldValue('profileImage', e.target.files?.[0])}
+                  onChange={(event: React.ChangeEvent<HTMLInputElement>) => {
+                    console.log(event?.currentTarget?.files ? [0] : '');
+                    if (event.currentTarget.files && event.currentTarget.files.length > 0) {
+                      setFieldValue('profileImage', event.currentTarget.files[0]);
+                    }
+                  }}
                 />
                 <ErrorMessage name='profileImage' component='div' className='error' />
               </div>

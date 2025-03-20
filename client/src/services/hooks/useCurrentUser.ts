@@ -7,7 +7,6 @@ import {useMutation, useQueryClient} from '@tanstack/react-query';
 import {} from '../../services/userService';
 import {useSetRecoilState} from 'recoil';
 import {userState} from '../recoilService/userState';
-import {useEffect} from 'react';
 
 export const useCurrentUser = (id: string | undefined, isEditMode: boolean) => {
   return useQuery<IUser | undefined>({

@@ -103,7 +103,7 @@ export default function Navbar() {
             <MenuItem onClick={handleLogout} className='links'>
               {BUTTON_TEXT.LOGOUT}
             </MenuItem>
-            <MenuItem onClick={() => handleLinkClick(FUNCS.EDIT_USER(userData.user?._id))} className='links'>
+            <MenuItem onClick={() => handleLinkClick(FUNCS.EDIT_USER_NAVIGATE(userData.user?._id || ''))} className='links'>
               {BUTTON_TEXT.PROFILE}
             </MenuItem>
             <MenuItem onClick={() => requestPermissionsAlert(navigate, userData.user?._id || '')} className='links'>
