@@ -6,6 +6,7 @@ import jwt from 'jsonwebtoken';
 import {PermissionEnum} from '../models/enums/permissionEnum';
 import PermissionRequest from '../models/mongooseSchemas/requestSchema';
 import {MESSAGES, JWT_SECRET, MSG_FUNC} from '../constants';
+import {validateObjectId} from '../utils/validateObjectId';
 
 class UserService {
   async getUsers() {
@@ -17,9 +18,8 @@ class UserService {
   }
 
   async getUserById(id: string) {
-    if (!Types.ObjectId.isValid(id)) {
-      throw new Error(MESSAGES.INVALID_ID);
-    }
+    validateObjectId(id);
+
     try {
       const user = await User.findById(id).select('-password');
       return user;
@@ -57,9 +57,8 @@ class UserService {
   }
 
   async updateUser(id: string, updateData: Partial<IUser>) {
-    if (!Types.ObjectId.isValid(id)) {
-      throw new Error(MESSAGES.INVALID_ID);
-    }
+    validateObjectId(id);
+
     try {
       if (updateData.password) {
         updateData.password = await bcrypt.hash(updateData.password, 10);
@@ -83,9 +82,8 @@ class UserService {
   }
 
   async deleteUser(id: string) {
-    if (!Types.ObjectId.isValid(id)) {
-      throw new Error(MESSAGES.INVALID_ID);
-    }
+    validateObjectId(id);
+
     try {
       const deletedUser = await User.findByIdAndDelete(id).select('-password');
       if (!deletedUser) {
@@ -97,9 +95,7 @@ class UserService {
     }
   }
   async changeUserPermissions(id: string, permission: PermissionEnum, action: 'ADD' | 'REMOVE') {
-    if (!Types.ObjectId.isValid(id)) {
-      throw new Error(MESSAGES.INVALID_ID);
-    }
+    validateObjectId(id);
 
     if (!Object.values(PermissionEnum).includes(permission)) {
       throw new Error(MESSAGES.INVALID_PERMISSION);
@@ -120,9 +116,8 @@ class UserService {
   }
 
   async changeUserPR(id: string, permission: PermissionEnum) {
-    if (!Types.ObjectId.isValid(id)) {
-      throw new Error(MESSAGES.INVALID_ID);
-    }
+    validateObjectId(id);
+
     try {
       console.log('changeUserPR');
       console.log(id);
@@ -140,9 +135,8 @@ class UserService {
   }
 
   async requestPermissionChange(requestedPermission: PermissionEnum, userId: string) {
-    if (!Types.ObjectId.isValid(userId)) {
-      throw new Error(MESSAGES.INVALID_ID);
-    }
+    validateObjectId(userId);
+
     try {
       const user = await User.findById(userId);
       if (!user) {

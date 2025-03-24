@@ -13,7 +13,6 @@ export const useGetUsers = () => {
   return useQuery<IUser[]>({
     queryKey: ['Users'],
     queryFn: getAllUsers,
-    // staleTime: 1000000,
   });
 };
 
@@ -34,7 +33,6 @@ export const useGetUserById = (id: string) => {
       queryClient.setQueryData(['user'], userFromApi);
       return userFromApi;
     },
-    // staleTime: 50 * 60 * 1000,
   });
 };
 

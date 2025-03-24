@@ -8,29 +8,29 @@
   label {
     font-size: 16px;
     font-weight: 500;
-    color: #2d3748;
+    color: vars.$primary-color;
     margin-bottom: 5px;
   }
 
   input {
     padding: 0.5rem 0.75rem;
-    border: 1px solid #cbd5e0;
+    border: 1px solid vars.$secondary-bg;
     border-radius: 4px;
     font-size: 14px;
-    color: #1a202c;
-    box-shadow: inset 0 1px 2px rgba(0, 0, 0, 0.075);
+    color: vars.$third-color;
+    box-shadow: inset 0 1px 2px vars.$light-shadow;
     transition: border-color 0.2s ease, box-shadow 0.2s ease;
 
     &:focus {
-      border-color: #3182ce;
-      box-shadow: 0 0 0 3px rgba(66, 153, 225, 0.5);
+      border-color: vars.$hover-links;
+      box-shadow: 0 0 0 3px vars.$blue-shadow;
       outline: none;
     }
   }
 
   .error {
     font-size: 12px;
-    color: #e53e3e;
+    color: vars.$error-message;
     margin-top: 5px;
   }
 }

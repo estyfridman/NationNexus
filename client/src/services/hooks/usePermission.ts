@@ -11,7 +11,6 @@ export const useRequests = () => {
   return useQuery({
     queryKey: ['requests'],
     queryFn: getAllPermissionRequests,
-    staleTime: Infinity,
   });
 };
 

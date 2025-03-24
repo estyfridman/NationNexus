@@ -3,6 +3,8 @@ import {Types} from 'mongoose';
 import ICity from '../models/interfaces/iCity';
 import {ERRORS} from '../constants';
 import CountryService from './countryService';
+import {validateObjectId} from '../utils/validateObjectId';
+
 class CitiesService {
   async getAllCities() {
     try {
@@ -13,9 +15,8 @@ class CitiesService {
   }
 
   async getCityById(id: string) {
-    if (!Types.ObjectId.isValid(id)) {
-      throw new Error(ERRORS.INVALID_ID_ERR);
-    }
+    validateObjectId(id);
+
     try {
       const city = await City.findById(id);
       if (!city) {
@@ -28,9 +29,8 @@ class CitiesService {
   }
 
   async getCitiesByCountryId(id: string) {
-    if (!Types.ObjectId.isValid(id)) {
-      throw new Error(ERRORS.INVALID_ID_ERR);
-    }
+    validateObjectId(id);
+
     try {
       const cities = await City.find({countryId: id});
       if (!cities || cities.length === 0) {
@@ -61,9 +61,8 @@ class CitiesService {
   }
 
   async updateCity(id: string, updateData: Partial<ICity>) {
-    if (!Types.ObjectId.isValid(id)) {
-      throw new Error(ERRORS.INVALID_ID_ERR);
-    }
+    validateObjectId(id);
+
     try {
       const city = await City.findByIdAndUpdate(id, updateData, {new: true});
       if (!city) {
@@ -76,9 +75,8 @@ class CitiesService {
   }
 
   async deleteCity(id: string) {
-    if (!Types.ObjectId.isValid(id)) {
-      throw new Error(ERRORS.INVALID_ID_ERR);
-    }
+    validateObjectId(id);
+
     try {
       const city = await City.findByIdAndDelete(id);
       if (!city) {

@@ -3,7 +3,7 @@
 .user-details-card {
   padding: 2%;
   width: 35%;
-  box-shadow: 20px 4px 10px rgba(0, 0, 0, 0.2);
+  box-shadow: 20px 4px 10px vars.$shadow;
   display: flex;
 
   @media (max-width: 768px) {

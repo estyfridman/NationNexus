@@ -1,4 +1,4 @@
-import { atom } from 'recoil';
+import {atom} from 'recoil';
 import ICity from '../../models/interfaces/iCity';
 
 const cityState = () => {
@@ -7,8 +7,6 @@ const cityState = () => {
     default: {
       _id: '',
       name: '',
-      population: 0,
-      countryId: '',
     },
   });
 };

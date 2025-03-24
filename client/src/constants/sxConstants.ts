@@ -46,3 +46,18 @@ export const JUSTIFY_CENTER = {justifyContent: 'center'};
 export const APP_DIV_STYLE = {textAlign: 'center', padding: '2rem'} as const;
 export const H1_DIV_STYLE = {fontSize: '3rem', marginBottom: '1rem'};
 export const P_DIV_STYLE = {fontSize: '1.2rem', lineHeight: '1.6'};
+
+export const LOADING_DIV = {
+  display: 'flex',
+  justifyContent: 'center',
+  alignItems: 'center',
+  height: '45%',
+  backgroundColor: 'none',
+};
+export const LOADING_IMG = {
+  width: '200px',
+  height: '170px',
+  backgroundColor: 'transparent',
+};
+
+export const FLUG_COLUMN = {width: '50px', height: '30px'};

@@ -2,6 +2,7 @@ import {MESSAGES, MSG_FUNC} from '../constants';
 import PermissionRequest from '../models/mongooseSchemas/requestSchema';
 import {Types} from 'mongoose';
 import {RoleRequestStatusEnum} from '../models/enums/RoleRequestStatusEnum';
+import {validateObjectId} from '../utils/validateObjectId';
 
 export async function getAllPermissionRequests() {
   try {
@@ -15,9 +16,7 @@ export async function getAllPermissionRequests() {
 }
 
 export async function deletePermissionRequests(id: string) {
-  if (!Types.ObjectId.isValid(id)) {
-    throw new Error(MESSAGES.INVALID_ID);
-  }
+  validateObjectId(id);
   try {
     const deleteRequest = await PermissionRequest.findByIdAndDelete(id);
     if (!deleteRequest) {
@@ -30,9 +29,7 @@ export async function deletePermissionRequests(id: string) {
 }
 
 export async function patchPermissionRequests(id: string, status: RoleRequestStatusEnum) {
-  if (!Types.ObjectId.isValid(id)) {
-    throw new Error(MESSAGES.INVALID_ID);
-  }
+  validateObjectId(id);
   try {
     const updateRequest = await PermissionRequest.findByIdAndUpdate(id, {status}, {new: true});
     if (!updateRequest) {

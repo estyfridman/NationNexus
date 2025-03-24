@@ -91,6 +91,9 @@ export const LABELS = {
   WELCOME: 'Welcome!',
   APP_TEXT1: 'Discover a world of possibilities at your fingertips.',
   APP_TEXT2: 'Start exploring and learning with ease today.',
+  HOME_PAGE: 'Back to Home Page',
+  NOT_FOUND_TITLE: "The page you were looking for doesn't exist",
+  NOT_FOUND_MESSAGE: 'This page appears to have been removed or no longer exists',
 };
 
 export const BUTTON_TEXT = {

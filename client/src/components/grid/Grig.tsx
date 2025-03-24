@@ -14,10 +14,10 @@ import DeleteIcon from '@mui/icons-material/Delete';
 import {useDeleteCountry} from '../../services/hooks/useCountry';
 import {deleteAlert, errorDeleteAlert, successAlert} from '../../utils/sweet-alerts';
 import {userState} from '../../services/recoilService/userState';
-import {LABELS, BUTTON_TEXT, FIELD, PATH, FUNCS} from '../../constants/constants';
+import {LABELS, BUTTON_TEXT, FIELD, PATH, FUNCS, ALERT_MESSAGES} from '../../constants/constants';
 import Button from '@mui/material/Button';
 import AddCircleOutlineIcon from '@mui/icons-material/AddCircleOutline';
-import {ADD_BUTTON} from '../../constants/sxConstants';
+import {ADD_BUTTON, FLUG_COLUMN} from '../../constants/sxConstants';
 import {PermissionEnum} from '../../models/enums/permissionEnum';
 
 export default function Grid() {
@@ -46,7 +46,7 @@ export default function Grid() {
       headerName: LABELS.FLAG_URL,
       flex: 1,
       headerClassName: 'custom-header',
-      renderCell: (params: any) => <img src={`${params.value}`} alt={params.row.name} style={{width: '50px', height: '30px'}} />,
+      renderCell: (params: any) => <img src={`${params.value}`} alt={params.row.name} style={FLUG_COLUMN} />,
     },
     {field: FIELD.REGION, headerName: LABELS.REGION, flex: 1, headerClassName: 'custom-header'},
     {field: FIELD.POPULATION, headerName: LABELS.POPULATION, flex: 1, headerClassName: 'custom-header'},
@@ -114,7 +114,7 @@ export default function Grid() {
             successAlert();
           },
           onError: () => {
-            errorDeleteAlert('Failed to delete the record. Please try again.');
+            errorDeleteAlert(ALERT_MESSAGES.ERROR_DELETE);
           },
         });
       });

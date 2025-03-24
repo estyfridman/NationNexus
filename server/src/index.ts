@@ -14,6 +14,7 @@ import permissionsRoutes from './routes/permissionsRoutes';
 import {securityMiddlewares} from './middlewares/securityMiddleware';
 import fetchAndSaveCountries from './utils/seed';
 import {METHODS, ORIGIN, ALLOWED_HEADERS, PATH, MESSAGES} from './constants';
+
 const app = express();
 
 app.use(

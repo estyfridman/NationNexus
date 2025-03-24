@@ -23,7 +23,6 @@ export const useCurrentUser = (id: string | undefined, isEditMode: boolean) => {
       }
     },
     enabled: isEditMode && !!id,
-    staleTime: Infinity,
   });
 };
 
