@@ -1,30 +1,16 @@
 import {useState, MouseEvent} from 'react';
-import {
-  AppBar,
-  Typography,
-  Link,
-  Box,
-  IconButton,
-  Menu,
-  MenuItem,
-  Toolbar,
-  List,
-  ListItem,
-  ListItemText,
-  Drawer,
-  ListItemButton,
-} from '@mui/material';
+import {AppBar, Typography, Box, IconButton, Menu, MenuItem, Toolbar, List, ListItem, ListItemText, Drawer, ListItemButton} from '@mui/material';
 import {useRecoilValue} from 'recoil';
 import {selectedCountryState} from '../../services/recoilService/selectedCountry';
 import {useNavigate} from 'react-router-dom';
-import './navbar.scss';
 import {userState} from '../../services/recoilService/userState';
 import {useLogoutMutation} from '../../services/hooks/useCurrentUser';
 import {requestPermissionsAlert} from '../../utils/sweet-alerts';
-import {NAVBAR_LINKS, PATH, LABELS, BUTTON_TEXT, FUNCS} from '../../constants/constants';
+import {NAVBAR_LINKS, PATH, BUTTON_TEXT, FUNCS} from '../../constants/constants';
 import {RoleEnum} from '../../models/enums/RoleEnum';
 import {linksBoxXs, appBarXs, menuXs, mdlSectionXs, toolbarXs} from '../../constants/sxConstants';
 import MenuIcon from '@mui/icons-material/Menu';
+import './navbar.scss';
 
 export default function Navbar() {
   const selectedCountry = useRecoilValue(selectedCountryState);
@@ -32,7 +18,6 @@ export default function Navbar() {
   const userData = useRecoilValue(userState);
   const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
   const [drawerOpen, setDrawerOpen] = useState(false);
-
   const apiPort = import.meta.env.VITE_API_PORT;
   const {mutate: logout} = useLogoutMutation();
 
@@ -50,11 +35,22 @@ export default function Navbar() {
     setAnchorEl(null);
   };
 
-  function handleLogout() {
+  const handleLogout = () => {
     logout();
     handleMenuClose();
     navigate('/');
-  }
+  };
+
+  const userMenuItems = userData?.user
+    ? [
+        {text: BUTTON_TEXT.LOGOUT, action: handleLogout},
+        {text: BUTTON_TEXT.PROFILE, action: () => handleLinkClick(FUNCS.EDIT_USER_NAVIGATE(userData.user?._id || ''))},
+        {text: BUTTON_TEXT.PERMISSION, action: () => requestPermissionsAlert(navigate, userData.user?._id || '')},
+      ]
+    : [
+        {text: BUTTON_TEXT.LOGIN, action: () => handleLinkClick(PATH.LOGIN)},
+        {text: BUTTON_TEXT.REGISTER, action: () => handleLinkClick(PATH.REGISTER)},
+      ];
 
   return (
     <AppBar position='static' sx={appBarXs}>
@@ -63,34 +59,24 @@ export default function Navbar() {
           <MenuIcon />
         </IconButton>
         <Box sx={linksBoxXs}>
-          {NAVBAR_LINKS.map((link) => {
-            return (
-              <Link key={link} underline='none' color='inherit' onClick={() => handleLinkClick(link)} className='links'>
-                {link.replace('/', '').toUpperCase()}
-              </Link>
-            );
-          })}
-
-          {userData && userData?.user?.role === RoleEnum.ADMIN && (
-            <Link underline='none' color='inherit' onClick={() => handleLinkClick('/adminDashboard')} className='links'>
-              {BUTTON_TEXT.ADMIN}
-            </Link>
-          )}
+          {[...NAVBAR_LINKS, userData?.user?.role === RoleEnum.ADMIN ? '/adminDashboard' : null].filter(Boolean).map((link) => (
+            <MenuItem key={link} onClick={() => handleLinkClick(link!)}>
+              {link!.replace('/', '').toUpperCase()}
+            </MenuItem>
+          ))}
         </Box>
         <Box sx={{display: 'flex', alignItems: 'center', gap: 2}}>
           <Typography className='customTypography' sx={mdlSectionXs}>
-            {selectedCountry && selectedCountry.name ? ` ${LABELS.SELECTED_COUNTRY} ${selectedCountry.name}` : LABELS.TO_SELECT_COUNTRY}
+            {selectedCountry?.name ? `Selected Country: ${selectedCountry.name}` : 'Select a Country'}
           </Typography>
           <IconButton color='inherit' onClick={handleMenuOpen} className='imageWrapper'>
-            {userData && userData.user && <Typography>{userData.user.username}</Typography>}
+            {userData?.user && <Typography>{userData.user.username}</Typography>}
             <img
               src={userData?.user?.profileImage ? `${apiPort}${userData.user.profileImage}` : PATH.USER_IMG}
-              alt={userData?.user?.firstName}
+              alt={userData?.user?.firstName || 'User'}
               className='imgUser'
               onError={(e) => {
-                const target = e.target as HTMLImageElement;
-                target.onerror = null;
-                target.src = PATH.USER_IMG;
+                (e.target as HTMLImageElement).src = PATH.USER_IMG;
               }}
             />
           </IconButton>
@@ -98,71 +84,27 @@ export default function Navbar() {
       </Toolbar>
 
       <Menu anchorEl={anchorEl} open={Boolean(anchorEl)} onClose={handleMenuClose}>
-        {userData && userData.user !== null ? (
-          <>
-            <MenuItem onClick={handleLogout} className='links'>
-              {BUTTON_TEXT.LOGOUT}
-            </MenuItem>
-            <MenuItem onClick={() => handleLinkClick(FUNCS.EDIT_USER_NAVIGATE(userData.user?._id || ''))} className='links'>
-              {BUTTON_TEXT.PROFILE}
-            </MenuItem>
-            <MenuItem onClick={() => requestPermissionsAlert(navigate, userData.user?._id || '')} className='links'>
-              {BUTTON_TEXT.PERMISSION}
-            </MenuItem>
-          </>
-        ) : (
-          <>
-            <MenuItem onClick={() => handleLinkClick(PATH.LOGIN)} className='links'>
-              {BUTTON_TEXT.LOGIN}
-            </MenuItem>
-            <MenuItem onClick={() => handleLinkClick(PATH.REGISTER)} className='links'>
-              {BUTTON_TEXT.REGISTER}
-            </MenuItem>
-          </>
-        )}
+        {userMenuItems.map(({text, action}) => (
+          <MenuItem key={text} onClick={action}>
+            {text}
+          </MenuItem>
+        ))}
       </Menu>
+
       <Drawer anchor='left' open={drawerOpen} onClose={() => setDrawerOpen(false)}>
         <List>
-          {NAVBAR_LINKS.map((link) => (
-            <ListItem key={link} onClick={() => handleLinkClick(link)}>
-              <ListItemButton>{link.replace('/', '').toUpperCase()}</ListItemButton>
+          {[...NAVBAR_LINKS, userData?.user?.role === RoleEnum.ADMIN ? '/adminDashboard' : null].filter(Boolean).map((link) => (
+            <ListItem key={link} onClick={() => handleLinkClick(link!)}>
+              <ListItemButton>{link!.replace('/', '').toUpperCase()}</ListItemButton>
             </ListItem>
           ))}
-          {userData?.user?.role === RoleEnum.ADMIN && (
-            <ListItem onClick={() => handleLinkClick('/adminDashboard')}>
-              <ListItemButton> {BUTTON_TEXT.ADMIN} </ListItemButton>
+          {userMenuItems.map(({text, action}) => (
+            <ListItem key={text} onClick={action}>
+              <ListItemButton>
+                <ListItemText primary={text} />
+              </ListItemButton>
             </ListItem>
-          )}
-          {userData && userData.user !== null ? (
-            <>
-              <ListItem onClick={handleLogout}>
-                <ListItemButton>
-                  <ListItemText primary={BUTTON_TEXT.LOGOUT} />
-                </ListItemButton>
-              </ListItem>
-              <ListItem disablePadding>
-                <ListItemButton onClick={() => handleLinkClick(`/editUser/${userData.user?._id}`)}>
-                  <ListItemText primary={BUTTON_TEXT.PROFILE} />
-                </ListItemButton>
-              </ListItem>
-              <ListItem disablePadding>
-                <ListItemButton onClick={() => requestPermissionsAlert(navigate, userData.user?._id || '')}>
-                  <ListItemText primary={BUTTON_TEXT.PERMISSION} />
-                </ListItemButton>
-              </ListItem>
-            </>
-          ) : (
-            <>
-              <ListItem onClick={() => handleLinkClick('/login')}>
-                <ListItemButton>
-                  <ListItemText primary={BUTTON_TEXT.LOGIN.toUpperCase()} />
-                </ListItemButton>
-              </ListItem>
-              <ListItem onClick={() => handleLinkClick('/register')}>
-                <ListItemButton>{BUTTON_TEXT.REGISTER.toUpperCase()}</ListItemButton>
-              </ListItem>
-            </>
-          )}
+          ))}
         </List>
       </Drawer>
     </AppBar>
